@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    {
+      "name": "Windows",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/target/debug/namegen.exe",
+      "args": [
+        "elf-m.xml"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "RUST_BACKTRACE",
+          "value": "1"
+        }
+      ],
+      "console": "integratedTerminal"
+    }
+  }
