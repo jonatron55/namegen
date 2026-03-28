@@ -37,11 +37,11 @@ fn main() {
         .ignore_comments(true)
         .create_reader(reader);
 
-    let gen = generator::from_xml(&mut xml).expect("Failed to parse config file");
+    let generator = generator::from_xml(&mut xml).expect("Failed to parse config file");
 
     let mut rand = rand::rng();
     for _ in 0..args.count {
-        for name in gen.generate(&mut rand) {
+        for name in generator.generate(&mut rand) {
             print!("{name}");
         }
         println!();

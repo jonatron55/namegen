@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    io::{stdout, Write},
+    io::{Write, stdout},
 };
 
 use rand::{Rng, RngExt};
@@ -11,11 +11,12 @@ type FreqMap = HashMap<Option<String>, i32>;
 
 pub struct MarkovGen {
     freqs: HashMap<Option<String>, FreqMap>,
+    target_len: Option<usize>,
     reject: Vec<String>,
 }
 
 impl MarkovGen {
-    pub fn train(data: &[String], reject: Vec<String>) -> Self {
+    pub fn train(data: &[String], target_len: Option<usize>, reject: Vec<String>) -> Self {
         let mut freqs = HashMap::new();
 
         for word in data {
@@ -37,7 +38,11 @@ impl MarkovGen {
             }
         }
 
-        Self { freqs, reject }
+        Self {
+            freqs,
+            target_len,
+            reject,
+        }
     }
 }
 
@@ -51,6 +56,13 @@ impl Generator for MarkovGen {
                 let freq = self.freqs.get(&token).unwrap();
                 let total: i32 = freq.values().sum();
                 let mut roll: i32 = rand.random_range(0..total);
+
+                if let Some(target_len) = self.target_len
+                    && name.len() >= target_len
+                    && freq.contains_key(&None)
+                {
+                    return vec![name];
+                }
 
                 for (next, count) in freq.iter() {
                     roll -= count;

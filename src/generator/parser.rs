@@ -2,9 +2,12 @@ use std::{error::Error, io::Read};
 
 use xml::reader::{EventReader, XmlEvent};
 
-use crate::generator::{Generator, concatter::Concatter, markov::MarkovGen, optional::Optional, repeater::Repeater, switcher::Switcher};
+use crate::generator::{
+    Generator, concatter::Concatter, markov::MarkovGen, optional::Optional, repeater::Repeater,
+    switcher::Switcher,
+};
 
-const VALID_PART_TYPES: [&str; 6] = ["Markov", "Concat", "Switch",  "Words", "Option", "Repeat"];
+const VALID_PART_TYPES: [&str; 6] = ["Markov", "Concat", "Switch", "Words", "Option", "Repeat"];
 
 pub fn from_xml<R: Read>(
     reader: &mut EventReader<R>,
@@ -53,9 +56,18 @@ fn inner_from_xml<R: Read>(
         } if name.local_name == "Markov" => {
             let mut training_data = Vec::new();
             let mut reject = Vec::new();
+            let mut target_len = None;
 
             for attr in attributes {
-                return Err(format!("Unexpected attribute: {}", attr.name).into());
+                if attr.name.local_name == "target_len" {
+                    target_len = Some(
+                        attr.value
+                            .parse()
+                            .map_err(|_| format!("Invalid target_len value: {}", attr.value))?,
+                    );
+                } else {
+                    return Err(format!("Unexpected attribute: {}", attr.name).into());
+                }
             }
 
             loop {
@@ -73,7 +85,11 @@ fn inner_from_xml<R: Read>(
                     }
                     XmlEvent::EndElement { name } => {
                         if name.local_name == "Markov" {
-                            return Ok(Box::new(MarkovGen::train(&training_data, reject)));
+                            return Ok(Box::new(MarkovGen::train(
+                                &training_data,
+                                target_len,
+                                reject,
+                            )));
                         } else {
                             return Err(format!("Unexpected end element: </{}>", name).into());
                         }
@@ -162,7 +178,7 @@ fn inner_from_xml<R: Read>(
             }
         }
 
-        XmlEvent::StartElement { name, .. } if name.local_name ==  "Words" => {
+        XmlEvent::StartElement { name, .. } if name.local_name == "Words" => {
             let mut options = Vec::new();
 
             loop {
@@ -171,7 +187,7 @@ fn inner_from_xml<R: Read>(
                         options.extend(data.split_whitespace().map(|s| s.to_string()));
                     }
                     XmlEvent::Whitespace(_) => {}
-                    XmlEvent::EndElement { name } if name.local_name ==  "Words" => {
+                    XmlEvent::EndElement { name } if name.local_name == "Words" => {
                         return Ok(Box::new(options));
                     }
                     other => {
@@ -181,7 +197,6 @@ fn inner_from_xml<R: Read>(
             }
         }
 
-
         XmlEvent::StartElement {
             name, attributes, ..
         } if name.local_name == "Option" => {
@@ -190,9 +205,10 @@ fn inner_from_xml<R: Read>(
 
             for attr in attributes {
                 if attr.name.local_name == "probability" {
-                    probability = attr.value.parse().map_err(|_| {
-                        format!("Invalid probability value: {}", attr.value)
-                    })?;
+                    probability = attr
+                        .value
+                        .parse()
+                        .map_err(|_| format!("Invalid probability value: {}", attr.value))?;
                 } else {
                     return Err(format!("Unexpected attribute: {}", attr.name).into());
                 }
@@ -234,14 +250,16 @@ fn inner_from_xml<R: Read>(
             for attr in attributes {
                 match attr.name.local_name.as_str() {
                     "min" => {
-                        min = attr.value.parse().map_err(|_| {
-                            format!("Invalid min value: {}", attr.value)
-                        })?;
+                        min = attr
+                            .value
+                            .parse()
+                            .map_err(|_| format!("Invalid min value: {}", attr.value))?;
                     }
                     "max" => {
-                        max = attr.value.parse().map_err(|_| {
-                            format!("Invalid max value: {}", attr.value)
-                        })?;
+                        max = attr
+                            .value
+                            .parse()
+                            .map_err(|_| format!("Invalid max value: {}", attr.value))?;
                     }
                     other => {
                         return Err(format!("Unexpected attribute: {other}").into());
