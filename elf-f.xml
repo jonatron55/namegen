@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<NameGen name="Elf/Fey (m)">
-  <Markov>
-    Ad/er/yn Aer/a/frin Aer/a/th/i/elle Aer/on/v/i/a Aer/on/we/n Aer/ona An/we/n
-    Br/an/we/nne Br/on/wy/n
-    C/arr/i/a/n C/or/i/anna
-    E/a/frin E/a/wen E/a/wy/nne E/on/oa E/on/th/i/a Eil/w/yn Eir/i/an Eir/we/n Ell/ar/w/yn Ell/e/th/i/a Ell/on/v/i/a Ell/u/th/i/a Ell/u/v/i/a
-    F/ae/we/n F/ae/wy/nne F/ay/elle F/ay/on/elle F/ey/ar/wy/n F/ey/elle F/ey/on/oa
-    G/lor/i/el G/we/nd/a G/we/nd/o/lynne G/we/nna G/we/nnyth G/wy/nna G/wy/nnyth Glor/a/frin
-    Ir/i/el Ir/u/th/i/a
-    J/as/i/anna
-    L/u/th/i/el L/u/v/i/oa L/y/th/i/anna
-    M/or/a/frin M/or/gan M/or/we/n M/or/wy/nne Merr/i/anna
-    N/ol/we/n N/un/v/i/oa
-    Qu/enn/a/lynne
-    Rh/e/v/a Rh/i/a/nnon Rh/i/v/a Rh/on/wy/nne Rh/os/yn
-    S/y/ar/elle/ S/y/ar/eth Sa/ph/i/elle Sh/y/a/nnon Sh/y/ar/we/n So/ph/i/a
-    T/ae/gen T/ar/i/eth T/ol/wy/n T/or/i/a Ta/nna/qu/ille
-    Ur/os/ynne Ur/s/a/lynne Ur/s/u/la Ur/wy/n
-  </Markov>
-  <Concat>
-    <Part>
-      Birch Blue Bramble Bright Dawn Dream Dusk Ever Fair Fenn Fey Frost Green Grey Merry Mist Light Moon Night Oaken Ocean Pale Quick Rain River Sea Shade Shadow Silver Sky Star Storm Sun Summer Swift Wander Wild Willow Wind Winter Wise
-    </Part>
-    <Part>
-      bark birch bloom blossom bow bramble branch bright caller caster cloud dancer dawn dream dreamer drifter dusk dweller heart hunter leaf light mist nettle rain, sapling seed seeker seer shade shadow shrub singer song soul spell staff stave strider summer treader tree twig twigs twiggy thorn vine walker wanderer whisper willow wind wing winter
-    </Part>
-    <Reject>
-      Birchbirch Bramblebramble Brightbright Dawndawn Dawntreader Duskdawn Dreamdream Nightnight Dreamdreamer Mistmist Wanderwanderer Rainrain Shadowshadow Shadeshade Summersummer Summerwinter Windwind Willowwillow Winterwinter Wildwild Wintersummer
-    </Reject>
+<NameGen>
+  <Concat joiner=" ">
+    <Markov>
+      Ad/er/yn Aer/a/frin Aer/a/th/i/elle Aer/on/v/i/a Aer/on/we/n Aer/ona An/we/n
+      Br/an/we/nne Br/on/wy/n
+      C/arr/i/a/n C/or/i/anna
+      E/a/frin E/a/wen E/a/wy/nne E/on/oa E/on/th/i/a Eil/w/yn Eir/i/an Eir/we/n Ell/ar/w/yn
+      Ell/e/th/i/a Ell/on/v/i/a Ell/u/th/i/a Ell/u/v/i/a
+      F/ae/we/n F/ae/wy/nne F/ay/elle F/ay/on/elle F/ey/ar/wy/n F/ey/elle F/ey/on/oa
+      G/lor/i/el G/we/nd/a G/we/nd/o/lynne G/we/nna G/we/nnyth G/wy/nna G/wy/nnyth Glor/a/frin
+      Ir/i/el Ir/u/th/i/a
+      J/as/i/anna
+      L/u/th/i/el L/u/v/i/oa L/y/th/i/anna
+      M/or/a/frin M/or/gan M/or/we/n M/or/wy/nne Merr/i/anna
+      N/ol/we/n N/un/v/i/oa
+      Qu/enn/a/lynne
+      Rh/e/v/a Rh/i/a/nnon Rh/i/v/a Rh/on/wy/nne Rh/os/yn
+      S/y/ar/elle/ S/y/ar/eth Sa/ph/i/elle Sh/y/a/nnon Sh/y/ar/we/n So/ph/i/a
+      T/ae/gen T/ar/i/eth T/ol/wy/n T/or/i/a Ta/nna/qu/ille
+      Ur/os/ynne Ur/s/a/lynne Ur/s/u/la Ur/wy/n
+    </Markov>
+    <Concat>
+      <Words>
+        Birch Blue Bramble Bright Dawn Dream Dusk Ever Fair Fenn Fey Frost Green Grey Merry Mist
+        Light Moon Night Oaken Ocean Pale Quick Rain River Sea Shade Shadow Silver Sky Star Storm
+        Sun Summer Swift Wander Wild Willow Wind Winter Wise
+      </Words>
+      <Words>
+        bark birch bloom blossom bow bramble branch bright caller caster cloud dancer dawn dream
+        dreamer drifter dusk dweller heart hunter leaf light mist nettle rain sapling seed seeker
+        seer shade shadow shrub singer song soul spell staff stave strider summer treader tree twig
+        twigs twiggy thorn vine walker wanderer whisper willow wind wing winter
+      </Words>
+      <Reject>
+        Birchbirch Bramblebramble Brightbright Dawndawn Dawntreader Duskdawn Dreamdream Nightnight
+        Dreamdreamer Mistmist Wanderwanderer Rainrain Shadowshadow Shadeshade Summersummer
+        Summerwinter Windwind Willowwillow Winterwinter Wildwild Wintersummer
+      </Reject>
+    </Concat>
   </Concat>
 </NameGen>

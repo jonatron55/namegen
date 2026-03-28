@@ -1,41 +1,49 @@
-mod concatter;
-mod markov;
-mod namegen;
+mod generator;
 
-use std::fs::File;
-use std::io::BufReader;
+use std::{
+    fs::File,
+    io::{BufReader, Read},
+    path::PathBuf,
+};
 
 use clap::Parser;
-use namegen::config::Config;
-use namegen::NameGen;
-use rand::thread_rng;
-use xml::{EventReader as XmlReader, ParserConfig as XmlParserConfig};
+use xml::ParserConfig as XmlParserConfig;
 
 #[derive(Parser)]
 struct Cli {
-    config: String,
+    config: Option<PathBuf>,
 
-    #[arg(long, short = 'n', default_value = "10")]
-    count: Option<usize>,
+    #[arg(long, short = 'n', default_value_t = 1)]
+    count: usize,
 }
 
 fn main() {
     let args = Cli::parse();
-    let file = File::open(&args.config).expect("Failed to open config file");
-    let reader: BufReader<File> = BufReader::new(file);
+    let reader: Box<dyn Read> = match args.config {
+        Some(path) => {
+            let file = File::open(&path).expect("Failed to open config file");
+            Box::new(file)
+        }
+        None => {
+            let default = include_bytes!("default.xml");
+            Box::new(&default[..])
+        }
+    };
+
+    let reader = BufReader::new(reader);
     let mut xml = XmlParserConfig::new()
         .trim_whitespace(true)
         .whitespace_to_characters(true)
         .ignore_comments(true)
         .create_reader(reader);
 
-    let config = Config::from_xml(&mut xml)
-        .expect("Failed to parse config file");
+    let gen = generator::from_xml(&mut xml).expect("Failed to parse config file");
 
-    let namegen = NameGen::from_config(config);
-
-    let mut rng= thread_rng();
-    for _ in 0..args.count.unwrap_or(10) {
-        println!("{}", namegen.generate(&mut rng));
+    let mut rand = rand::rng();
+    for _ in 0..args.count {
+        for name in gen.generate(&mut rand) {
+            print!("{name}");
+        }
+        println!();
     }
 }

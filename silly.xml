@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NameGen>
+  <Concat joiner=" ">
+    <Switch>
+      <Concat joiner=" ">
+        <Option probability="0.2">
+          <Words>
+            Adm. Baron Capt. Cmdr. Col. Commodore Count Dr. Earl Gen. Granddad Insp. Lord Lt. Mr.
+            Prince Prof. Sgt. Sir Sr. Uncle
+          </Words>
+        </Option>
+        <Repeat min="1" max="2">
+          <Concat joiner="">
+            <Option probability="0.1">
+              <Words>
+                Mc
+              </Words>
+            </Option>
+            <Words>
+              Albert Alexander Alvin Angus Antonio Apollo Apophis Archibald Ares Arnold Arthur Atlas
+              Augustus Avery Axel Azrael Barbarossa Bartholomew Baxter Beelzebub Benjamin Beowulf
+              Bernard Beverly Bill Billy Blake Bob Bobby Bogart Boris Bradbury Braxton Broderick
+              Brody Buckminster Buster Calvin Carlson Ceasar Charlie Chester Christopher Clarence
+              Clifford Clinton Clyde Colby Colin Columbus Conrad Cornelius Cosmo Cronus Dashiell
+              Davy Delbert Desmond Dexter Dimitri Dionysus Dominic Donald Donovan Douglas Drake
+              Dudley Duncan Dwayne Dwight Edgar Edison Edmund Edward Edwin Egbert Elmer Elon Emerson
+              Emory Enzo Ephraim Erasmus Excalibur Ezekiel Ezra Fabian Fairbanks Felix Ferdinand
+              Ferdinand Fergus Finn Finnegan Fitzgerald Fitzpatrick Fletcher Frankie Franklin Freddy
+              Frederick Fritz Furio Gabriel Geoffrey Gerald Gideon Gilbert Giles Godfrey Gordon
+              Graham Grant Gregory Gregory Grover Guillermo Gus Gustav Hades Harold Harrison Harry
+              Harvey Heathcliff Hector Helios Henry Hephaestus Herbert Herman Horace Horatio Horatio
+              Horus Howard Howard Howell Hubert Hudson Hugo Humphrey Huxley Hyperion Hypnos Ian
+              Icarus Ictor Ignatius Immanuel Irving Isaac Isaac Isaiah Isidore Ismael Ivan James
+              Jehovah Jenkins Jeremiah Jethro Jimbo Jimbob Jimmy Johnny Jonathan Joseph Joshua Judas
+              Jupiter Kerberos Lancelot Laszlo Lawrence Leonard Leopold Leroy Lincoln Lionel Lionel
+              Lorenzo Louis Louis Lucas Lucifer Lucius Luther Lysander Marcellus Marcus Martin
+              Maximus Maxwell Melvin Merlin Merrick Metatron Michael Milton Montgomery Mordecai
+              Morpheus Mortimer Moses Murphy Murray Napoleon Nathan Nathaniel Neptune Neville Newton
+              Nigel Norbert Norman Norris Norris Norton Octavius Oliver Orion Orlando Orson Orville
+              Oscar Osiris Oswald Otto Owen Ozzy Pan Pan Patrick Percival Percy Perry Perseus Peter
+              Philip Phineas Phoenix Pluto Pollywog Ponce Pontius Porter Poseidon Prescott Preston
+              Prometheus Ptolemy Quentin Quigley Quincy Quincy Quixote Randall Randolph Reginald
+              Roderick Roland Rudolph Rufus Rumpelstiltskin Rupert Rurik Satan Saturn Seamus
+              Sebastian Seymour Sheldon Sherlock Sigmund Sinclair Sisyphus Solomon Stanley Stanton
+              Sterling Stetson Sullivan Sylvester Thackeray Thaddeus Thanatos Theodore Thomas
+              Throckmorton Thurston Timothy Titus Tobias Toby Todd Tom Tommy Torquil Torrance
+              Trenton Tristan Troy Truman Tucker Turner Tycho Tyler Tyson Ulrich Ulysses Umberto
+              Upton Uriel Victor Vincent Virgil Vladimir Voltaire Vulcan Xander Xavier Xeno Xerxes
+              Xylon Zacharias Zachary Zane Zebedee Zephyr Zeus Zoltan
+            </Words>
+          </Concat>
+        </Repeat>
+        <Option probability="0.1">
+          <Words>
+            von
+          </Words>
+        </Option>
+      </Concat>
+      <Concat joiner=" ">
+        <Option probability="0.2">
+          <Words>
+            Adm. Baroness Capt. Cmdr. Aunt Col. Commodore Countess Dame Dr. Gen. Grandma Insp. Lt.
+            Mdme. Mrs. Ms. Princess Prof. Sgt. Sra. Srta.
+          </Words>
+        </Option>
+        <Repeat min="1" max="2">
+          <Words>
+            Agatha Amelia Angelica Annabelle Antonia Aphrodite Arabella Aria Ariadne Ariel Astrid
+            Atalanta Athena Audrey Augusta Bast Beatrice Bernadette Bernadine Bernice Beryl Beverly
+            Bianca Bonnie Bridget Bronwyn Bryony Buffy Calypso Caroline Cassandra Catherine Catrina
+            Cecilia Celeste Celia Charity Charlene Charlotte Clementine Cordelia Cynthia Daisy
+            Delilah Demeter Desdemona Diana Dolores Dominique Donna Dorothea Drusilla Elizabeth
+            Esmeralda Ethel Eurydice Evangeline Evelyn Felicity Fiona Flora Florence Francesca
+            Franny Freya Frida Genevieve Gertrude Ginny Giselle Gloria Grace Griselda Guinevere
+            Gwendolyn Harriet Hazel Helena Henrietta Hera Hesperia Hestia Hilda Hildegarde Holly
+            Hortense Hyacinth Hypatia Imogen Ingrid Irene Iris Isabella Isabella Isadora Isis Isolde
+            Ivana Ivy Janice Jardine Jasmine Jeanette Jemima Jessica Joan Jocelyn Josephine Joyce
+            Judith Julia Juliana Juliette Juno Laura Lavinia Leona Leonora Letitia Lilith Lillian
+            Lilliput Lizzie Lucinda Lucretia Lucy Ludmilla Luna Lyra Lysistrata Madeline Magdalen
+            Magnolia Matilda Maureen Maxine Mercedes Mercy Meredith Millicent Minerva Miranda
+            Morgana Myrtle Nemesis Nike Nyx Patricia Penelope Persephone Philippa Phoebe Phyllis
+            Polly Portia Priscilla Prudence Pulchritude Rachel Ramona Rebecca Regina Renata Rhea
+            Rhiannon Rhoda Rosalind Rosalyn Rosamund Rosemary Rowena Roxanne Sabrina Sabrina
+            Samantha Samantha Sarah Sarah Selene Selene Selene Serena Serena Shasta Shasta Sheridan
+            Sheridan Sibyl Sibyl Siren Sophia Stella Stephanie Styx Susan Susannah Sylvia Tabitha
+            Tammy Thalia Thalia Thelma Themis Theodora Theresa Tilly Titania Trixie Ursula Valentina
+            Vanessa Venus Verona Veronica Veronica Vesper Victoria Violet Violet Violetta Virginia
+            Vivian Vivienne Wanda Wendy Wilhelmina Willa Winifred Winona
+          </Words>
+        </Repeat>
+        <Option probability="0.1">
+          <Words>
+            van
+          </Words>
+        </Option>
+      </Concat>
+    </Switch>
+    <Concat joiner="">
+      <Option probability="0.1">
+        <Words>
+          Mc
+        </Words>
+      </Option>
+      <Words>
+        Aardvark Accident Aerodrome Albatross Alligator Antelope Antlion Armadillo Asparagus Avocado
+        Badger Banana Basilisk Beachball Beehive Beetle Bigears Bigfoot Bighead Bigmouth Bignose
+        Bigwig Billygoat Biscotti Bonobo Bowtie Brogues Broomstick Bulldozer Bumblebee Burrito
+        Cabbage Cactus Cannoli Cantaloupe Cappuccino Caribou Cashew Cassowary Chicken Chimpanzee
+        Chinchilla Chipmunk Chupacabra Clockwork Cockatoo Coffeepot Contraption Corgi Crocodile
+        Cummerbund Cupcake Cutlery Cyborg Dachshund Dandelion Dimetrodon Dingo Discotheque Dodad
+        Dodecahedron Doohickey Dromedary Elephant Emu Enchilada Espresso Excavator Facepalm
+        Faceplant Falafel Fedora Ferret Fettuccine Fishstick Flamingo Flibbertigibbet Flowerpot
+        Frankenstein Gadgetry Gazelle Gelato Gimbal Giraffe Gizmo Gnocchi Gobbledygook Goblin Golem
+        Gorilla Gremlin Grendel Gymnasium Habanero Haberdasher Haggis Hedgehog Helicopter Heliotrope
+        Hippogriff Hippopotamus Hobgoblin Houseplant Hummus Hyperboloid Hypercube Hypersphere
+        Inventor Jackalope Jalapeno Jellyfish Jetpack Kangaroo Koala Kraken Labradoodle Lasagna
+        Latte Lemur Linguine Littlebottom Littlefoot Littlenose Llama Longears Longnose Longtoes
+        Macaron Macaroni Macaw Macchiato Manifold Moorhen Motorcycle Muffin Mushroom Necktie
+        Nectarine Ninja Noodle Octopus Ogre Orangutan Ostrich Owlbear Pancake Pangolin Panini
+        Panorama Parabola Paradox Parasol Parrot Peacock Pillbug Pillow Pirate Pixie Planetarium
+        Platypus Plesiosaur Polyglot Polyhedron Polymath Polymorph Poodle Porcupine Porkpie Porpoise
+        Poutine Proudbottom Proudears Proudfoot Proudnose Psudonym Psudopod Psychopomp Pterodactyl
+        Pumpkin Pyjamas Python Quesadilla Quetzalcoatl Raccoon Racecar Racehorse Rattlesnake Ravioli
+        Raygun Rhinoceros Robot Roflcopter Salamander Samosa Sandwich Sasquatch Seahorse Shawarma
+        Spacecraft Spaghetti Spumoni Squid Squirrel Starfish Stegosaurus Submarine Sushi Suspenders
+        Synthesizer Tapir Teapot Teddybear Tempura Tentacle Tesseract Thingamabob Thingamajig
+        Tiramisu Toadstool Toaster Tofu Tortoise Toucan Triceratops Trousers Trumpet Tuba Tugboat
+        Turtle Tuxedo Tyrannosaurus Ukulele Umbrella Unicorn Unicycle Urchin Vampire Velociraptor
+        Vindaloo Vulture Waffle Walrus Warthog Waterfowl Watermelon Weasel Whatchamacallit
+        Wildebeest Wombat Xylophone Zebra Zeppelin Zombie
+      </Words>
+    </Concat>
+    <Option probability="0.3">
+      <Switch>
+        <Words>
+          DDS DVM Esq. II III IV Jr. MD OBE PhD Sr. XIII XVIII
+        </Words>
+        <Concat joiner=" ">
+          <Words>
+            the
+          </Words>
+          <Words>
+            Adorable Amazing Amusing Angry Anxious Apprehensive Arrogant Awesome Awkward Bad
+            Barbarian Beautiful Bewildered Bizarre Blithering Boastful Brash Brave Cantankerous
+            Clever Clumsy Comical Confused Cool Cranky Crazy Cryptic Curmudgeonly Dapper Devious
+            Diligent Discombobulated Disgruntled Dreadful Drunken Eccentric Elegant Elusive
+            Embarrassed Enigmatic Eternal Evil Exasperated Excellent Exceptional Excited
+            Extraordinary Fabulous Fantastic Fierce Flabbergasted Flammable Fluffy Foolish Fragrant
+            Frightened Funky Funny Furious Fuzzy Glorious Good Great Grim Grizzled Groovy Grouchy
+            Grumpy Handsome Hangry Happy Heavy Helpless Hideous Hilarious Holy Huggable Humble
+            Humorous Hyperbolic Iconic Imaginative Impish Important Impossible Impressive Improbable
+            Incomprehensible Inconceivable Incredible Incredulous Indignant Ingenious Inquisitive
+            Inscrutable Intrepid Ironic Irrational Irrelevant Irreverent Irritable Jealous Jolly
+            Jovial Joyous Jubilant Judicious Jumpy Kooky Lanky Lazy Legendary Lethargic Loopy
+            Loquacious Loud Lovely Ludicrous Lyrical Mad Magical Magnificent Maladroit Malodorous
+            Maniac Marvelous Mischievous Miserable Mistaken Modest Monstrous Monumental Morbid
+            Mysterious Nasty Naughty Nefarious Noble Noisy Nonchalant Nonplussed Nonsensical Normal
+            Nosy Noxious Nutty Obese Obnoxious Occupied Octagonal Odd Offensive Ogre Old Ominous
+            Oneiric Optimistic Ordinary Original Ornery Outrageous Outstanding Panicky Paranoid
+            Pathetic Peculiar Perfect Perky Perplexed Petty Phantasmagorical Philosophical Pompous
+            Preposterous Proud Psychotic Putrid Puzzling Quaint Qualified Quintessential Quixotic
+            Quizzical Rambunctious Rascally Reclusive Regal Relevant Reluctant Remarkable Repulsive
+            Resilient Respectable Restless Robust Rude Ruthless Sad Sarcastic Sassy Secretive
+            Serious Shady Shameless Shifty Shy Silly Sleepy Slippery Slothful Smelly Smug Snarky
+            Soggy Spiffy Spunky Stately Stubborn Sublime Superfluous Suspicious Swaggering Swanky
+            Swift Tactful Talented Tenacious Terrible Thankful Theological Thoughtful Thoughtless
+            Thundering Timid Trickster Troubling Ubiquitous Ugly Unacceptable Unbelievable Uncanny
+            Undead Unflappable Unforgettable Unimpressive Unpronounceable Unruly Unscrupulous
+            Unstoppable Upbeat Upset Upstanding Urgent Useful Vagrant Valiant Valid Valorous Vapid
+            Vegetarian Vehement Versatile Vexing Vibrant Vicious Victorious Vigilant Vindictive
+            Vivacious Vulgar Wacky Wandering Wanted Weird Wise Wistful Wizard Wonderful Wretched
+            Yawning Yummy Zany Zealous Zesty
+          </Words>
+        </Concat>
+      </Switch>
+    </Option>
+  </Concat>
+</NameGen>
