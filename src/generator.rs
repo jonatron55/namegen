@@ -7,7 +7,7 @@ mod switcher;
 
 pub use parser::from_xml;
 
-use rand::{seq::IndexedRandom, Rng};
+use rand::{Rng, seq::IndexedRandom};
 
 pub trait Generator {
     fn generate(&self, rng: &mut dyn Rng) -> Vec<String>;
@@ -15,9 +15,6 @@ pub trait Generator {
 
 impl Generator for Vec<String> {
     fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
-        self.choose(rand)
-            .map(|s| s.to_string())
-            .into_iter()
-            .collect()
+        self.choose(rand).map(|s| s.to_string()).into_iter().collect()
     }
 }

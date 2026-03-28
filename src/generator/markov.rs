@@ -25,9 +25,7 @@ impl MarkovGen {
             loop {
                 let next = tokens.next();
 
-                let freq = freqs
-                    .entry(token.map(str::to_string))
-                    .or_insert_with(HashMap::new);
+                let freq = freqs.entry(token.map(str::to_string)).or_insert_with(HashMap::new);
                 *freq.entry(next.map(str::to_string)).or_insert(0) += 1;
 
                 token = next;

@@ -33,11 +33,6 @@
         seer shade shadow shrub singer song soul spell staff stave strider summer treader tree twig
         twigs twiggy thorn vine walker wanderer whisper willow wind wing winter
       </Words>
-      <Reject>
-        Birchbirch Bramblebramble Brightbright Dawndawn Dawntreader Duskdawn Dreamdream Nightnight
-        Dreamdreamer Mistmist Wanderwanderer Rainrain Shadowshadow Shadeshade Summersummer
-        Summerwinter Windwind Willowwillow Winterwinter Wildwild Wintersummer
-      </Reject>
     </Concat>
   </Concat>
 </NameGen>

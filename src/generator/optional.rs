@@ -1,4 +1,3 @@
-
 use crate::generator::Generator;
 
 use rand::{Rng, RngExt};

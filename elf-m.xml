@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <NameGen>
   <Concat joiner=" ">
     <Markov>
@@ -26,8 +28,6 @@
       <Words>
         bark birch bloom blossom bow bramble branch bright caller caster cloud dancer dawn dream dreamer drifter dusk dweller heart hunter leaf light mist nettle rain, sapling seed seeker seer shade shadow shrub singer song soul spell staff stave strider summer treader tree twig twigs twiggy thorn vine walker wanderer whisper willow wind wing winter
       </Words>
-      <Reject>
-        Birchbirch Bramblebramble Brightbright Dawndawn Dawntreader Duskdawn Dreamdream Nightnight Dreamdreamer Mistmist Wanderwanderer Rainrain Shadowshadow Shadeshade Summersummer Summerwinter Windwind Willowwillow Winterwinter Wildwild Wintersummer
-      </Reject>
     </Concat>
-  </NameGen>
+  </Concat>
+</NameGen>
