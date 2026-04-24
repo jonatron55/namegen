@@ -2,7 +2,7 @@
 
 <NameGen>
   <Concat joiner=" ">
-    <Markov target_len="11" case_insensitive="true">
+    <Markov target_len="11">
       Argwog
       Arklesnarck
       Arzlewig

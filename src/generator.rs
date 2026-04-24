@@ -1,3 +1,4 @@
+mod capitalizer;
 mod concatter;
 mod markov;
 mod numberer;

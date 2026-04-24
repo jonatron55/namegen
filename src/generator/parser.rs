@@ -7,6 +7,7 @@ use xml::{
 
 use crate::generator::{
     Generator,
+    capitalizer::{Capitalizer, CapitalizerMode},
     concatter::Concatter,
     markov::{MarkovGen, Tokenizer},
     numberer::{NumberStyle, Numberer},
@@ -15,27 +16,29 @@ use crate::generator::{
     switcher::Switcher,
 };
 
-const ELEM_MARKOV: &str = "Markov";
+const ELEM_CAPITALIZE: &str = "Capitalize";
 const ELEM_CONCAT: &str = "Concat";
-const ELEM_SWITCH: &str = "Switch";
-const ELEM_WORDS: &str = "Words";
+const ELEM_MARKOV: &str = "Markov";
+const ELEM_NUMBER: &str = "Number";
 const ELEM_OPTION: &str = "Option";
 const ELEM_REPEAT: &str = "Repeat";
-const ELEM_NUMBER: &str = "Number";
+const ELEM_SWITCH: &str = "Switch";
+const ELEM_WORDS: &str = "Words";
 
 const ELEM_SPLIT_TOKENIZER: &str = "SplitTokenizer";
-const ELEM_SPLIT_LEN_TOKENIZER: &str = "SplitLenTokenizer";
+const ELEM_CHUNK_TOKENIZER: &str = "ChunkTokenizer";
 const ELEM_SSP_TOKENIZER: &str = "SspTokenizer";
 const ELEM_CLASS: &str = "Class";
 
-const VALID_PART_TYPES: [&str; 7] = [
-    ELEM_MARKOV,
+const VALID_PART_TYPES: [&str; 8] = [
+    ELEM_CAPITALIZE,
     ELEM_CONCAT,
-    ELEM_SWITCH,
-    ELEM_WORDS,
+    ELEM_MARKOV,
+    ELEM_NUMBER,
     ELEM_OPTION,
     ELEM_REPEAT,
-    ELEM_NUMBER,
+    ELEM_SWITCH,
+    ELEM_WORDS,
 ];
 
 pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn Generator>, Box<dyn Error>> {
@@ -82,7 +85,7 @@ fn inner_from_xml<R: Read>(
             let mut training_data = Vec::new();
             let mut reject = Vec::new();
             let mut reject_training = false;
-            let mut case_insensitive = false;
+            let mut uniform = false;
             let mut target_len = None;
             let mut tokenizer: Option<Tokenizer> = None;
 
@@ -98,11 +101,11 @@ fn inner_from_xml<R: Read>(
                         .value
                         .parse()
                         .map_err(|_| format!("Invalid reject_training value: {}", attr.value))?;
-                } else if attr.name.local_name == "case_insensitive" {
-                    case_insensitive = attr
+                } else if attr.name.local_name == "uniform" {
+                    uniform = attr
                         .value
                         .parse()
-                        .map_err(|_| format!("Invalid case_insensitive value: {}", attr.value))?;
+                        .map_err(|_| format!("Invalid uniform value: {}", attr.value))?;
                 } else {
                     return Err(format!("Unexpected attribute: {}", attr.name).into());
                 }
@@ -118,7 +121,7 @@ fn inner_from_xml<R: Read>(
                         ..
                     } => match name.local_name.as_str() {
                         "Reject" => parse_reject(reader, &mut reject)?,
-                        ELEM_SPLIT_TOKENIZER | ELEM_SPLIT_LEN_TOKENIZER | ELEM_SSP_TOKENIZER => {
+                        ELEM_SPLIT_TOKENIZER | ELEM_CHUNK_TOKENIZER | ELEM_SSP_TOKENIZER => {
                             if tokenizer.is_some() {
                                 return Err("Multiple tokenizer elements in <Markov>".into());
                             }
@@ -145,7 +148,7 @@ fn inner_from_xml<R: Read>(
                                 target_len,
                                 reject,
                                 &tokenizer,
-                                case_insensitive,
+                                uniform,
                             )));
                         } else {
                             return Err(format!("Unexpected end element: </{}>", name).into());
@@ -375,6 +378,55 @@ fn inner_from_xml<R: Read>(
             }
         }
 
+        XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_CAPITALIZE => {
+            let mut mode = CapitalizerMode::FirstUpper;
+            for attr in attributes {
+                match attr.name.local_name.as_str() {
+                    "mode" => {
+                        mode = match attr.value.as_str() {
+                            "AllLower" => CapitalizerMode::AllLower,
+                            "FirstUpper" => CapitalizerMode::FirstUpper,
+                            "AllUpper" => CapitalizerMode::AllUpper,
+                            other => return Err(format!("Invalid mode value: {other}").into()),
+                        };
+                    }
+                    other => {
+                        return Err(format!("Unexpected attribute on <{ELEM_CAPITALIZE}>: {other}").into());
+                    }
+                }
+            }
+
+            let mut subpart = None;
+
+            for attr in attributes {
+                return Err(format!("Unexpected attribute: {}", attr.name).into());
+            }
+
+            loop {
+                let event = reader.next()?;
+
+                match event {
+                    XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
+                        if subpart.is_some() {
+                            return Err("Capitalizer elements must contain exactly one generator".into());
+                        }
+
+                        subpart = Some(inner_from_xml(&event, reader)?);
+                    }
+                    XmlEvent::EndElement { name } if name.local_name == ELEM_CAPITALIZE => {
+                        return Ok(Box::new(Capitalizer::new(
+                            subpart
+                                .ok_or_else(|| "Capitalizer elements must contain exactly one generator".to_string())?,
+                            mode,
+                        )));
+                    }
+                    other => {
+                        return Err(format!("Unexpected event: {other:?}").into());
+                    }
+                }
+            }
+        }
+
         other => {
             return Err(format!("Unexpected event: {other:?}").into());
         }
@@ -422,7 +474,7 @@ fn parse_tokenizer<R: Read>(
             Ok(Tokenizer::SplitChars(chars))
         }
 
-        ELEM_SPLIT_LEN_TOKENIZER => {
+        ELEM_CHUNK_TOKENIZER => {
             let mut len: Option<usize> = None;
             for attr in attributes {
                 if attr.name.local_name == "len" {
@@ -436,7 +488,7 @@ fn parse_tokenizer<R: Read>(
                 return Err(format!("<{elem}> len must be greater than zero").into());
             }
             consume_empty_element(reader, elem)?;
-            Ok(Tokenizer::SplitLen(len))
+            Ok(Tokenizer::Chunker(len))
         }
 
         ELEM_SSP_TOKENIZER => {

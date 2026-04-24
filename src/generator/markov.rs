@@ -1,7 +1,6 @@
 mod tokenizer;
 
 use std::{
-    borrow::Cow,
     collections::HashMap,
     io::{Write, stdout},
 };
@@ -18,7 +17,6 @@ pub struct MarkovGen {
     freqs: HashMap<Option<String>, FreqMap>,
     target_len: Option<usize>,
     reject: Vec<String>,
-    case_insensitive: bool,
 }
 
 const MAX_ATTEMPTS: usize = 100;
@@ -29,15 +27,9 @@ impl MarkovGen {
         target_len: Option<usize>,
         reject: Vec<String>,
         tokenizer: &Tokenizer,
-        case_insensitive: bool,
+        uniform: bool,
     ) -> Self {
         let mut freqs = HashMap::new();
-
-        let data = if case_insensitive {
-            Cow::Owned(data.iter().map(|s| s.to_uppercase()).collect::<Vec<_>>())
-        } else {
-            Cow::Borrowed(data)
-        };
 
         for word in data.iter() {
             let mut tokens = tokenizer.tokenize(word).into_iter();
@@ -46,7 +38,11 @@ impl MarkovGen {
                 let next = tokens.next();
 
                 let freq = freqs.entry(token.map(str::to_string)).or_insert_with(HashMap::new);
-                *freq.entry(next.map(str::to_string)).or_insert(0) += 1;
+                if uniform {
+                    freq.entry(next.map(str::to_string)).or_insert(1);
+                } else {
+                    *freq.entry(next.map(str::to_string)).or_insert(0) += 1;
+                }
 
                 token = next;
 
@@ -60,27 +56,6 @@ impl MarkovGen {
             freqs,
             target_len,
             reject,
-            case_insensitive,
-        }
-    }
-
-    fn capitalize(&self, s: String) -> String {
-        // If we trained with case insensitivity, then everything was normalized
-        // to uppercase. Capitalize the generated name by uppercasing the first
-        // character and lowercasing the rest.
-        if self.case_insensitive {
-            let mut chars = s.chars();
-
-            if let Some(first) = chars.next() {
-                let mut s = String::with_capacity(s.len());
-                s.extend(first.to_uppercase());
-                s.extend(chars.flat_map(|ch| ch.to_lowercase()));
-                s
-            } else {
-                String::new()
-            }
-        } else {
-            s
         }
     }
 }
@@ -105,7 +80,7 @@ impl Generator for MarkovGen {
                     && name.len() >= target_len
                     && freq.contains_key(&None)
                 {
-                    return vec![self.capitalize(name)];
+                    return vec![name];
                 }
 
                 for (next, count) in freq.iter() {
@@ -121,7 +96,7 @@ impl Generator for MarkovGen {
                                 attempt += 1;
                                 break 'inner;
                             } else {
-                                return vec![self.capitalize(name)];
+                                return vec![name];
                             }
                         }
                     }

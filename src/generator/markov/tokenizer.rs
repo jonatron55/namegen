@@ -30,7 +30,7 @@ pub enum Tokenizer {
     ///
     /// The final token may be shorter if the word length is not a multiple of
     /// the specified length.
-    SplitLen(usize),
+    Chunker(usize),
 
     /// Sonority Sequencing Principle tokenizer.
     ///
@@ -65,7 +65,7 @@ impl Tokenizer {
     pub fn tokenize<'a>(&self, word: &'a str) -> Vec<&'a str> {
         match self {
             Self::SplitChars(c) => word.split(|ch| c.contains(&ch)).collect(),
-            Self::SplitLen(len) => {
+            Self::Chunker(len) => {
                 let len = *len;
                 let mut tokens = Vec::new();
                 let mut start = 0;

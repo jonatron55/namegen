@@ -2,178 +2,304 @@
 
 <NameGen>
   <Concat joiner=" ">
-    <!-- Adjectives -->
-    <Words>
-      Abandoned Aberrant Accidental Acidic Acoustic Acrobatic Additional Adept Adhesive Adorable
-      Adroit Adventurous Affectionate Agitated Agreeable Alienated Altruistic Ambitious Ambivalent
-      Amiable Amorphous Amusing Ancient Annoying Anomalous Antagonistic Antiquated Apprehensive
-      Appropriate Arbitrary Arcane Architectural Aristocratic Arrogant Artful Artificial Ascetic
-      Aspiring Assertive Assiduous Astonishing Astounding Astute Athletic Atrocious Audacious
-      Automatic Autumnal Avian Awesome Awkward Axiomatic Baffling Balanced Baleful Banished Baroque
-      Bashful Bellicose Belligerent Benevolent Benign Bionic Bizarre Boggling Bohemian Bombastic
-      Bonafide Bonkers Bouncy Brawny Brilliant Bumbling Bungling Camouflaged Cantankerous Capable
-      Capricious Carefree Careful Careless Categorical Cautious Celebrated Celestial Cerebral
-      Ceremonial Certified Cerulean Charming Cheerful Cheesy Chemical Chic Chilly Chivalrous
-      Chromatic Chronic Cinematic Circuitous Circumstantial Circumventive Civilized Clandestine
-      Clumsy Cluttered Coherent Coincidental Colinear Compendious Conical Conscientious Considerate
-      Consistent Constitutional Constructive Contemplative Contrarian Contrived Contumacious
-      Convivial Cooperative Coplanar Cornucopian Cosmic Courageous Crafty Cuddly Cunning Cybernetic
-      Cyberpunk Cyborg Daring Dashing Dazzling Deceitful Devious Dexterous Dieselpunk Diligent Dire
-      Discerning Discombobulated Discreet Disgruntled Disingenuous Disobedient Disorganized
-      Disorientated Disproportionate Disreputable Disruptive Distinguished Distorted Distributional
-      Divergent Dizzying Dogmatic Dreadful Dreary Dubious Durable Dynamic Dysfunctional Eccentric
-      Eclectic Elaborate Elated Electric Elegant Eloquent Elusive Enigmatic Enormous Exasperated
-      Excellent Exceptional Excitable Excited Exhilarating Existential Exquisite Extraordinary
-      Extraplanetary Extraterritorial Extravagant Exuberant Exultant Flamboyant Full-resolution
-      Galactic Gargantuan Gelatinous Generous Gigantic Giggle-inducing Giggly Gilded Glamorous
-      Gleaming Glorious Glowing Gluttonous Goblincore Gobsmacked Goofy Gorgeous Gracious Grandiose
-      Gregarious Gyroscopic Haphazard High-definition Hilarious Histrionic Hodgepodge Humble
-      Hysterical Immortal Imperfect Impermeable Inconceivable Inconsistent Incorrect Indecisive
-      Indefatigable Indefensible Indelible Indubitable Inexplicable Infinite Infinitesimal
-      Infuriating Ingenious Inimitable Innumerable Inquisitive Inscrutable Intelligent
-      Interdimensional Intergalactic Interplanetary Interstellar Inventive Irrelevant Irresistible
-      Irresolute Irresponsible Irretrievable Irreverent Jocular Labyrinthine Laser-powered Laudable
-      Logarithmic Luminous Lunar Luxurious Magnanimous Magnificent Magniloquent Malicious Managerial
-      Maniacal Manifold Martian Maximalist Mechanical Metric Minimalist Multifaceted Multitudinous
-      Multiversal Mysterious Mystifying Mythical Nefarious Nerdy Obscure Obsolete Obstinate Obtuse
-      Odious Odyssean Offbeat Offensive Official Ominous Omniscient Onerous Opaque Operatic
-      Operative Optimistic Opulent Otherworldly Paisley Paradoxical Peculiar Pendulous Pensive
-      Penultimate Perceptive Perfidious Perilous Perplexing Photonic Plasmatic Pneumatic Polygonal
-      Polymorphic Polyvalent Postmodernist Precarious Precocious Predatory Predictable Preposterous
-      Prestigious Prodigious Profound Prolific Prosaic Pseudonymous Pugnacious Qualified Quantum
-      Quarrelsome Queasy Querulous Quick Quintessential Quirky Quixotic Quizzical Quotidian
-      Rambunctious Raucous Reciprocal Reclusive Reconfigurable Reconstituted Reconstitutional
-      Reconstructive Rectangular Recyclable Redundant Reflective Regenerative Remarkable Remedial
-      Resilient Resourceful Reversible Rhapsodic Rhythmic Robotic Robust Rugged Sagacious Salacious
-      Salubrious Sanguine Sardonic Saturnine Scientific Scintillating Scrupulous Scurrilous
-      Sempervirent Sentimental Serendipitous Serene Serious Serpentine Shimmering Sincere Sleek
-      Slippery Smiling Smirking Snappy Snarky Snazzy Sneaky Snobbish Snugly Soaring Solar Sonorous
-      Sophisticated Spacey Spicy Spiffy Spooky Spunky Spurious Squiggly Squircular Squirrely Squishy
-      Stealthy Steampunk Strategic Studious Stupendous Subversive Supercharged Superficial
-      Suspicious Swanky Swashbuckling Sweltering Symbiotic Sympathetic Syncopated Synergistic
-      Synthetic Synthwave Systematic Tacky Tactical Tenacious Tenebrous Tenuous Time-travelling
-      Treacherous Tremendous Tumultuous Turbocharged Turbulent Twinkling Twisted Tyrannical
-      Ubiquitous Ultimate Ultrasonic Ultraviolet Umbral Unbelievable Unbounded Uncanny
-      Uncategorizable Unconventional Uncooperative Uncountable Undercover Underhanded Understated
-      Underwater Undisputed Unearthly Unfathomable Unflappable Unflinching Unforgettable Uniform
-      Unimaginable Universal Unknowable Unmeasurable Unorthodox Unparalleled Unprecedented
-      Unpredictable Unquantifiable Unreasonable Unstoppable Unthinkable Unusual Unwieldy Utopian
-      Venerable Versatile Vibrant Villainous Vivacious Volcanic Voracious Warped Weary Webbed Weird
-      Wiggly Wimpy Wobbly Woeful Wondrous Zany Zealous Zenlike Zigzag
-    </Words>
+    <Switch>
+      <Concat joiner=" ">
+        <Option probability="0.2">
+          <Words>
+            Adm. Baron Capt. Cmdr. Col. Commodore Count Dr. Earl Gen. Granddad Insp. Lord Lt. Mr.
+            Prince Prof. Sgt. Sir Sr. Uncle
+          </Words>
+        </Option>
+        <Repeat min="1" max="2">
+          <Concat joiner="">
+            <Option probability="0.1">
+              <Words>
+                Mc
+              </Words>
+            </Option>
+            <Markov>
+              Albert Alexander Alvin Angus Antonio Apollo Apophis Archibald Ares Arnold Arthur Atlas Augustus Avery Axel
+              Azrael
 
-    <Concat joiner="-">
-      <!-- Prefixes -->
-      <Option probability="0.2">
+              Barbarossa Bartholomew Baxter Beelzebub Benjamin Beowulf Bernard Beverly Bill Billy Blake Bob Bobby Bogart
+              Boris Bradbury Braxton Broderick Brody Buckminster Buster
+
+              Calvin Carlson Ceasar Charlie Chester Christopher Clarence Clifford Clinton Clyde Colby Colin Columbus
+              Conrad Cornelius Cosmo Cronus
+
+              Dashiell Davy Delbert Desmond Dexter Dimitri Dionysus Dominic Donald Donovan Douglas Drake Dudley Duncan
+              Dwayne Dwight
+
+              Edgar Edison Edmund Edward Edwin Egbert Elmer Elon Emerson Emory Enzo Ephraim Erasmus Excalibur Ezekiel
+              Ezra Fabian
+
+              Fairbanks Felix Ferdinand Ferdinand Fergus Finn Finnegan Fitzgerald Fitzpatrick Fletcher Frankie Franklin
+              Freddy Frederick Fritz Furio
+
+              Gabriel Geoffrey Gerald Gideon Gilbert Giles Godfrey Gordon Graham Grant Gregory Gregory Grover Guillermo
+              Gus Gustav
+
+              Hades Harold Harrison Harry Harvey Heathcliff Hector Helios Henry Hephaestus Herbert Herman Horace Horatio
+              Horatio Horus Howard Howard Howell Hubert Hudson Hugo Humphrey Huxley Hyperion Hypnos
+
+              Ian Icarus Ictor Ignatius Immanuel Irving Isaac Isaac Isaiah Isidore Ismael Ivan
+
+              James Jehovah Jenkins Jeremiah Jethro Jimbo Jimbob Jimmy Johnny Jonathan Joseph Joshua Judas Jupiter
+
+              Kerberos
+
+              Lancelot Laszlo Lawrence Leonard Leopold Leroy Lincoln Lionel Lionel Lorenzo Louis Louis Lucas Lucifer
+              Lucius Luther Lysander
+
+              Marcellus Marcus Martin Maximus Maxwell Melvin Merlin Merrick Metatron Michael Milton Montgomery Mordecai
+              Morpheus Mortimer Moses Murphy Murray
+
+              Napoleon Nathan Nathaniel Neptune Neville Newton Nigel Norbert Norman Norris Norris Norton
+
+              O'Brian O'Connor O'Donnell O'Farrell O'Flaherty O'Finnegan O'Flynn O'Gara O'Grady O'Hare O'Leary O'Malley
+              O'Mara O'Neill O'Rourke O'Sullivan O'Toole O' Oberon Octavius Oliver Orion Orlando Orson Orville Oscar
+              Osiris Oswald Otto Owen Ozzy
+
+              Pan Pan Patrick Percival Percy Perry Perseus Peter Philip Phineas Phoenix Pluto Pollywog Ponce Pontius
+              Porter Poseidon Prescott Preston Prometheus Ptolemy
+
+              Quentin Quigley Quincy Quincy Quixote
+
+              Randall Randolph Reginald Roderick Roland Rudolph Rufus Rumpelstiltskin Rupert Rurik
+
+              Satan Saturn Seamus Sebastian Seymour Sheldon Sherlock Sigmund Sinclair Sisyphus Solomon Stanley Stanton
+              Sterling Stetson Sullivan Sylvester
+
+              Thackeray Thaddeus Thanatos Theodore Thomas Throckmorton Thurston Timothy Titus Tobias Toby Todd Tom Tommy
+              Torquil Torrance Trenton Tristan Troy Truman Tucker Turner Tycho Tyler Tyson
+
+              Ulrich Ulysses Umberto Upton Uriel
+
+              Victor Vincent Virgil Vladimir Voltaire Vulcan
+
+              Walter Waldo Wallace Washington Watson Wayne Webster Wesley Wheeler Whittaker Wilburforce Wilfred William
+              Willoughby Wilson Winston Wolfgang Woodrow Wyatt
+
+              Xander Xavier Xeno Xerxes Xylon Zacharias Zachary Zane Zebedee Zephyr Zeus Zoltan
+            </Markov>
+          </Concat>
+        </Repeat>
+        <Option probability="0.1">
+          <Words>
+            von
+          </Words>
+        </Option>
+      </Concat>
+      <Concat joiner=" ">
+        <Option probability="0.2">
+          <Words>
+            Adm. Baroness Capt. Cmdr. Aunt Col. Commodore Countess Dame Dr. Gen. Grandma Insp. Lt.
+            Mdme. Mrs. Ms. Princess Prof. Sgt. Sra. Srta.
+          </Words>
+        </Option>
+        <Repeat min="1" max="2">
+          <Markov>
+            Agatha Agnes Amelia Angelica Annabelle Antonia Aphrodite Arabella Aria Ariadne Ariel Astrid Atalanta Athena
+            Audrey Augusta
+
+            Bast Barbara Beatrice Bernadette Bernadine Bernice Beryl Beverly Bianca Bonita Bonnie Bridget Bronwyn Brooke
+            Bryony Buffy Buttercup
+
+            Calypso Caroline Cassandra Catherine Catrina Cecilia Celeste Celia Charity Charlene Charlotte Chastity
+            Chelsea Cheryl Chloe Christabel Christina Christine Cindy Cinderella Claire Clarissa Claudia Clementine
+            Cordelia Cornelia Courtney Crystal Cynthia
+
+            Daisy Danielle Daphne Deborah Debbie Deirdre Delilah Demeter Desdemona Diana Dolores Dominique Donna
+            Dorothea Drusilla
+
+            Edith Edna Eleanor Eastasia  Eileen Elena Elaine Elizabeth Esmeralda Ethel Emilia Emily Emma Enid Enya Erica
+            Esme Estelle Esther Ethel Eudora Eugenia Euphemia Eurydice Evangeline Evelyn
+
+            Faith Fallon Felicia Faith Fallon Felicia Felicity Fiona Flora Florence Francesca Franny Freya Frida
+
+            Gabriella Galadriel Galatea Gale Genevieve Gertrude Ginny Giselle Gloria Grace Griselda Guinevere Gwendolyn
+
+            Harriet Hazel Helena Henrietta Hera Hesperia Hestia Hilda Hildegarde Holly Hortense Hyacinth Hypatia
+
+            Imogen Ingrid Irene Iris Isabella Isabella Isadora Isis Isolde Ivana Ivy
+
+            Janice Jardine Jasmine Jeanette Jemima Jessica Joan Jocelyn Josephine Joyce Judith Julia Juliana Juliette
+            Juno
+
+            Laura Lavinia Leona Leonora Letitia Lilith Lillian Lilliput Lizzie Lucinda Lucretia Lucy Ludmilla Luna Lyra
+            Lysistrata
+
+            Madeline Magdalen Magnolia Matilda Maureen Maxine Mercedes Mercy Meredith Millicent Minerva Miranda Morgana
+            Myrtle
+
+            Nancy Naomi Natalie Natasha Nell Nemesis Nicole Nike  Nicolette Nina Noel Nora Norah Nyx
+
+            Pamela Pandora Pansy Parvati Pascale Patricia Penelope Persephone Philippa Phoebe Phyllis Polly Portia
+            Priscilla Prudence Pulchritude
+
+            Rachel Ramona Rebecca Regina Renata Rhea Rhiannon Rhoda Rosalind Rosalyn Rosamund Rosemary Rowena Roxanne
+
+            Sabrina Sabrina Samantha Samantha Sarah Sarah Selene Selene Selene Serena Serena Shasta Shasta Sheridan
+            Sheridan Sibyl Sibyl Siren Sophia Stella Stephanie Styx Susan Susannah Sylvia
+
+            Tabitha Tammy Thalia Thalia Thelma Themis Theodora Theresa Tilly Titania Trixie
+
+            Ursula
+
+            Valentina Vanessa Venus Verona Veronica Veronica Vesper Victoria Violet Violet Violetta Virginia Vivian
+            Vivienne
+
+            Wanda Wendy Wilhelmina Willa Winifred Winona
+          </Markov>
+        </Repeat>
+        <Option probability="0.1">
+          <Words>
+            van
+          </Words>
+        </Option>
+      </Concat>
+    </Switch>
+    <Concat joiner="">
+      <Option probability="0.1">
         <Words>
-          aero astro auto bio chrono cyber electro geo giga hemi hexa hydro hyper hypno hypo infra
-          kilo laser macro mega meta micro milli mini multi nano neo octo omni penta radio retro
-          semi space sub super techno tera turbo ultra
+          Mc
         </Words>
       </Option>
+      <Markov>
+        Aardvark Accident Aerodrome Albatross Alligator Antelope Antlion Armadillo Asparagus Avocado
 
-      <!-- Nouns -->
-      <Words>
-        aardvark aerodrome albatross alchemist alligator anaconda anemone antelope antlion ape
-        apparatus armadillo armpit arquebus artificer ascot asparagus astronaut automaton automobile
-        aviator avocado banana basilisk bazinga beachball beanstalk beehive beetle beret berry
-        bigfoot billygoat biologist biscotti blimp bling blorp blubber blunderbuss bobsled bonobo
-        boondoggle bork borscht botanist bowtie brogues broomstick bubblewrap bulldozer bumblebee
-        burrito cabbage cactus cannoli cantaloupe cappuccino caribou cartoon cashew cassowary
-        charlatan chemist chicken chimpanzee chinchilla chipmunk chupacabra circus clockwork clown
-        cockatoo coconut coffeepot compendium confetti contraption corgi cornflake cornucopia
-        crocodile croissant cucumber cuddlebug cummerbund cupcake curlycue curmudgeon cutlery
-        dachshund dandelion dimetrodon dingo discotheque dodad dodecahedron doodle doodlebug
-        doohickey doughnut dromedary elephant emu enchilada encyclopedia entomologist espresso
-        etymologist excavator eyeball eyepatch facepalm faceplant falafel fedora ferret fettuccine
-        fishstick flamingo flibbertigibbet flowerpot foobar frankenstein gadgetry gazelle gelato
-        gerbil gimbal giraffe gizmo gnocchi gobbledygook goblin golem gorilla gremlin grendel
-        gymnasium habanero haberdasher haggis hamburger hedgehog helicopter heliotrope herpetologist
-        hippogriff hippopotamus hobgoblin horologist horticulturist hotdog houseplant hummus
-        hyperboloid hypercube hypersphere ibex ibis ichthyologist igloo ignoramus iguana impala
-        infographic infomercial insect insomniac jackalope jalapeno jellyfish jetpack kaiju kangaroo
-        knitwear koala kraken krampus kumquat labradoodle labyrinth lasagna latte lemming lemur
-        linguine llama locomotive lollipop lollygag loudspeaker luffa lugnut lumberjack lycanthrope
-        macaron macaroni macaw macchiato magician malarkey mallard mammoth manatee marshmallow
-        martian marzelvane mastodon mathematician meatball megaphone melon menagerie merlot mongoose
-        monocle moonbeam moorhen moped motorcycle muffin muffler mushroom nebula necktie nectarine
-        nematode ninja noodle nunchuck octopus ogre orangutan ornithologist ostrich owlbear
-        paleontologist pancake pangolin panini panorama parabola paradox parasol parrot peacock
-        pelican pharmacologist philosopher physicist pillbug pillow pirate pixie planetarium
-        platypus plesiosaur pogo polyglot polyhedron polymath polymorph pomeranian poodle popcorn
-        popsicle porcupine porkpie porpoise poutine pretzel propellor psychologist pterodactyl
-        pumpkin pyjamas python quasar qubit quesadilla quetzalcoatl quiche quinoa rabbit raccoon
-        racecar racehorse ramen raptor rattlesnake ravioli raygun reindeer rhinoceros robot
-        roflcopter salamander samosa sandwich sasquatch scientist sculpture seahorse shawarma
-        skeleton slop sociologist spacecraft spaghetti spam spatula sphinx spork sprinkles spud
-        spumoni spurtle squabble squeegee squelch squid squirrel starfish stegosaurus strawberry
-        submarine succotash sushi suspenders tandoori tapir teapot teddybear tempura tentacle
-        tesseract theologian thingamabob thingamajig tiramisu toadstool toaster tofu toothbrush
-        toothpaste toothpick tortoise toucan triceratops trousers trumpet tuba tugboat turtle tuxedo
-        tyrannosaurus ukulele umbrella unicorn unicycle urchin vampire velociraptor vindaloo volcano
-        vulcan vulture waffle walrus warthog waterfowl watermelon weasel whatchamacallit whodunit
-        wildebeest wingnut wizard wombat wookie xylophone yodeler yoyo yurt zebra zeppelin zither
-        zombie zoologist
-      </Words>
+        Badger Banana Basilisk Beachball Beehive Beetle Bigears Bigfoot Bighead Bigmouth Bignose Bigwig Billygoat
+        Biscotti Bonobo Bowtie Brogues Broomstick Bulldozer Bumblebee Burrito
+
+        Cabbage Cactus Cannoli Cantaloupe Cappuccino Caribou Cashew Cassowary Chicken Chimpanzee Chinchilla Chipmunk
+        Chupacabra Clockwork Cockatoo Coffeepot Contraption Corgi Crocodile Cummerbund Cupcake Cutlery Cyborg
+
+        Dachshund Dandelion Dimetrodon Dingo Discotheque Dodad Dodecahedron Doohickey Dromedary
+
+        Elephant Emu Enchilada Espresso Excavator
+        Facepalm Faceplant Falafel Fedora Ferret Fettuccine Fishstick Flamingo Flibbertigibbet Flowerpot Frankenstein
+
+        Gadgetry Gazelle Gelato Gimbal Giraffe Gizmo Gnocchi Gobbledygook Goblin Golem Gorilla Gremlin Grendel Gymnasium
+
+        Habanero Haberdasher Haggis Hedgehog Helicopter Heliotrope Hippogriff Hippopotamus Hobgoblin Houseplant Hummus
+        Hyperboloid Hypercube Hypersphere
+
+        Inventor
+
+        Jackalope Jalapeno Jellyfish Jetpack
+
+        Kangaroo Koala Kraken
+
+        Labradoodle Lasagna Latte Lemur Linguine Littlebottom Littlefoot Littlenose Llama Longears Longnose Longtoes
+
+        Macaron Macaroni Macaw Macchiato Manifold Moorhen Motorcycle Muffin Mushroom
+
+        Necktie Nectarine Ninja Noodle
+
+        Octopus Ogre Orangutan Ostrich Owlbear
+
+        Pancake Pangolin Panini Panorama Parabola Paradox Parasol Parrot Peacock Pillbug Pillow Pirate Pixie Planetarium
+        Platypus Plesiosaur Polyglot Polyhedron Polymath Polymorph Poodle Porcupine Porkpie Porpoise Poutine Proudbottom
+        Proudears Proudfoot Proudnose Psudonym Psudopod Psychopomp Pterodactyl Pumpkin Pyjamas Python
+
+        Quesadilla Quetzalcoatl
+
+        Raccoon Racecar Racehorse Rattlesnake Ravioli Raygun Rhinoceros Robot Roflcopter
+
+        Salamander Samosa Sandwich Sasquatch Seahorse Shawarma Spacecraft Spaghetti Spumoni Squid Squirrel Starfish
+        Stegosaurus Submarine Sushi Suspenders Synthesizer
+
+        Tapir Teapot Teddybear Tempura Tentacle Tesseract Thingamabob Thingamajig Tiramisu Toadstool Toaster Tofu
+        Tortoise Toucan Triceratops Trousers Trumpet Tuba Tugboat Turtle Tuxedo Tyrannosaurus
+
+        Ukulele Umbrella Unicorn Unicycle Urchin
+
+        Vampire Velociraptor Vindaloo Vulture
+
+        Waffle Walrus Warthog Waterfowl Watermelon Weasel Whatchamacallit Wildebeest Wombat
+
+        Xylophone
+
+        Zebra Zeppelin Zombie
+      </Markov>
     </Concat>
+    <Option probability="0.2">
+      <Switch>
+        <Switch>
+          <Words>
+            DDS DVM Esq. Jr. MD OBE PhD Sr.
+          </Words>
+          <Number min="1" max="29" style="Roman" />
+        </Switch>
+        <Concat joiner=" ">
+          <Words>
+            the
+          </Words>
+          <Words>
+            Adorable Amazing Amusing Angry Anxious Apprehensive Arrogant Awesome Awkward
 
-    <Option probability="0.35">
-      <!-- Agent nouns -->
-      <Words>
-        abbreviator accelerator accumulator adapter adhesivator adjudicator aerator affector
-        aggregator agitator aligner alleviator allocator ameliorator amortizer amplifier analog
-        analyzer anesthetizer annihilator annotator antagonizer antenna anticipator appender
-        applicator appreciator apprehensor appropriator arbitrator arbitrizer array articulator
-        assembler assessor attenuator attractor attributor augmenter automatizer autonomizer avenger
-        balancer bamboozler banisher barometer barricader benefactor berserker bestower bewilderer
-        blaster blender booster bootstrapper brainstormer briber broker builder bureaucrat
-        calamitizor calculator calibrator camouflager campaigner canister capacitator captivator
-        caricaturist carrier cartographer cataloguer catalyzer categorizer celebrator centralizer
-        certifier characterizer chauffeur choreographer chronometer circuit circumnavigator collator
-        collective combobulator compressor computer concatinator conductor confabulator consoler
-        constructor converter coordinator coprocessor counter deactivator debugger decelerator
-        decider decompressor deconstructor decorator dedicator deducer deduplicator defender
-        defibrillator deflator deflector deprecator destabilizer destructor desynchronizer
-        detachinator detector developer disambiguator disassembler discombobulator disconnector
-        disentangler disintegrator disorientor disruptor disseminator dissertation distiller
-        diverter duplicator effector ejector emitter emptier emulator encabulator encapsulator
-        encoder energizer enhancer enthusiast enumerator envisioner evaluator excavator executor
-        explainer exterminator extinguisher extractor extrapolator fabricator facilitator fascinator
-        fastener feasibilizer feeder fermenter filter finagler fixer flabbergaster flipper flummoxer
-        flusterer fluxer flywheel forecaster foreteller forgiver formulator fortifier fractalizer
-        fragmentizer frobnicator frustrator fulminator fumigator functionalizer galvanizer generator
-        gravitator grinder grockulator gyrator harmonizer harvester humungifier hyperbolizer
-        hypnotizer illuminator imaginator implementer impresser improver improviser incinerator
-        infiltrator informator inhibitor injector innovator insectoid installer instigator
-        integrator intensifier interceptor interdictor interdigitator interfacer interpolator
-        interrogator interrupter intriguinator inventor investigator invigorator ionizer irradiator
-        irritator isolator jammer joiner juggler juicer jumbler justifier kineticizer laminator
-        launderer legislator leveller liberator lobotomizer locomotivator manipulator maximizer
-        memorizer minimizer mobilizer modulator multiplicator multiplier mutilator mysterizer
-        navigator nefarizer negator neglecter negotiator nemesis networker neuralizer neutralizer
-        normalizer notifier nullifier obfuscator obliterator obscurator observer obviator occultator
-        officiator ominator optimizer orchestrator oscillator outputter outrigger outsourcer
-        overachiever overcharger overclocker overloader overlord overseer overtaker pacifier
-        palletizer parallelizer paralyzer parametrizer parenthesizer participator partitioner
-        percolator perforator perpetrator perplexifier persuader perturbator petrolizer
-        philosophizer photocopier pillager qualifier quantifier quantizer quantumizer quarantiner
-        quencher quotientizer rationalizer recalibrator reciprocator recognizer reconfigurator
-        reconstitutor reconstructor refrigerator regenerator rehabilitator rejuvenator relativizer
-        remedializer remunerator renovator reorganizer replenisher replicator repressor reprogrammer
-        reptilizer reticulator reunifier revelator revolutionizer rhapsodizer rigorizer ruminator
-        sabotager saturator scavenger scrutinizer scurryfunger sequesterizer simplifier simulator
-        siphonator slotter smuggler sniper socializer solicitor speculator spiffifier spiralizer
-        splicer stabilizer stapler stunner subjugator substantiator subverter summarizer suppressor
-        surfacizer surrealizer syllablizer sympathizer synchronizer synthesizer systematizer
-        tabulator tactician terminator testifier theorizer thermostatizer thesaurizer throttler
-        thunderizer transformator transformer transmogrifier transmutator transpiler transportator
-        transporter trapper trivializer troublemaker unifier universalizer unjumbler unjustifier
-        unleasher unlimiter unloader unravelizer unscrambler unspecifier unspiffifier unspiralizer
-        unstabilizer unstucker unsubjugator unsubstantiator unverifier upgrader utilizer vacillator
-        validator vandalizer vanquisher vaporizer vectorizer verifier versifier verticizer vocalizer
-        volatilizer vortexizer vulcanizer waffleizer waterer weakener weaponizer wonderizer worker
-        wrangler wrongdoer wrongifier wunderkind
-      </Words>
+            Bad Barbarian Beautiful Bewildered Bizarre Blithering Boastful Brash Brave
+
+            Cantankerous Clever Clumsy Comical Confused Cool Cranky Crazy Cryptic Curmudgeonly
+
+            Dapper Devious Diligent Discombobulated Disgruntled Dreadful Drunken
+
+            Eccentric Elegant Elusive Embarrassed Enigmatic Eternal Evil Exasperated Excellent Exceptional Excited
+            Extraordinary
+
+            Fabulous Fantastic Fierce Flabbergasted Flammable Fluffy Foolish Fragrant Frightened Funky Funny Furious
+            Fuzzy
+
+            Glorious Good Great Grim Grizzled Groovy Grouchy Grumpy
+
+            Handsome Hangry Happy Heavy Helpless Hideous Hilarious Holy Huggable Humble Humorous Hyperbolic
+
+            Iconic Imaginative Impish Important Impossible Impressive Improbable Incomprehensible Inconceivable
+            Incredible Incredulous Indignant Ingenious Inquisitive Inscrutable Intrepid Ironic Irrational Irrelevant
+            Irreverent Irritable
+
+            Jealous Jolly Jovial Joyous Jubilant Judicious Jumpy
+
+            Kooky
+
+            Lanky Lazy Legendary Lethargic Loopy Loquacious Loud Lovely Ludicrous Lyrical
+
+            Mad Magical Magnificent Maladroit Malodorous Maniac Marvelous Mischievous Miserable Mistaken Modest
+            Monstrous Monumental Morbid Mysterious
+
+            Nasty Naughty Nefarious Noble Noisy Nonchalant Nonplussed Nonsensical Normal Nosy Noxious Nutty
+
+            Obese Obnoxious Occupied Octagonal Odd Offensive Ogre Old Ominous Oneiric Optimistic Ordinary Original
+            Ornery Outrageous Outstanding
+
+            Panicky Paranoid Pathetic Peculiar Perfect Perky Perplexed Petty Phantasmagorical Philosophical Pompous
+            Preposterous Proud Psychotic Putrid Puzzling
+
+            Quaint Qualified Quintessential Quixotic Quizzical
+
+            Rambunctious Rascally Reclusive Regal Relevant Reluctant Remarkable Repulsive Resilient Respectable Restless
+            Robust Rude Ruthless
+
+            Sad Sarcastic Sassy Secretive Serious Shady Shameless Shifty Shy Silly Sleepy Slippery Slothful Smelly Smug
+            Snarky Soggy Spiffy Spunky Stately Stubborn Sublime Superfluous Suspicious Swaggering Swanky Swift
+
+            Tactful Talented Tenacious Terrible Thankful Theological Thoughtful Thoughtless Thundering Timid Trickster
+            Troubling
+
+            Ubiquitous Ugly Unacceptable Unbelievable Uncanny Undead Unflappable Unforgettable Unimpressive
+            Unpronounceable Unruly Unscrupulous Unstoppable Upbeat Upset Upstanding Urgent Useful
+
+            Vagrant Valiant Valid Valorous Vapid Vegetarian Vehement Versatile Vexing Vibrant Vicious Victorious
+            Vigilant Vindictive Vivacious Vulgar
+
+            Wacky Wandering Wanted Weird Wise Wistful Wizard Wonderful Wretched
+
+            Yawning Yummy
+
+            Zany Zealous Zesty
+          </Words>
+        </Concat>
+      </Switch>
     </Option>
   </Concat>
 </NameGen>
