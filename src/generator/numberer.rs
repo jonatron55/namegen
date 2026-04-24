@@ -39,6 +39,14 @@ impl Generator for Numberer {
         let num = rand.random_range(self.min..=self.max);
         vec![self.style.format(num)]
     }
+
+    fn print_analysis(&self, indent: usize) {
+        let indent_str = " ".repeat(indent);
+        println!(
+            "{}Number generator: range {}-{}, style {:?}",
+            indent_str, self.min, self.max, self.style
+        );
+    }
 }
 
 const ROMAN_VALUES: [(usize, &str); 13] = [

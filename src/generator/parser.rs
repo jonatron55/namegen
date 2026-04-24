@@ -1,11 +1,14 @@
 use std::{error::Error, io::Read};
 
-use xml::reader::{EventReader, XmlEvent};
+use xml::{
+    attribute::OwnedAttribute,
+    reader::{EventReader, XmlEvent},
+};
 
 use crate::generator::{
     Generator,
     concatter::Concatter,
-    markov::MarkovGen,
+    markov::{MarkovGen, Tokenizer},
     numberer::{NumberStyle, Numberer},
     optional::Optional,
     repeater::Repeater,
@@ -19,6 +22,11 @@ const ELEM_WORDS: &str = "Words";
 const ELEM_OPTION: &str = "Option";
 const ELEM_REPEAT: &str = "Repeat";
 const ELEM_NUMBER: &str = "Number";
+
+const ELEM_SPLIT_TOKENIZER: &str = "SplitTokenizer";
+const ELEM_SPLIT_LEN_TOKENIZER: &str = "SplitLenTokenizer";
+const ELEM_SSP_TOKENIZER: &str = "SspTokenizer";
+const ELEM_CLASS: &str = "Class";
 
 const VALID_PART_TYPES: [&str; 7] = [
     ELEM_MARKOV,
@@ -73,7 +81,10 @@ fn inner_from_xml<R: Read>(
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_MARKOV => {
             let mut training_data = Vec::new();
             let mut reject = Vec::new();
+            let mut reject_training = false;
+            let mut case_insensitive = false;
             let mut target_len = None;
+            let mut tokenizer: Option<Tokenizer> = None;
 
             for attr in attributes {
                 if attr.name.local_name == "target_len" {
@@ -82,6 +93,16 @@ fn inner_from_xml<R: Read>(
                             .parse()
                             .map_err(|_| format!("Invalid target_len value: {}", attr.value))?,
                     );
+                } else if attr.name.local_name == "reject_training" {
+                    reject_training = attr
+                        .value
+                        .parse()
+                        .map_err(|_| format!("Invalid reject_training value: {}", attr.value))?;
+                } else if attr.name.local_name == "case_insensitive" {
+                    case_insensitive = attr
+                        .value
+                        .parse()
+                        .map_err(|_| format!("Invalid case_insensitive value: {}", attr.value))?;
                 } else {
                     return Err(format!("Unexpected attribute: {}", attr.name).into());
                 }
@@ -91,8 +112,18 @@ fn inner_from_xml<R: Read>(
                 let event = reader.next()?;
 
                 match event {
-                    XmlEvent::StartElement { ref name, .. } => match name.local_name.as_str() {
+                    XmlEvent::StartElement {
+                        ref name,
+                        ref attributes,
+                        ..
+                    } => match name.local_name.as_str() {
                         "Reject" => parse_reject(reader, &mut reject)?,
+                        ELEM_SPLIT_TOKENIZER | ELEM_SPLIT_LEN_TOKENIZER | ELEM_SSP_TOKENIZER => {
+                            if tokenizer.is_some() {
+                                return Err("Multiple tokenizer elements in <Markov>".into());
+                            }
+                            tokenizer = Some(parse_tokenizer(reader, &name.local_name, attributes)?);
+                        }
                         _ => {
                             return Err(format!("Unexpected element: <{name}>").into());
                         }
@@ -102,7 +133,20 @@ fn inner_from_xml<R: Read>(
                     }
                     XmlEvent::EndElement { name } => {
                         if name.local_name == ELEM_MARKOV {
-                            return Ok(Box::new(MarkovGen::train(&training_data, target_len, reject)));
+                            let tokenizer = tokenizer.unwrap_or_default();
+
+                            if reject_training {
+                                reject.extend_from_slice(&training_data);
+                                reject.dedup();
+                            }
+
+                            return Ok(Box::new(MarkovGen::train(
+                                &training_data,
+                                target_len,
+                                reject,
+                                &tokenizer,
+                                case_insensitive,
+                            )));
                         } else {
                             return Err(format!("Unexpected end element: </{}>", name).into());
                         }
@@ -354,4 +398,109 @@ fn parse_reject<R: Read>(reader: &mut EventReader<R>, reject: &mut Vec<String>) 
     }
 
     Ok(())
+}
+
+fn parse_tokenizer<R: Read>(
+    reader: &mut EventReader<R>,
+    elem: &str,
+    attributes: &[OwnedAttribute],
+) -> Result<Tokenizer, Box<dyn Error>> {
+    match elem {
+        ELEM_SPLIT_TOKENIZER => {
+            let mut chars: Vec<char> = Vec::new();
+            for attr in attributes {
+                if attr.name.local_name == "split_chars" {
+                    chars = attr.value.chars().collect();
+                } else {
+                    return Err(format!("Unexpected attribute on <{elem}>: {}", attr.name).into());
+                }
+            }
+            if chars.is_empty() {
+                chars.push('/');
+            }
+            consume_empty_element(reader, elem)?;
+            Ok(Tokenizer::SplitChars(chars))
+        }
+
+        ELEM_SPLIT_LEN_TOKENIZER => {
+            let mut len: Option<usize> = None;
+            for attr in attributes {
+                if attr.name.local_name == "len" {
+                    len = Some(attr.value.parse().map_err(|_| format!("Invalid len value: {}", attr.value))?);
+                } else {
+                    return Err(format!("Unexpected attribute on <{elem}>: {}", attr.name).into());
+                }
+            }
+            let len = len.ok_or_else(|| format!("<{elem}> requires a len attribute"))?;
+            if len == 0 {
+                return Err(format!("<{elem}> len must be greater than zero").into());
+            }
+            consume_empty_element(reader, elem)?;
+            Ok(Tokenizer::SplitLen(len))
+        }
+
+        ELEM_SSP_TOKENIZER => {
+            for attr in attributes {
+                return Err(format!("Unexpected attribute on <{elem}>: {}", attr.name).into());
+            }
+            let mut tokenizer = Tokenizer::default_ssp();
+            let Tokenizer::Ssp { ref mut ranks } = tokenizer else {
+                unreachable!("default_ssp must return Tokenizer::Ssp");
+            };
+
+            loop {
+                match reader.next()? {
+                    XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_CLASS => {
+                        let mut rank: Option<u8> = None;
+                        for attr in &attributes {
+                            if attr.name.local_name == "rank" {
+                                rank = Some(
+                                    attr.value.parse().map_err(|_| format!("Invalid rank value: {}", attr.value))?,
+                                );
+                            } else {
+                                return Err(format!("Unexpected attribute on <{ELEM_CLASS}>: {}", attr.name).into());
+                            }
+                        }
+                        let rank = rank.ok_or_else(|| format!("<{ELEM_CLASS}> requires a rank attribute"))?;
+
+                        loop {
+                            match reader.next()? {
+                                XmlEvent::Characters(data) => {
+                                    for c in data.chars().filter(|c| !c.is_whitespace()) {
+                                        ranks.insert(c, rank);
+                                    }
+                                }
+                                XmlEvent::Whitespace(_) => {}
+                                XmlEvent::EndElement { name } if name.local_name == ELEM_CLASS => break,
+                                other => {
+                                    return Err(format!("Unexpected event inside <{ELEM_CLASS}>: {other:?}").into());
+                                }
+                            }
+                        }
+                    }
+                    XmlEvent::Whitespace(_) => {}
+                    XmlEvent::EndElement { name } if name.local_name == elem => break,
+                    other => {
+                        return Err(format!("Unexpected event inside <{elem}>: {other:?}").into());
+                    }
+                }
+            }
+
+            Ok(tokenizer)
+        }
+
+        _ => Err(format!("Unknown tokenizer element: <{elem}>").into()),
+    }
+}
+
+fn consume_empty_element<R: Read>(reader: &mut EventReader<R>, elem: &str) -> Result<(), Box<dyn Error>> {
+    loop {
+        match reader.next()? {
+            XmlEvent::Whitespace(_) => {}
+            XmlEvent::EndElement { name } if name.local_name == elem => return Ok(()),
+            other => {
+                return Err(format!("<{elem}> must be empty; unexpected event: {other:?}").into());
+            }
+        }
+    }
 }

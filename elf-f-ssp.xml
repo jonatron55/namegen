@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NameGen>
+  <Concat joiner=" ">
+    <Markov>
+      <SspTokenizer>
+        <Class rank="5">AEIOUYaeiouy</Class>
+        <Class rank="4">Ww</Class>
+        <Class rank="3">LlRrHh</Class>
+        <Class rank="2">MNmnFSfsVZvz</Class>
+        <Class rank="1">BCDGJKPQTXbcdgjkpqtx</Class>
+      </SspTokenizer>
+      Aderyn Aerafrin Aerathielle Aeronvia Aeronwen Aerona Anwen
+      Branwenne Bronwyn
+      Carrian Corianna
+      Eafrin Eawen Eawynne Eonoa Eonthia Eilwyn Eirian Eirwen Ellarwyn
+      Ellethia Ellonvia Elluthia Elluvia
+      Faewen Faewynne Fayelle Fayonelle Feyarwyn Feyelle Feyonoa
+      Gloriel Gwenda Gwendolynne Gwenna Gwennyth Gwynna Gwynnyth Glorafrin
+      Iriel Iruthia
+      Jasianna
+      Luthiel Luvioa Lythianna
+      Morafrin Morgan Morwen Morwynne Merrianna
+      Nolwen Nunvioa
+      Quennalynne
+      Rheva Rhiannon Rhiva Rhonwynne Rhosyn
+      Syarelle Syareth Saphielle Shyannon Shyarwen Sophia
+      Taegen Tarieth Tolwyn Toria Tannaquille
+      Urosynne Ursalynne Ursula Urwyn
+    </Markov>
+    <Concat>
+      <Words>
+        Birch Blue Bramble Bright Dawn Dream Dusk Ever Fair Fenn Fey Frost Green Grey Merry Mist
+        Light Moon Night Oaken Ocean Pale Quick Rain River Sea Shade Shadow Silver Sky Star Storm
+        Sun Summer Swift Wander Wild Willow Wind Winter Wise
+      </Words>
+      <Words>
+        bark birch bloom blossom bow bramble branch bright caller caster cloud dancer dawn dream
+        dreamer drifter dusk dweller heart hunter leaf light mist nettle rain sapling seed seeker
+        seer shade shadow shrub singer song soul spell staff stave strider summer treader tree twig
+        twigs twiggy thorn vine walker wanderer whisper willow wind wing winter
+      </Words>
+    </Concat>
+  </Concat>
+</NameGen>

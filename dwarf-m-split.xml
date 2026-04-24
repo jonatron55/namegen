@@ -2,7 +2,8 @@
 
 <NameGen>
   <Concat joiner=" ">
-    <Markov target_len="10">
+    <Markov target_len="10" case_insensitive="true">
+      <SplitTokenizer/>
       A/nd/or
       A/nth/or
       Ag/n/ar

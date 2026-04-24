@@ -17,7 +17,7 @@
                 Mc
               </Words>
             </Option>
-            <Words>
+            <Markov>
               Albert Alexander Alvin Angus Antonio Apollo Apophis Archibald Ares Arnold Arthur Atlas Augustus Avery Axel
               Azrael
 
@@ -81,7 +81,7 @@
               Willoughby Wilson Winston Wolfgang Woodrow Wyatt
 
               Xander Xavier Xeno Xerxes Xylon Zacharias Zachary Zane Zebedee Zephyr Zeus Zoltan
-            </Words>
+            </Markov>
           </Concat>
         </Repeat>
         <Option probability="0.1">
@@ -98,7 +98,7 @@
           </Words>
         </Option>
         <Repeat min="1" max="2">
-          <Words>
+          <Markov>
             Agatha Agnes Amelia Angelica Annabelle Antonia Aphrodite Arabella Aria Ariadne Ariel Astrid Atalanta Athena
             Audrey Augusta
 
@@ -150,7 +150,7 @@
             Vivienne
 
             Wanda Wendy Wilhelmina Willa Winifred Winona
-          </Words>
+          </Markov>
         </Repeat>
         <Option probability="0.1">
           <Words>
@@ -223,7 +223,7 @@
         Zebra Zeppelin Zombie
       </Words>
     </Concat>
-    <Option probability="0.3">
+    <Option probability="1.0">
       <Switch>
         <Switch>
           <Words>
@@ -235,7 +235,7 @@
           <Words>
             the
           </Words>
-          <Words>
+          <Markov>
             Adorable Amazing Amusing Angry Anxious Apprehensive Arrogant Awesome Awkward
 
             Bad Barbarian Beautiful Bewildered Bizarre Blithering Boastful Brash Brave
@@ -297,7 +297,7 @@
             Yawning Yummy
 
             Zany Zealous Zesty
-          </Words>
+          </Markov>
         </Concat>
       </Switch>
     </Option>

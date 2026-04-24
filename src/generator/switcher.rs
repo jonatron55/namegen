@@ -20,4 +20,13 @@ impl Generator for Switcher {
             .map(|part| part.generate(rand))
             .unwrap_or_else(Vec::new)
     }
+
+    fn print_analysis(&self, indent: usize) {
+        let indent_str = " ".repeat(indent);
+        println!("Switcher: {} subparts", self.subparts.len());
+        for (i, subpart) in self.subparts.iter().enumerate() {
+            print!("{} Subpart {}: ", indent_str, i);
+            subpart.print_analysis(indent + 2);
+        }
+    }
 }

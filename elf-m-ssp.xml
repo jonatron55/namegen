@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NameGen>
+  <Concat joiner=" ">
+    <Markov>
+      <SspTokenizer>
+        <Class rank="5">AEIOUYaeiouy</Class>
+        <Class rank="4">Ww</Class>
+        <Class rank="3">LlRrHh</Class>
+        <Class rank="2">MNmnFSfsVZvz</Class>
+        <Class rank="1">BCDGJKPQTXbcdgjkpqtx</Class>
+      </SspTokenizer>
+      Adeth Adiol Aderiol Aerand Aerannol Aerathiand Aeriol Aeron Aerond
+      Brandior
+      Carrinnor Coriand
+      Deinniol
+      Eannin Earand Earond Earin Eonthiol Evandiol Evand Eilieth Eiliol Einiond Eirdor Ellarond
+      Ellethiand Ellonviol Elluthiol Elluvior
+      Faedior Faennin Faeonel
+      Gareth Glenndower
+      Herule
+      Heruli
+      Ianiol Ianor Iuand Iuthol Iriol Iruthiond
+      Luthior Luvieth Lythinn
+      Myarand Myarand Myaron
+      Nunviond
+      Rheviand Rhiviond Rhondor Rhosior
+      Sudiond Syareth Syorond Shariand Sharinnor
+      Tariond Toriand Tyorwer Tanriond Thaliand Thaliand Thardiond Tharidinn Tryariol
+      Vandiol Voridower Vorior
+    </Markov>
+    <Concat>
+      <Words>
+        Birch Blue Bramble Bright Dawn Dream Dusk Ever Fair Fenn Fey Frost Green Grey Merry Mist
+        Light Moon Night Oaken Ocean Pale Quick Rain River Sea Shade Shadow Silver Sky Star Storm
+        Sun Summer Swift Wander Wild Willow Wind Winter Wise
+      </Words>
+      <Words>
+        bark birch bloom blossom bow bramble branch bright caller caster cloud dancer dawn dream
+        dreamer drifter dusk dweller heart hunter leaf light mist nettle rain sapling seed seeker
+        seer shade shadow shrub singer song soul spell staff stave strider summer treader tree twig
+        twigs twiggy thorn vine walker wanderer whisper willow wind wing winter
+      </Words>
+    </Concat>
+  </Concat>
+</NameGen>

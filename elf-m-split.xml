@@ -3,6 +3,7 @@
 <NameGen>
   <Concat joiner=" ">
     <Markov>
+      <SplitTokenizer />
       A/d/e/th A/d/i/ol Ad/er/i/ol Aer/a/nd Aer/a/nn/ol Aer/a/th/i/a/nd Aer/i/ol Aer/o/n Aer/o/nd
       Br/a/nd/i/or
       C/arr/i/nn/or C/or/i/and

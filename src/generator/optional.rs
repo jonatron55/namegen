@@ -21,4 +21,11 @@ impl Generator for Optional {
             vec![]
         }
     }
+
+    fn print_analysis(&self, indent: usize) {
+        let indent_str = " ".repeat(indent);
+        println!("Optional: propability {}", self.propability);
+        print!("{} Subpart: ", indent_str);
+        self.generator.print_analysis(indent + 2);
+    }
 }

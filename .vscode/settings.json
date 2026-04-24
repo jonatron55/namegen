@@ -4,8 +4,12 @@
   },
   "[markdown][rust]": {
     "editor.rulers": [
+      80,
       120
     ]
+  },
+  "[xml]": {
+    "editor.formatOnSave": false
   },
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",

@@ -1,4 +1,7 @@
+mod tokenizer;
+
 use std::{
+    borrow::Cow,
     collections::HashMap,
     io::{Write, stdout},
 };
@@ -7,20 +10,37 @@ use rand::{Rng, RngExt};
 
 use crate::generator::Generator;
 
+pub use tokenizer::Tokenizer;
+
 type FreqMap = HashMap<Option<String>, i32>;
 
 pub struct MarkovGen {
     freqs: HashMap<Option<String>, FreqMap>,
     target_len: Option<usize>,
     reject: Vec<String>,
+    case_insensitive: bool,
 }
 
+const MAX_ATTEMPTS: usize = 100;
+
 impl MarkovGen {
-    pub fn train(data: &[String], target_len: Option<usize>, reject: Vec<String>) -> Self {
+    pub fn train(
+        data: &[String],
+        target_len: Option<usize>,
+        reject: Vec<String>,
+        tokenizer: &Tokenizer,
+        case_insensitive: bool,
+    ) -> Self {
         let mut freqs = HashMap::new();
 
-        for word in data {
-            let mut tokens = word.split('/');
+        let data = if case_insensitive {
+            Cow::Owned(data.iter().map(|s| s.to_uppercase()).collect::<Vec<_>>())
+        } else {
+            Cow::Borrowed(data)
+        };
+
+        for word in data.iter() {
+            let mut tokens = tokenizer.tokenize(word).into_iter();
             let mut token = None;
             loop {
                 let next = tokens.next();
@@ -40,6 +60,27 @@ impl MarkovGen {
             freqs,
             target_len,
             reject,
+            case_insensitive,
+        }
+    }
+
+    fn capitalize(&self, s: String) -> String {
+        // If we trained with case insensitivity, then everything was normalized
+        // to uppercase. Capitalize the generated name by uppercasing the first
+        // character and lowercasing the rest.
+        if self.case_insensitive {
+            let mut chars = s.chars();
+
+            if let Some(first) = chars.next() {
+                let mut s = String::with_capacity(s.len());
+                s.extend(first.to_uppercase());
+                s.extend(chars.flat_map(|ch| ch.to_lowercase()));
+                s
+            } else {
+                String::new()
+            }
+        } else {
+            s
         }
     }
 }
@@ -48,8 +89,13 @@ impl Generator for MarkovGen {
     fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
         let mut name = String::new();
         let mut token: Option<String> = None;
+        let mut attempt = 0;
 
         loop {
+            if attempt >= MAX_ATTEMPTS {
+                panic!("Markov generation failed after {} attempts", MAX_ATTEMPTS);
+            }
+
             'inner: loop {
                 let freq = self.freqs.get(&token).unwrap();
                 let total: i32 = freq.values().sum();
@@ -59,7 +105,7 @@ impl Generator for MarkovGen {
                     && name.len() >= target_len
                     && freq.contains_key(&None)
                 {
-                    return vec![name];
+                    return vec![self.capitalize(name)];
                 }
 
                 for (next, count) in freq.iter() {
@@ -72,9 +118,10 @@ impl Generator for MarkovGen {
                             break;
                         } else {
                             if self.reject.contains(&name) {
+                                attempt += 1;
                                 break 'inner;
                             } else {
-                                return vec![name];
+                                return vec![self.capitalize(name)];
                             }
                         }
                     }
@@ -88,5 +135,71 @@ impl Generator for MarkovGen {
             name.clear();
             token = None;
         }
+    }
+
+    fn print_analysis(&self, indent: usize) {
+        let indent_str = " ".repeat(indent);
+        println!("Markov generator: {} states", self.freqs.len());
+
+        for (token, freq) in &self.freqs {
+            print!("{} ", indent_str);
+
+            if let Some(token) = token {
+                print!("\"{token}\" -> ");
+            } else {
+                print!("BEGIN -> ");
+            }
+            for (next, count) in freq {
+                if let Some(next) = next {
+                    print!("[\"{next}\": {count}], ");
+                } else {
+                    print!("[HALT: {count}], ");
+                }
+            }
+            println!();
+        }
+
+        // Branching metrics
+        let mut total_succ = 0usize;
+        let mut weighted_entropy = 0.0f64;
+        let mut grand_total = 0i64;
+        let mut dead_ends = 0usize;
+
+        for freq in self.freqs.values() {
+            let n = freq.len();
+            total_succ += n;
+            if n == 1 && freq.contains_key(&None) {
+                dead_ends += 1;
+            }
+
+            let total: i32 = freq.values().sum();
+            grand_total += total as i64;
+
+            // H(s) in bits
+            let h: f64 = freq
+                .values()
+                .map(|&c| {
+                    let p = c as f64 / total as f64;
+                    if p > 0.0 { -p * p.log2() } else { 0.0 }
+                })
+                .sum();
+
+            // weight by state frequency (outgoing count as proxy)
+            weighted_entropy += h * total as f64;
+        }
+
+        let avg_branching = total_succ as f64 / self.freqs.len() as f64;
+        let avg_entropy = weighted_entropy / grand_total as f64;
+        let perplexity = avg_entropy.exp2();
+
+        println!("{}Average branching factor: {:.2}", indent_str, avg_branching);
+        println!("{}Average entropy (bits):   {:.2}", indent_str, avg_entropy);
+        println!("{}Perplexity:           {:.2}", indent_str, perplexity);
+        println!(
+            "{}Dead-end states:      {} / {}",
+            indent_str,
+            dead_ends,
+            self.freqs.len()
+        );
     }
 }

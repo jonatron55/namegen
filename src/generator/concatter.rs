@@ -41,4 +41,13 @@ impl Generator for Concatter {
             }
         }
     }
+
+    fn print_analysis(&self, indent: usize) {
+        let indent_str = " ".repeat(indent);
+        println!("{}Concatinator: {} subparts", indent_str, self.subparts.len());
+        for (i, subpart) in self.subparts.iter().enumerate() {
+            print!("{} Subpart {}: ", indent_str, i);
+            subpart.print_analysis(indent + 2);
+        }
+    }
 }

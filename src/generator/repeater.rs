@@ -19,4 +19,11 @@ impl Generator for Repeater {
         let count = rand.random_range(self.min..=self.max);
         (0..count).flat_map(|_| self.generator.generate(rand)).collect()
     }
+
+    fn print_analysis(&self, indent: usize) {
+        let indent_str = " ".repeat(indent);
+        println!("Repeater: min {}, max {}", self.min, self.max);
+        print!("{} Subpart: ", indent_str);
+        self.generator.print_analysis(indent + 2);
+    }
 }
