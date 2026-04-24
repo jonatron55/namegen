@@ -1,4 +1,4 @@
-use crate::generator::Generator;
+use crate::generator::{Generator, Result};
 
 use rand::Rng;
 use rand::seq::IndexedRandom;
@@ -14,11 +14,11 @@ impl Switcher {
 }
 
 impl Generator for Switcher {
-    fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
+    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
         self.subparts
             .choose(rand)
             .map(|part| part.generate(rand))
-            .unwrap_or_else(Vec::new)
+            .unwrap_or_else(|| Ok(vec![]))
     }
 
     fn print_analysis(&self, indent: usize) {

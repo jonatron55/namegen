@@ -1,8 +1,13 @@
-use std::{error::Error, io::Read};
+use std::{
+    io::{Error as IoError, Read},
+    result::Result as StdResult,
+};
 
+use thiserror::Error as ThisError;
 use xml::{
     attribute::OwnedAttribute,
-    reader::{EventReader, XmlEvent},
+    common::{Position as XmlPosition, TextPosition},
+    reader::{Error as XmlReadError, EventReader, XmlEvent},
 };
 
 use crate::generator::{
@@ -41,13 +46,49 @@ const VALID_PART_TYPES: [&str; 8] = [
     ELEM_WORDS,
 ];
 
-pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn Generator>, Box<dyn Error>> {
+#[derive(ThisError, Debug)]
+pub enum Error {
+    #[error("{0}")]
+    Io(#[from] IoError),
+
+    #[error("{0}")]
+    Xml(#[from] XmlReadError),
+
+    #[error("Unexpected event {event:?} at {position}")]
+    UnexpectedEvent { event: XmlEvent, position: TextPosition },
+
+    #[error("Unexpected <{name}> at {position}")]
+    UnexpectedElement { name: String, position: TextPosition },
+
+    #[error("Unexpected end element: </{name}> at {position}")]
+    UnexpectedEnd { name: String, position: TextPosition },
+
+    #[error("Unexpected attribute: {name} at {position}")]
+    UnexpectedAttribute { name: String, position: TextPosition },
+
+    #[error("Invalid {attribute} value: \"{value}\" at {position}")]
+    InvalidValue {
+        attribute: String,
+        value: String,
+        position: TextPosition,
+    },
+
+    #[error("Missing attribute: \"{0}\"")]
+    MissingAttribute(String),
+}
+
+pub type Result<T> = StdResult<T, Error>;
+
+pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn Generator>> {
     let event = reader.next()?;
 
     match event {
         XmlEvent::StartDocument { .. } => {}
-        _ => {
-            return Err("Expected start document".into());
+        other => {
+            return Err(Error::UnexpectedEvent {
+                event: other,
+                position: reader.position(),
+            });
         }
     }
 
@@ -56,7 +97,10 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn Generato
     match event {
         XmlEvent::StartElement { name, .. } if name.local_name == "NameGen" => {}
         other => {
-            return Err(format!("Expected <NameGen> element, encountered {other:?}").into());
+            return Err(Error::UnexpectedEvent {
+                event: other,
+                position: reader.position(),
+            });
         }
     }
 
@@ -69,45 +113,53 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn Generato
             if name.local_name == "NameGen" {
                 Ok(config)
             } else {
-                Err(format!("Unexpected end element: </{}>", name).into())
+                Err(Error::UnexpectedEnd {
+                    name: name.local_name,
+                    position: reader.position(),
+                })
             }
         }
-        other => Err(format!("Unexpected event: {other:?}").into()),
+        other => Err(Error::UnexpectedEvent {
+            event: other,
+            position: reader.position(),
+        }),
     }
 }
 
-fn inner_from_xml<R: Read>(
-    event: &XmlEvent,
-    reader: &mut EventReader<R>,
-) -> Result<Box<dyn Generator>, Box<dyn Error>> {
+fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Result<Box<dyn Generator>> {
     match event {
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_MARKOV => {
             let mut training_data = Vec::new();
             let mut reject = Vec::new();
             let mut reject_training = false;
             let mut uniform = false;
-            let mut target_len = None;
+            let mut cutoff_len = None;
             let mut tokenizer: Option<Tokenizer> = None;
 
             for attr in attributes {
-                if attr.name.local_name == "target_len" {
-                    target_len = Some(
-                        attr.value
-                            .parse()
-                            .map_err(|_| format!("Invalid target_len value: {}", attr.value))?,
-                    );
+                if attr.name.local_name == "cutoff_len" {
+                    cutoff_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                        attribute: "cutoff_len".to_string(),
+                        value: attr.value.clone(),
+                        position: reader.position(),
+                    })?);
                 } else if attr.name.local_name == "reject_training" {
-                    reject_training = attr
-                        .value
-                        .parse()
-                        .map_err(|_| format!("Invalid reject_training value: {}", attr.value))?;
+                    reject_training = attr.value.parse().map_err(|_| Error::InvalidValue {
+                        attribute: "reject_training".to_string(),
+                        value: attr.value.clone(),
+                        position: reader.position(),
+                    })?;
                 } else if attr.name.local_name == "uniform" {
-                    uniform = attr
-                        .value
-                        .parse()
-                        .map_err(|_| format!("Invalid uniform value: {}", attr.value))?;
+                    uniform = attr.value.parse().map_err(|_| Error::InvalidValue {
+                        attribute: "uniform".to_string(),
+                        value: attr.value.clone(),
+                        position: reader.position(),
+                    })?;
                 } else {
-                    return Err(format!("Unexpected attribute: {}", attr.name).into());
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
                 }
             }
 
@@ -123,12 +175,18 @@ fn inner_from_xml<R: Read>(
                         "Reject" => parse_reject(reader, &mut reject)?,
                         ELEM_SPLIT_TOKENIZER | ELEM_CHUNK_TOKENIZER | ELEM_SSP_TOKENIZER => {
                             if tokenizer.is_some() {
-                                return Err("Multiple tokenizer elements in <Markov>".into());
+                                return Err(Error::UnexpectedElement {
+                                    name: name.local_name.clone(),
+                                    position: reader.position(),
+                                });
                             }
                             tokenizer = Some(parse_tokenizer(reader, &name.local_name, attributes)?);
                         }
                         _ => {
-                            return Err(format!("Unexpected element: <{name}>").into());
+                            return Err(Error::UnexpectedElement {
+                                name: name.local_name.clone(),
+                                position: reader.position(),
+                            });
                         }
                     },
                     XmlEvent::Characters(data) => {
@@ -145,17 +203,23 @@ fn inner_from_xml<R: Read>(
 
                             return Ok(Box::new(MarkovGen::train(
                                 &training_data,
-                                target_len,
+                                cutoff_len,
                                 reject,
                                 &tokenizer,
                                 uniform,
                             )));
                         } else {
-                            return Err(format!("Unexpected end element: </{}>", name).into());
+                            return Err(Error::UnexpectedEnd {
+                                name: name.local_name,
+                                position: reader.position(),
+                            });
                         }
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -170,7 +234,10 @@ fn inner_from_xml<R: Read>(
                 if attr.name.local_name == "joiner" {
                     joiner = attr.value.clone();
                 } else {
-                    return Err(format!("Unexpected attribute: {}", attr.name).into());
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
                 }
             }
 
@@ -190,7 +257,10 @@ fn inner_from_xml<R: Read>(
                                 break;
                             }
                             other => {
-                                return Err(format!("Unexpected event: {other:?}").into());
+                                return Err(Error::UnexpectedEvent {
+                                    event: other,
+                                    position: reader.position(),
+                                });
                             }
                         }
                     },
@@ -198,7 +268,10 @@ fn inner_from_xml<R: Read>(
                         return Ok(Box::new(Concatter::new(subparts, reject).with_joiner(joiner)));
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -208,7 +281,10 @@ fn inner_from_xml<R: Read>(
             let mut subparts = Vec::new();
 
             for attr in attributes {
-                return Err(format!("Unexpected attribute: {}", attr.name).into());
+                return Err(Error::UnexpectedAttribute {
+                    name: attr.name.local_name.clone(),
+                    position: reader.position(),
+                });
             }
 
             loop {
@@ -222,7 +298,10 @@ fn inner_from_xml<R: Read>(
                         return Ok(Box::new(Switcher::new(subparts)));
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -232,7 +311,10 @@ fn inner_from_xml<R: Read>(
             let mut options = Vec::new();
 
             for attr in attributes {
-                return Err(format!("Unexpected attribute: {}", attr.name).into());
+                return Err(Error::UnexpectedAttribute {
+                    name: attr.name.local_name.clone(),
+                    position: reader.position(),
+                });
             }
 
             loop {
@@ -245,7 +327,10 @@ fn inner_from_xml<R: Read>(
                         return Ok(Box::new(options));
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -257,12 +342,16 @@ fn inner_from_xml<R: Read>(
 
             for attr in attributes {
                 if attr.name.local_name == "probability" {
-                    probability = attr
-                        .value
-                        .parse()
-                        .map_err(|_| format!("Invalid probability value: {}", attr.value))?;
+                    probability = attr.value.parse().map_err(|_| Error::InvalidValue {
+                        attribute: attr.name.local_name.clone(),
+                        value: attr.value.clone(),
+                        position: reader.position(),
+                    })?;
                 } else {
-                    return Err(format!("Unexpected attribute: {}", attr.name).into());
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
                 }
             }
 
@@ -272,7 +361,10 @@ fn inner_from_xml<R: Read>(
                 match event {
                     XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
                         if subpart.is_some() {
-                            return Err("Option elements must contain exactly one generator".into());
+                            return Err(Error::UnexpectedElement {
+                                name: name.local_name.clone(),
+                                position: reader.position(),
+                            });
                         }
                         subpart = Some(inner_from_xml(&event, reader)?);
                     }
@@ -280,11 +372,17 @@ fn inner_from_xml<R: Read>(
                         if let Some(subpart) = subpart {
                             return Ok(Box::new(Optional::new(subpart, probability)));
                         } else {
-                            return Err("Option elements must contain exactly one generator".into());
+                            return Err(Error::UnexpectedEnd {
+                                name: name.local_name.clone(),
+                                position: reader.position(),
+                            });
                         }
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -298,13 +396,24 @@ fn inner_from_xml<R: Read>(
             for attr in attributes {
                 match attr.name.local_name.as_str() {
                     "min" => {
-                        min = attr.value.parse().map_err(|_| format!("Invalid min value: {}", attr.value))?;
+                        min = attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: attr.name.local_name.clone(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?;
                     }
                     "max" => {
-                        max = attr.value.parse().map_err(|_| format!("Invalid max value: {}", attr.value))?;
+                        max = attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: attr.name.local_name.clone(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?;
                     }
                     other => {
-                        return Err(format!("Unexpected attribute: {other}").into());
+                        return Err(Error::UnexpectedAttribute {
+                            name: other.to_string(),
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -315,7 +424,10 @@ fn inner_from_xml<R: Read>(
                 match event {
                     XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
                         if subpart.is_some() {
-                            return Err("Repeat elements must contain exactly one generator".into());
+                            return Err(Error::UnexpectedElement {
+                                name: name.local_name.clone(),
+                                position: reader.position(),
+                            });
                         }
                         subpart = Some(inner_from_xml(&event, reader)?);
                     }
@@ -323,11 +435,17 @@ fn inner_from_xml<R: Read>(
                         if let Some(subpart) = subpart {
                             return Ok(Box::new(Repeater::new(subpart, min, max)));
                         } else {
-                            return Err("Repeat elements must contain exactly one generator".into());
+                            return Err(Error::UnexpectedEnd {
+                                name: name.local_name.clone(),
+                                position: reader.position(),
+                            });
                         }
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -341,10 +459,18 @@ fn inner_from_xml<R: Read>(
             for attr in attributes {
                 match attr.name.local_name.as_str() {
                     "min" => {
-                        min = attr.value.parse().map_err(|_| format!("Invalid min value: {}", attr.value))?;
+                        min = attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: attr.name.local_name.clone(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?;
                     }
                     "max" => {
-                        max = attr.value.parse().map_err(|_| format!("Invalid max value: {}", attr.value))?;
+                        max = attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: attr.name.local_name.clone(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?;
                     }
                     "style" => {
                         style = match attr.value.as_str() {
@@ -355,11 +481,20 @@ fn inner_from_xml<R: Read>(
                             "Bin" | "Binary" => NumberStyle::Binary,
                             "Roman" | "RomanUpper" => NumberStyle::RomanUpper,
                             "RomanLower" => NumberStyle::RomanLower,
-                            other => return Err(format!("Invalid style value: {other}").into()),
+                            other => {
+                                return Err(Error::InvalidValue {
+                                    attribute: attr.name.local_name.clone(),
+                                    value: other.to_string(),
+                                    position: reader.position(),
+                                });
+                            }
                         };
                     }
                     other => {
-                        return Err(format!("Unexpected attribute: {other}").into());
+                        return Err(Error::UnexpectedAttribute {
+                            name: other.to_string(),
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -372,7 +507,10 @@ fn inner_from_xml<R: Read>(
                         return Ok(Box::new(Numberer::new(min, max).with_style(style)));
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -387,11 +525,20 @@ fn inner_from_xml<R: Read>(
                             "AllLower" => CapitalizerMode::AllLower,
                             "FirstUpper" => CapitalizerMode::FirstUpper,
                             "AllUpper" => CapitalizerMode::AllUpper,
-                            other => return Err(format!("Invalid mode value: {other}").into()),
+                            other => {
+                                return Err(Error::InvalidValue {
+                                    attribute: attr.name.local_name.clone(),
+                                    value: other.to_string(),
+                                    position: reader.position(),
+                                });
+                            }
                         };
                     }
                     other => {
-                        return Err(format!("Unexpected attribute on <{ELEM_CAPITALIZE}>: {other}").into());
+                        return Err(Error::UnexpectedAttribute {
+                            name: other.to_string(),
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -399,7 +546,10 @@ fn inner_from_xml<R: Read>(
             let mut subpart = None;
 
             for attr in attributes {
-                return Err(format!("Unexpected attribute: {}", attr.name).into());
+                return Err(Error::UnexpectedAttribute {
+                    name: attr.name.local_name.clone(),
+                    position: reader.position(),
+                });
             }
 
             loop {
@@ -408,32 +558,43 @@ fn inner_from_xml<R: Read>(
                 match event {
                     XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
                         if subpart.is_some() {
-                            return Err("Capitalizer elements must contain exactly one generator".into());
+                            return Err(Error::UnexpectedEvent {
+                                event,
+                                position: reader.position(),
+                            });
                         }
 
                         subpart = Some(inner_from_xml(&event, reader)?);
                     }
-                    XmlEvent::EndElement { name } if name.local_name == ELEM_CAPITALIZE => {
+                    XmlEvent::EndElement { ref name } if name.local_name == ELEM_CAPITALIZE => {
                         return Ok(Box::new(Capitalizer::new(
-                            subpart
-                                .ok_or_else(|| "Capitalizer elements must contain exactly one generator".to_string())?,
+                            subpart.ok_or_else(|| Error::UnexpectedEvent {
+                                event: event.clone(),
+                                position: reader.position(),
+                            })?,
                             mode,
                         )));
                     }
                     other => {
-                        return Err(format!("Unexpected event: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
         }
 
         other => {
-            return Err(format!("Unexpected event: {other:?}").into());
+            return Err(Error::UnexpectedEvent {
+                event: other.clone(),
+                position: reader.position(),
+            });
         }
     }
 }
 
-fn parse_reject<R: Read>(reader: &mut EventReader<R>, reject: &mut Vec<String>) -> Result<(), Box<dyn Error>> {
+fn parse_reject<R: Read>(reader: &mut EventReader<R>, reject: &mut Vec<String>) -> Result<()> {
     loop {
         match reader.next()? {
             XmlEvent::Characters(data) => {
@@ -444,7 +605,10 @@ fn parse_reject<R: Read>(reader: &mut EventReader<R>, reject: &mut Vec<String>) 
                 break;
             }
             other => {
-                return Err(format!("Unexpected event: {other:?}").into());
+                return Err(Error::UnexpectedEvent {
+                    event: other,
+                    position: reader.position(),
+                });
             }
         }
     }
@@ -456,7 +620,7 @@ fn parse_tokenizer<R: Read>(
     reader: &mut EventReader<R>,
     elem: &str,
     attributes: &[OwnedAttribute],
-) -> Result<Tokenizer, Box<dyn Error>> {
+) -> Result<Tokenizer> {
     match elem {
         ELEM_SPLIT_TOKENIZER => {
             let mut chars: Vec<char> = Vec::new();
@@ -464,7 +628,10 @@ fn parse_tokenizer<R: Read>(
                 if attr.name.local_name == "split_chars" {
                     chars = attr.value.chars().collect();
                 } else {
-                    return Err(format!("Unexpected attribute on <{elem}>: {}", attr.name).into());
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
                 }
             }
             if chars.is_empty() {
@@ -478,14 +645,28 @@ fn parse_tokenizer<R: Read>(
             let mut len: Option<usize> = None;
             for attr in attributes {
                 if attr.name.local_name == "len" {
-                    len = Some(attr.value.parse().map_err(|_| format!("Invalid len value: {}", attr.value))?);
+                    len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                        attribute: attr.name.local_name.clone(),
+                        value: attr.value.clone(),
+                        position: reader.position(),
+                    })?);
                 } else {
-                    return Err(format!("Unexpected attribute on <{elem}>: {}", attr.name).into());
+                    return Err(Error::InvalidValue {
+                        attribute: attr.name.local_name.clone(),
+                        value: attr.value.clone(),
+                        position: reader.position(),
+                    });
                 }
             }
-            let len = len.ok_or_else(|| format!("<{elem}> requires a len attribute"))?;
+
+            let len = len.ok_or_else(|| Error::MissingAttribute("len".to_string()))?;
+
             if len == 0 {
-                return Err(format!("<{elem}> len must be greater than zero").into());
+                return Err(Error::InvalidValue {
+                    attribute: "len".to_string(),
+                    value: "0".to_string(),
+                    position: reader.position(),
+                });
             }
             consume_empty_element(reader, elem)?;
             Ok(Tokenizer::Chunker(len))
@@ -493,7 +674,10 @@ fn parse_tokenizer<R: Read>(
 
         ELEM_SSP_TOKENIZER => {
             for attr in attributes {
-                return Err(format!("Unexpected attribute on <{elem}>: {}", attr.name).into());
+                return Err(Error::UnexpectedAttribute {
+                    name: attr.name.local_name.clone(),
+                    position: reader.position(),
+                });
             }
             let mut tokenizer = Tokenizer::default_ssp();
             let Tokenizer::Ssp { ref mut ranks } = tokenizer else {
@@ -506,14 +690,19 @@ fn parse_tokenizer<R: Read>(
                         let mut rank: Option<u8> = None;
                         for attr in &attributes {
                             if attr.name.local_name == "rank" {
-                                rank = Some(
-                                    attr.value.parse().map_err(|_| format!("Invalid rank value: {}", attr.value))?,
-                                );
+                                rank = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                                    attribute: "rank".to_string(),
+                                    value: attr.value.clone(),
+                                    position: reader.position(),
+                                })?);
                             } else {
-                                return Err(format!("Unexpected attribute on <{ELEM_CLASS}>: {}", attr.name).into());
+                                return Err(Error::UnexpectedAttribute {
+                                    name: attr.name.local_name.clone(),
+                                    position: reader.position(),
+                                });
                             }
                         }
-                        let rank = rank.ok_or_else(|| format!("<{ELEM_CLASS}> requires a rank attribute"))?;
+                        let rank = rank.ok_or_else(|| Error::MissingAttribute("rank".to_string()))?;
 
                         loop {
                             match reader.next()? {
@@ -525,7 +714,10 @@ fn parse_tokenizer<R: Read>(
                                 XmlEvent::Whitespace(_) => {}
                                 XmlEvent::EndElement { name } if name.local_name == ELEM_CLASS => break,
                                 other => {
-                                    return Err(format!("Unexpected event inside <{ELEM_CLASS}>: {other:?}").into());
+                                    return Err(Error::UnexpectedEvent {
+                                        event: other,
+                                        position: reader.position(),
+                                    });
                                 }
                             }
                         }
@@ -533,7 +725,10 @@ fn parse_tokenizer<R: Read>(
                     XmlEvent::Whitespace(_) => {}
                     XmlEvent::EndElement { name } if name.local_name == elem => break,
                     other => {
-                        return Err(format!("Unexpected event inside <{elem}>: {other:?}").into());
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
                     }
                 }
             }
@@ -541,17 +736,23 @@ fn parse_tokenizer<R: Read>(
             Ok(tokenizer)
         }
 
-        _ => Err(format!("Unknown tokenizer element: <{elem}>").into()),
+        other => Err(Error::UnexpectedElement {
+            name: other.to_string(),
+            position: reader.position(),
+        }),
     }
 }
 
-fn consume_empty_element<R: Read>(reader: &mut EventReader<R>, elem: &str) -> Result<(), Box<dyn Error>> {
+fn consume_empty_element<R: Read>(reader: &mut EventReader<R>, elem: &str) -> Result<()> {
     loop {
         match reader.next()? {
             XmlEvent::Whitespace(_) => {}
             XmlEvent::EndElement { name } if name.local_name == elem => return Ok(()),
             other => {
-                return Err(format!("<{elem}> must be empty; unexpected event: {other:?}").into());
+                return Err(Error::UnexpectedEvent {
+                    event: other,
+                    position: reader.position(),
+                });
             }
         }
     }

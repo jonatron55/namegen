@@ -1,4 +1,4 @@
-use crate::generator::Generator;
+use crate::generator::{Generator, Result};
 
 pub struct Capitalizer {
     subpart: Box<dyn Generator>,
@@ -38,8 +38,10 @@ impl Capitalizer {
 }
 
 impl Generator for Capitalizer {
-    fn generate(&self, rand: &mut dyn rand::Rng) -> Vec<String> {
-        self.subpart.generate(rand).into_iter().map(|s| self.capitalize(s)).collect()
+    fn generate(&self, rand: &mut dyn rand::Rng) -> Result<Vec<String>> {
+        self.subpart
+            .generate(rand)
+            .and_then(|vec| Ok(vec.into_iter().map(|s| self.capitalize(s)).collect()))
     }
 
     fn print_analysis(&self, indent: usize) {

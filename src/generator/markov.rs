@@ -7,7 +7,7 @@ use std::{
 
 use rand::{Rng, RngExt};
 
-use crate::generator::Generator;
+use crate::generator::{Error, Generator, MAX_REJECTIONS, Result};
 
 pub use tokenizer::Tokenizer;
 
@@ -15,16 +15,14 @@ type FreqMap = HashMap<Option<String>, i32>;
 
 pub struct MarkovGen {
     freqs: HashMap<Option<String>, FreqMap>,
-    target_len: Option<usize>,
+    cutoff_len: Option<usize>,
     reject: Vec<String>,
 }
-
-const MAX_ATTEMPTS: usize = 100;
 
 impl MarkovGen {
     pub fn train(
         data: &[String],
-        target_len: Option<usize>,
+        cutoff_len: Option<usize>,
         reject: Vec<String>,
         tokenizer: &Tokenizer,
         uniform: bool,
@@ -54,21 +52,21 @@ impl MarkovGen {
 
         Self {
             freqs,
-            target_len,
+            cutoff_len,
             reject,
         }
     }
 }
 
 impl Generator for MarkovGen {
-    fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
+    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
         let mut name = String::new();
         let mut token: Option<String> = None;
         let mut attempt = 0;
 
         loop {
-            if attempt >= MAX_ATTEMPTS {
-                panic!("Markov generation failed after {} attempts", MAX_ATTEMPTS);
+            if attempt > MAX_REJECTIONS {
+                return Err(Error::MaxRejectionsExceeded);
             }
 
             'inner: loop {
@@ -76,11 +74,11 @@ impl Generator for MarkovGen {
                 let total: i32 = freq.values().sum();
                 let mut roll: i32 = rand.random_range(0..total);
 
-                if let Some(target_len) = self.target_len
-                    && name.len() >= target_len
+                if let Some(cutoff_len) = self.cutoff_len
+                    && name.len() >= cutoff_len
                     && freq.contains_key(&None)
                 {
-                    return vec![name];
+                    return Ok(vec![name]);
                 }
 
                 for (next, count) in freq.iter() {
@@ -96,7 +94,7 @@ impl Generator for MarkovGen {
                                 attempt += 1;
                                 break 'inner;
                             } else {
-                                return vec![name];
+                                return Ok(vec![name]);
                             }
                         }
                     }

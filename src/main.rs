@@ -4,11 +4,16 @@ use std::{
     fs::File,
     io::{BufReader, Read},
     path::PathBuf,
+    process::ExitCode,
 };
 
+use anstream::eprintln;
+use anstyle::{AnsiColor, Color, Style};
 use clap::Parser;
 use rand::{Rng, SeedableRng, rngs::StdRng};
 use xml::ParserConfig as XmlParserConfig;
+
+const ERROR_STYLE: Style = Style::new().fg_color(Some(Color::Ansi(AnsiColor::Red))).bold();
 
 /// Generates random names from a given configuration.
 #[derive(Parser)]
@@ -35,7 +40,7 @@ struct Args {
     seed: Option<u64>,
 }
 
-fn main() {
+fn main() -> ExitCode {
     let args = Args::parse();
     let reader: Box<dyn Read> = match args.config {
         Some(path) => {
@@ -55,7 +60,13 @@ fn main() {
         .ignore_comments(true)
         .create_reader(reader);
 
-    let generator = generator::from_xml(&mut xml).expect("Failed to parse config file");
+    let generator = match generator::from_xml(&mut xml) {
+        Ok(generator) => generator,
+        Err(err) => {
+            eprintln!("{ERROR_STYLE}Config parse error:{ERROR_STYLE:#} {err}");
+            return ExitCode::FAILURE;
+        }
+    };
 
     let mut rand: Box<dyn Rng> = match args.seed {
         Some(seed) => Box::new(StdRng::seed_from_u64(seed)),
@@ -64,12 +75,23 @@ fn main() {
 
     if args.analyze {
         generator.print_analysis(0);
+        ExitCode::SUCCESS
     } else {
         for _ in 0..args.count {
-            for name in generator.generate(&mut rand) {
-                print!("{name}");
+            match generator.generate(&mut rand) {
+                Ok(names) => {
+                    for name in names {
+                        print!("{name}");
+                    }
+                    println!();
+                }
+                Err(err) => {
+                    eprintln!("{ERROR_STYLE}Generation error:{ERROR_STYLE:#} {err}");
+                    return ExitCode::FAILURE;
+                }
             }
-            println!();
         }
+
+        ExitCode::SUCCESS
     }
 }

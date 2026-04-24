@@ -1,4 +1,4 @@
-use crate::generator::Generator;
+use crate::generator::{Generator, Result};
 
 use rand::{Rng, RngExt};
 
@@ -15,9 +15,14 @@ impl Repeater {
 }
 
 impl Generator for Repeater {
-    fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
+    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
         let count = rand.random_range(self.min..=self.max);
-        (0..count).flat_map(|_| self.generator.generate(rand)).collect()
+        (0..count).try_fold(Vec::new(), |mut acc, _| {
+            self.generator.generate(rand).map(|mut v| {
+                acc.append(&mut v);
+                acc
+            })
+        })
     }
 
     fn print_analysis(&self, indent: usize) {

@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use rand::Rng;
 
-use crate::generator::Generator;
+use crate::generator::{Error, Generator, MAX_REJECTIONS, Result};
 
 pub struct Concatter {
     subparts: Vec<Box<dyn Generator>>,
@@ -26,9 +26,21 @@ impl Concatter {
 
 impl Generator for Concatter {
     #[allow(unstable_name_collisions)] // `intersperse` may at some point be incorporated into the standard library, but for now we need to use the one from itertools
-    fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
+    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
+        let mut attempt = 0;
+
         loop {
-            let name: Vec<_> = self.subparts.iter().flat_map(|part| part.generate(rand)).collect();
+            if attempt > MAX_REJECTIONS {
+                return Err(Error::MaxRejectionsExceeded);
+            }
+            attempt += 1;
+
+            let name: Vec<String> = self.subparts.iter().try_fold(Vec::new(), |mut acc, part| {
+                part.generate(rand).map(|mut v| {
+                    acc.append(&mut v);
+                    acc
+                })
+            })?;
 
             // Reject duplicates
             if name.iter().tuple_windows().any(|(a, b)| a == b) {
@@ -37,7 +49,7 @@ impl Generator for Concatter {
 
             let name = name.join(&self.joiner);
             if !self.reject.contains(&name) {
-                return vec![name];
+                return Ok(vec![name]);
             }
         }
     }

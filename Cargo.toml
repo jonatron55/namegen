@@ -4,10 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+anstream = "1.0.0"
+anstyle = "1.0.14"
 clap = { version = "4.5.16", features = ["derive"] }
 itertools = "0.14.0"
 rand = "0.10.0"
 serde = "1.0.208"
 serde_derive = "1.0.208"
+thiserror = "2.0.18"
 toml = "1.1.0"
 xml-rs = "1.0.0"

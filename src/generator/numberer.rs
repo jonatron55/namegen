@@ -1,4 +1,4 @@
-use crate::generator::Generator;
+use crate::generator::{Generator, Result};
 
 use rand::{Rng, RngExt};
 
@@ -35,9 +35,9 @@ impl Numberer {
 }
 
 impl Generator for Numberer {
-    fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
+    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
         let num = rand.random_range(self.min..=self.max);
-        vec![self.style.format(num)]
+        Ok(vec![self.style.format(num)])
     }
 
     fn print_analysis(&self, indent: usize) {

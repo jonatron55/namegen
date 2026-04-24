@@ -2,6 +2,8 @@ use crate::generator::Generator;
 
 use rand::{Rng, RngExt};
 
+use crate::generator::Result;
+
 pub struct Optional {
     generator: Box<dyn Generator>,
     propability: f64,
@@ -14,11 +16,11 @@ impl Optional {
 }
 
 impl Generator for Optional {
-    fn generate(&self, rand: &mut dyn Rng) -> Vec<String> {
+    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
         if rand.random_bool(self.propability) {
             self.generator.generate(rand)
         } else {
-            vec![]
+            Ok(vec![])
         }
     }
 

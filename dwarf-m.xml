@@ -2,7 +2,7 @@
 
 <NameGen>
   <Concat joiner=" ">
-    <Markov target_len="10">
+    <Markov cutoff_len="10">
       <SplitTokenizer/>
       A/nd/or
       A/nth/or

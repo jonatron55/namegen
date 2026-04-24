@@ -2,12 +2,12 @@
 
 <NameGen>
   <Concat joiner=" ">
-    <Markov>
+    <Markov cutoff_len="12">
       <SspTokenizer>
         <Class rank="5">AEIOUYaeiouy</Class>
         <Class rank="4">Ww</Class>
-        <Class rank="3">LlRrHh</Class>
-        <Class rank="2">MNmnFSfsVZvz</Class>
+        <Class rank="3">LRHlrh</Class>
+        <Class rank="2">MNFSVZmnfsvz</Class>
         <Class rank="1">BCDGJKPQTXbcdgjkpqtx</Class>
       </SspTokenizer>
       Aderyn Aerafrin Aerathielle Aeronvia Aeronwen Aerona Anwen
