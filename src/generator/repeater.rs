@@ -1,6 +1,9 @@
-use crate::generator::{Generator, Result};
-
 use rand::{Rng, RngExt};
+
+use crate::{
+    generator::{Generator, Result},
+    styles::{ELEM, PROP},
+};
 
 pub struct Repeater {
     generator: Box<dyn Generator>,
@@ -25,10 +28,11 @@ impl Generator for Repeater {
         })
     }
 
-    fn print_analysis(&self, indent: usize) {
+    fn analyze(&self, verbose: bool, indent: usize) {
         let indent_str = " ".repeat(indent);
-        println!("Repeater: min {}, max {}", self.min, self.max);
-        print!("{} Subpart: ", indent_str);
-        self.generator.print_analysis(indent + 2);
+        println!("{}{ELEM}Repeater:{ELEM:#}", indent_str);
+        println!("{} {PROP}Min: {PROP:#}{}", indent_str, self.min);
+        println!("{} {PROP}Max: {PROP:#}{}", indent_str, self.max);
+        self.generator.analyze(verbose, indent + 2);
     }
 }

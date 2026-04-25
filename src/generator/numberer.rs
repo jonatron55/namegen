@@ -1,5 +1,3 @@
-use crate::generator::{Generator, Result};
-
 use rand::{Rng, RngExt};
 
 pub struct Numberer {
@@ -7,6 +5,11 @@ pub struct Numberer {
     max: usize,
     style: NumberStyle,
 }
+
+use crate::{
+    generator::{Generator, Result},
+    styles::{ELEM, PROP},
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NumberStyle {
@@ -40,12 +43,12 @@ impl Generator for Numberer {
         Ok(vec![self.style.format(num)])
     }
 
-    fn print_analysis(&self, indent: usize) {
+    fn analyze(&self, _verbose: bool, indent: usize) {
         let indent_str = " ".repeat(indent);
-        println!(
-            "{}Number generator: range {}-{}, style {:?}",
-            indent_str, self.min, self.max, self.style
-        );
+        println!("{}{ELEM}Number generator:{ELEM:#}", indent_str);
+        println!("{} {PROP}Min: {PROP:#}{}", indent_str, self.min);
+        println!("{} {PROP}Max: {PROP:#}{}", indent_str, self.max);
+        println!("{} {PROP}Style: {PROP:#}{:?}", indent_str, self.style);
     }
 }
 

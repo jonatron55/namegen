@@ -54,19 +54,19 @@ pub enum Error {
     #[error("{0}")]
     Xml(#[from] XmlReadError),
 
-    #[error("Unexpected event {event:?} at {position}")]
+    #[error("Unexpected event {event:?}")]
     UnexpectedEvent { event: XmlEvent, position: TextPosition },
 
-    #[error("Unexpected <{name}> at {position}")]
+    #[error("Unexpected <{name}>")]
     UnexpectedElement { name: String, position: TextPosition },
 
-    #[error("Unexpected end element: </{name}> at {position}")]
+    #[error("Unexpected end element: </{name}>")]
     UnexpectedEnd { name: String, position: TextPosition },
 
-    #[error("Unexpected attribute: {name} at {position}")]
+    #[error("Unexpected attribute: {name}")]
     UnexpectedAttribute { name: String, position: TextPosition },
 
-    #[error("Invalid {attribute} value: \"{value}\" at {position}")]
+    #[error("Invalid {attribute} value: \"{value}\"")]
     InvalidValue {
         attribute: String,
         value: String,
@@ -133,11 +133,18 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             let mut reject = Vec::new();
             let mut reject_training = false;
             let mut uniform = false;
+            let mut target_len = None;
             let mut cutoff_len = None;
             let mut tokenizer: Option<Tokenizer> = None;
 
             for attr in attributes {
-                if attr.name.local_name == "cutoff_len" {
+                if attr.name.local_name == "target_len" {
+                    target_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                        attribute: "target_len".to_string(),
+                        value: attr.value.clone(),
+                        position: reader.position(),
+                    })?);
+                } else if attr.name.local_name == "cutoff_len" {
                     cutoff_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
                         attribute: "cutoff_len".to_string(),
                         value: attr.value.clone(),
@@ -203,6 +210,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
                             return Ok(Box::new(MarkovGen::train(
                                 &training_data,
+                                target_len,
                                 cutoff_len,
                                 reject,
                                 &tokenizer,
@@ -433,6 +441,14 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_REPEAT => {
                         if let Some(subpart) = subpart {
+                            if min > max {
+                                return Err(Error::InvalidValue {
+                                    attribute: "min".to_string(),
+                                    value: min.to_string(),
+                                    position: reader.position(),
+                                });
+                            }
+
                             return Ok(Box::new(Repeater::new(subpart, min, max)));
                         } else {
                             return Err(Error::UnexpectedEnd {
@@ -504,6 +520,14 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
                 match event {
                     XmlEvent::EndElement { name } if name.local_name == ELEM_NUMBER => {
+                        if min > max {
+                            return Err(Error::InvalidValue {
+                                attribute: "min".to_string(),
+                                value: min.to_string(),
+                                position: reader.position(),
+                            });
+                        }
+
                         return Ok(Box::new(Numberer::new(min, max).with_style(style)));
                     }
                     other => {
@@ -754,6 +778,19 @@ fn consume_empty_element<R: Read>(reader: &mut EventReader<R>, elem: &str) -> Re
                     position: reader.position(),
                 });
             }
+        }
+    }
+}
+
+impl Error {
+    pub fn position(&self) -> Option<TextPosition> {
+        match self {
+            Error::Io(_) | Error::Xml(_) | Error::MissingAttribute(_) => None,
+            Error::UnexpectedEvent { position, .. }
+            | Error::UnexpectedElement { position, .. }
+            | Error::UnexpectedEnd { position, .. }
+            | Error::UnexpectedAttribute { position, .. }
+            | Error::InvalidValue { position, .. } => Some(*position),
         }
     }
 }

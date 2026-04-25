@@ -1,8 +1,9 @@
-use crate::generator::Generator;
-
 use rand::{Rng, RngExt};
 
-use crate::generator::Result;
+use crate::{
+    generator::{Generator, Result},
+    styles::{ELEM, PROP},
+};
 
 pub struct Optional {
     generator: Box<dyn Generator>,
@@ -24,10 +25,10 @@ impl Generator for Optional {
         }
     }
 
-    fn print_analysis(&self, indent: usize) {
+    fn analyze(&self, verbose: bool, indent: usize) {
         let indent_str = " ".repeat(indent);
-        println!("Optional: propability {}", self.propability);
-        print!("{} Subpart: ", indent_str);
-        self.generator.print_analysis(indent + 2);
+        println!("{}{ELEM}Optional:{ELEM:#} ", indent_str);
+        println!("{} {PROP}probability: {PROP:#}{:.2}", indent_str, self.propability);
+        self.generator.analyze(verbose, indent + 2);
     }
 }

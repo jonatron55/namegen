@@ -1,9 +1,12 @@
-use crate::generator::{Generator, Result};
-
 pub struct Capitalizer {
     subpart: Box<dyn Generator>,
     mode: CapitalizerMode,
 }
+
+use crate::{
+    generator::{Generator, Result},
+    styles::{ELEM, PROP},
+};
 
 #[derive(Clone, Debug)]
 pub enum CapitalizerMode {
@@ -44,10 +47,10 @@ impl Generator for Capitalizer {
             .and_then(|vec| Ok(vec.into_iter().map(|s| self.capitalize(s)).collect()))
     }
 
-    fn print_analysis(&self, indent: usize) {
+    fn analyze(&self, verbose: bool, indent: usize) {
         let indent_str = " ".repeat(indent);
-        println!("{}Capitalizer: mode={:?}", indent_str, self.mode);
-        print!("{} Subpart: ", indent_str);
-        self.subpart.print_analysis(indent + 2);
+        println!("{}{ELEM}Capitalizer:{ELEM:#}", indent_str);
+        println!("{} {PROP}Mode: {PROP:#}{:?}", indent_str, self.mode);
+        self.subpart.analyze(verbose, indent + 2);
     }
 }

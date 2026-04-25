@@ -1,7 +1,10 @@
-use crate::generator::{Generator, Result};
-
 use rand::Rng;
 use rand::seq::IndexedRandom;
+
+use crate::{
+    generator::{Generator, Result},
+    styles::ELEM,
+};
 
 pub struct Switcher {
     subparts: Vec<Box<dyn Generator>>,
@@ -21,12 +24,11 @@ impl Generator for Switcher {
             .unwrap_or_else(|| Ok(vec![]))
     }
 
-    fn print_analysis(&self, indent: usize) {
+    fn analyze(&self, verbose: bool, indent: usize) {
         let indent_str = " ".repeat(indent);
-        println!("Switcher: {} subparts", self.subparts.len());
-        for (i, subpart) in self.subparts.iter().enumerate() {
-            print!("{} Subpart {}: ", indent_str, i);
-            subpart.print_analysis(indent + 2);
+        println!("{}{ELEM}Switcher:{ELEM:#} {} subparts", indent_str, self.subparts.len());
+        for subpart in self.subparts.iter() {
+            subpart.analyze(verbose, indent + 2);
         }
     }
 }

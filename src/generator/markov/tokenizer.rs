@@ -51,13 +51,13 @@ impl Tokenizer {
         };
 
         add(
-            "AÀÁÂÃÄÅÆEÈÉÊËIÌÍÎÏOÒÓÔÕÖØUÙÚÛÜŮÝaàáâãäåæeèéêëiìíîïoòóôõöøuùúûüůý",
+            "aAáÁàÀâÂåÅäÄãÃæÆeEéÉèÈêÊëËiIíÍìÌîÎïÏoOóÓòÒôÔöÖõÕøØuUúÚùÙûÛůŮüÜyYýÝÿŸ",
             RANK_VOWEL,
         );
-        add("YŸyÿWw", RANK_GLIDE);
-        add("LlRrŘř", RANK_LIQUID);
-        add("MNÑŇmnñňFSÞŠŽfsþšžVZvzHhÇÐßçð", RANK_NASAL_FRICATIVE);
-        add("BCČDĎGJKPQTŤXbcčdďgjkpqtťx", RANK_STOP);
+        add("wW", RANK_GLIDE);
+        add("lLrRřŘ", RANK_LIQUID);
+        add("çÇðÐfFhHmMnNňŇñÑsSšŠßvVzZžŽþÞ", RANK_NASAL_FRICATIVE);
+        add("bBcCčČdDďĎgGjJkKpPqQtTťŤxX", RANK_STOP);
 
         Self::Ssp { ranks }
     }

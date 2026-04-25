@@ -1,27 +1,36 @@
 mod tokenizer;
 
 use std::{
+    borrow::Cow,
     collections::HashMap,
     io::{Write, stdout},
 };
 
 use rand::{Rng, RngExt};
 
-use crate::generator::{Error, Generator, MAX_REJECTIONS, Result};
+use crate::{
+    generator::{Error, Generator, MAX_REJECTIONS, Result},
+    styles::{ELEM, PROP, PUNCT, SPEC, TOKEN},
+};
 
 pub use tokenizer::Tokenizer;
 
 type FreqMap = HashMap<Option<String>, i32>;
 
+/// Maximum length of generated string to prevent infinite loops in cyclic or near-cyclic models.
+pub const MAX_LEN: usize = 100;
+
 pub struct MarkovGen {
     freqs: HashMap<Option<String>, FreqMap>,
+    target_len: Option<usize>,
     cutoff_len: Option<usize>,
     reject: Vec<String>,
 }
 
 impl MarkovGen {
     pub fn train(
-        data: &[String],
+        data: &[impl AsRef<str>],
+        target_len: Option<usize>,
         cutoff_len: Option<usize>,
         reject: Vec<String>,
         tokenizer: &Tokenizer,
@@ -30,7 +39,7 @@ impl MarkovGen {
         let mut freqs = HashMap::new();
 
         for word in data.iter() {
-            let mut tokens = tokenizer.tokenize(word).into_iter();
+            let mut tokens = tokenizer.tokenize(word.as_ref()).into_iter();
             let mut token = None;
             loop {
                 let next = tokens.next();
@@ -52,6 +61,7 @@ impl MarkovGen {
 
         Self {
             freqs,
+            target_len,
             cutoff_len,
             reject,
         }
@@ -70,10 +80,14 @@ impl Generator for MarkovGen {
             }
 
             'inner: loop {
-                let freq = self.freqs.get(&token).unwrap();
-                let total: i32 = freq.values().sum();
-                let mut roll: i32 = rand.random_range(0..total);
+                if name.len() >= MAX_LEN {
+                    // Safety valve to prevent infinite loops in degenerate models
+                    return Ok(vec![name]);
+                }
 
+                let freq = self.freqs.get(&token).unwrap();
+
+                // Stop if we hit the cutoff length and there's a valid halt option
                 if let Some(cutoff_len) = self.cutoff_len
                     && name.len() >= cutoff_len
                     && freq.contains_key(&None)
@@ -81,13 +95,29 @@ impl Generator for MarkovGen {
                     return Ok(vec![name]);
                 }
 
+                // If we're under the target length and there are some valid continuations,
+                // remove the halt option to avoid early termination
+                let freq = if let Some(target_len) = self.target_len
+                    && name.len() < target_len
+                    && freq.keys().any(|k| k.is_some())
+                {
+                    let mut freq = freq.clone();
+                    freq.remove(&None);
+                    Cow::Owned(freq)
+                } else {
+                    Cow::Borrowed(freq)
+                };
+
+                let total: i32 = freq.values().sum();
+                let mut roll: i32 = rand.random_range(0..total);
+
                 for (next, count) in freq.iter() {
                     roll -= count;
                     if roll < 0 {
                         if let Some(next) = next {
                             stdout().flush().unwrap();
                             name.push_str(next);
-                            token = Some(next.clone());
+                            token = Some(next.to_string());
                             break;
                         } else {
                             if self.reject.contains(&name) {
@@ -110,28 +140,7 @@ impl Generator for MarkovGen {
         }
     }
 
-    fn print_analysis(&self, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!("Markov generator: {} states", self.freqs.len());
-
-        for (token, freq) in &self.freqs {
-            print!("{} ", indent_str);
-
-            if let Some(token) = token {
-                print!("\"{token}\" -> ");
-            } else {
-                print!("BEGIN -> ");
-            }
-            for (next, count) in freq {
-                if let Some(next) = next {
-                    print!("[\"{next}\": {count}], ");
-                } else {
-                    print!("[HALT: {count}], ");
-                }
-            }
-            println!();
-        }
-
+    fn analyze(&self, verbose: bool, indent: usize) {
         // Branching metrics
         let mut total_succ = 0usize;
         let mut weighted_entropy = 0.0f64;
@@ -165,14 +174,52 @@ impl Generator for MarkovGen {
         let avg_entropy = weighted_entropy / grand_total as f64;
         let perplexity = avg_entropy.exp2();
 
-        println!("{}Average branching factor: {:.2}", indent_str, avg_branching);
-        println!("{}Average entropy (bits):   {:.2}", indent_str, avg_entropy);
-        println!("{}Perplexity:           {:.2}", indent_str, perplexity);
+        let indent_str = " ".repeat(indent);
+
         println!(
-            "{}Dead-end states:      {} / {}",
+            "{}{ELEM}Markov generator:{ELEM:#} {} states",
+            indent_str,
+            self.freqs.len()
+        );
+
+        println!(
+            "{} {PROP}Average branching factor: {PROP:#}{:.2}",
+            indent_str, avg_branching
+        );
+        println!(
+            "{} {PROP}Average entropy (bits):   {PROP:#}{:.2}",
+            indent_str, avg_entropy
+        );
+        println!(
+            "{} {PROP}Perplexity:               {PROP:#}{:.2}",
+            indent_str, perplexity
+        );
+        println!(
+            "{} {PROP}Dead-end states:          {PROP:#}{} / {}",
             indent_str,
             dead_ends,
             self.freqs.len()
         );
+
+        if verbose {
+            println!("{} ---", indent_str);
+            for (token, freq) in &self.freqs {
+                print!("{} ", indent_str);
+
+                if let Some(token) = token {
+                    print!("{TOKEN}\"{token}\"{TOKEN:#} {PUNCT}->{PUNCT:#} ");
+                } else {
+                    print!("{SPEC}BEGIN{SPEC:#} {PUNCT}->{PUNCT:#} ");
+                }
+                for (next, count) in freq {
+                    if let Some(next) = next {
+                        print!("[{TOKEN}\"{next}\"{TOKEN:#}{PUNCT}: {count}{PUNCT:#}], ");
+                    } else {
+                        print!("[{SPEC}HALT{SPEC:#}{PUNCT}: {count}{PUNCT:#}], ");
+                    }
+                }
+                println!();
+            }
+        }
     }
 }

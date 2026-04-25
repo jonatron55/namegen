@@ -4,12 +4,14 @@
   <Concat joiner=" ">
     <Switch>
       <Concat joiner=" ">
+        <!-- Male titles -->
         <Option probability="0.2">
           <Words>
-            Adm. Baron Capt. Cmdr. Col. Commodore Count Dr. Earl Gen. Granddad Insp. Lord Lt. Mr.
-            Prince Prof. Sgt. Sir Sr. Uncle
+            Adm. Baron Capt. Cmdr. Col. Commodore Count DCI Dr. Earl Gen. Granddad Insp. Lord Lt. Mr.
+            PC Prince Prof. Sen. Sgt. Sir Sr. Uncle
           </Words>
         </Option>
+        <!-- Male names -->
         <Repeat min="1" max="2">
           <Concat joiner="">
             <Option probability="0.1">
@@ -17,7 +19,7 @@
                 Mc
               </Words>
             </Option>
-            <Markov cutoff_len="14">
+            <Markov target_len="5" cutoff_len="14">
               Albert Alexander Alvin Angus Antonio Apollo Apophis Archibald Ares Arnold Arthur Atlas Augustus Avery Axel
               Azrael
 
@@ -91,14 +93,16 @@
         </Option>
       </Concat>
       <Concat joiner=" ">
+        <!-- Female titles -->
         <Option probability="0.2">
           <Words>
-            Adm. Baroness Capt. Cmdr. Aunt Col. Commodore Countess Dame Dr. Gen. Grandma Insp. Lt.
-            Mdme. Mrs. Ms. Princess Prof. Sgt. Sra. Srta.
+            Adm. Baroness Capt. Cmdr. Aunt Col. Commodore Countess Dame DCI Dr. Gen. Grandma Insp. Lt.
+            Mdme. Mrs. Ms. PC Princess Prof. Sen. Sgt. Sra. Srta.
           </Words>
         </Option>
+        <!-- Female names -->
         <Repeat min="1" max="2">
-          <Markov cutoff_len="14">
+          <Markov target_len="5" cutoff_len="14">
             Agatha Agnes Amelia Angelica Annabelle Antonia Aphrodite Arabella Aria Ariadne Ariel Astrid Atalanta Athena
             Audrey Augusta
 
@@ -159,13 +163,14 @@
         </Option>
       </Concat>
     </Switch>
+    <!-- Surnames -->
     <Concat joiner="">
       <Option probability="0.1">
         <Words>
           Mc
         </Words>
       </Option>
-      <Markov  cutoff_len="14">
+      <Markov target_len="6" cutoff_len="14">
         Aardvark Accident Aerodrome Albatross Alligator Antelope Antlion Armadillo Asparagus Avocado
 
         Badger Banana Basilisk Beachball Beehive Beetle Bigears Bigfoot Bighead Bigmouth Bignose Bigwig Billygoat
@@ -225,12 +230,14 @@
     </Concat>
     <Option probability="0.2">
       <Switch>
+        <!-- Postnominals -->
         <Switch>
           <Words>
-            DDS DVM Esq. Jr. MD OBE PhD Sr.
+            CA DDS DVM Esq. Jr. MD MP OBE PhD Sr. VC
           </Words>
           <Number min="1" max="29" style="Roman" />
         </Switch>
+        <!-- Epithets -->
         <Concat joiner=" ">
           <Words>
             the
