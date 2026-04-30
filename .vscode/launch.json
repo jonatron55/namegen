@@ -6,6 +6,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/target/debug/namegen.exe",
       "args": [
+        "-b",
         "elf-m.xml"
       ],
       "stopAtEntry": false,

@@ -23,17 +23,8 @@ pub enum NumberStyle {
 }
 
 impl Numberer {
-    pub fn new(min: usize, max: usize) -> Self {
-        Self {
-            min,
-            max,
-            style: NumberStyle::Decimal,
-        }
-    }
-
-    pub fn with_style(mut self, style: NumberStyle) -> Self {
-        self.style = style;
-        self
+    pub fn new(min: usize, max: usize, style: NumberStyle) -> Self {
+        Self { min, max, style }
     }
 }
 

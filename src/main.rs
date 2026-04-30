@@ -1,10 +1,12 @@
+mod config;
 mod generator;
 mod styles;
 
 use std::{
     collections::HashMap,
-    fs::{self, File},
-    io::{BufRead, BufReader, Error as IoError, Read},
+    env::temp_dir,
+    fs::{self, File, OpenOptions},
+    io::{BufRead, BufReader, Error as IoError, Read, Write},
     path::PathBuf,
     process::ExitCode,
 };
@@ -12,9 +14,12 @@ use std::{
 use anstream::eprintln;
 use clap::Parser;
 use rand::{Rng, SeedableRng, rngs::StdRng};
-use xml::ParserConfig as XmlParserConfig;
+use xml::{EmitterConfig as XmlEmitterConfig, writer::XmlEvent};
 
-use crate::styles::{ERROR, PATH, WARN};
+use crate::{
+    config::ConfigSourceType,
+    styles::{ERROR, PATH, WARN},
+};
 
 const DEFAULT_CONFIG: &[u8] = include_bytes!("builtin/default.xml");
 const THING_CONFIG: &[u8] = include_bytes!("builtin/thing.xml");
@@ -50,6 +55,15 @@ struct Args {
     /// Number of names to generate.
     #[arg(long, short = 'n', default_value_t = 1)]
     count: usize,
+
+    /// Replaces the provided configuration file with a beautified version of
+    /// the same configuration and produces no other output.
+    ///
+    /// The output will be formatted with indentation and line breaks. Elements
+    /// such as <Markov> and <Words> will be sorted and deduplicated. Plain text
+    /// configurations will be converted to XML.
+    #[arg(long, short, conflicts_with = "count")]
+    beautify: bool,
 
     /// Analyze the given config file without generating names.
     ///
@@ -146,38 +160,87 @@ fn main() -> ExitCode {
         }
     };
 
-    let generator = if is_xml {
-        let mut xml = XmlParserConfig::new()
-            .trim_whitespace(true)
-            .whitespace_to_characters(true)
-            .ignore_comments(true)
-            .create_reader(reader);
+    let config = match config::read(
+        reader,
+        if is_xml {
+            ConfigSourceType::Xml
+        } else {
+            ConfigSourceType::PlainText
+        },
+    ) {
+        Ok(config) => config,
+        Err(err) => {
+            if let Some(position) = err.position() {
+                eprintln!(
+                    "{ERROR}Error:{ERROR:#} {PATH}{}:{}:{PATH:#} {}",
+                    path.display(),
+                    position,
+                    err
+                );
+            } else {
+                eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
+            }
+            return ExitCode::FAILURE;
+        }
+    };
 
-        match generator::from_xml(&mut xml) {
-            Ok(generator) => generator,
+    if args.beautify {
+        let tmp = temp_dir().join(path.file_name().unwrap_or_else(|| "namegen_beautify.xml".as_ref()));
+
+        let output = match OpenOptions::new().write(true).create(true).open(&tmp) {
+            Ok(file) => file,
             Err(err) => {
-                if let Some(position) = err.position() {
-                    eprintln!(
-                        "{ERROR}Error:{ERROR:#} {PATH}{}:{}:{PATH:#} {}",
-                        path.display(),
-                        position,
-                        err
-                    );
-                } else {
-                    eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
-                }
+                eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
                 return ExitCode::FAILURE;
             }
-        }
-    } else {
-        let mut text = String::new();
-        if let Err(err) = reader.read_to_string(&mut text) {
+        };
+
+        let mut writer: Box<dyn Write> = Box::new(output);
+        let mut writer = XmlEmitterConfig::new()
+            .perform_indent(true)
+            .line_separator("\n")
+            .pad_self_closing(true)
+            .indent_string("  ")
+            .create_writer(&mut writer);
+
+        if let Err(err) = writer.write(XmlEvent::start_element("NameGen")) {
             eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
             return ExitCode::FAILURE;
         }
 
-        generator::from_text(&text)
-    };
+        if let Err(err) = config.write_xml(&mut writer, 2) {
+            eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
+            return ExitCode::FAILURE;
+        }
+
+        if let Err(err) = writer.write(XmlEvent::end_element()) {
+            eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
+            return ExitCode::FAILURE;
+        }
+
+        let bak = path.with_extension("bak");
+
+        _ = fs::remove_file(&bak);
+
+        if let Err(err) = fs::rename(&path, &bak) {
+            eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
+            return ExitCode::FAILURE;
+        }
+
+        if let Err(err) = fs::rename(&tmp, &path) {
+            eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
+            return ExitCode::FAILURE;
+        }
+
+        if let Err(err) = fs::remove_file(&bak) {
+            eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
+            return ExitCode::FAILURE;
+        }
+
+        return ExitCode::SUCCESS;
+    }
+
+    let generator = config.into_generator();
 
     let mut rand: Box<dyn Rng> = match args.seed {
         Some(seed) => Box::new(StdRng::seed_from_u64(seed)),

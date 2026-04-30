@@ -13,17 +13,12 @@ pub struct Concatter {
 }
 
 impl Concatter {
-    pub fn new(subparts: Vec<Box<dyn Generator>>, reject: Vec<String>) -> Self {
+    pub fn new(subparts: Vec<Box<dyn Generator>>, joiner: String, reject: Vec<String>) -> Self {
         Self {
             subparts,
-            joiner: "".to_string(),
+            joiner,
             reject,
         }
-    }
-
-    pub fn with_joiner(mut self, joiner: String) -> Self {
-        self.joiner = joiner;
-        self
     }
 }
 

@@ -16,6 +16,7 @@ pub const RANK_STOP: u8 = 1;
 ///
 /// The tokenizer is used to split training data into units for the Markov
 /// chain.
+#[derive(PartialEq, Eq)]
 pub enum Tokenizer {
     /// Split on any of the specified chars.
     ///
@@ -51,13 +52,13 @@ impl Tokenizer {
         };
 
         add(
-            "aAáÁàÀâÂåÅäÄãÃæÆeEéÉèÈêÊëËiIíÍìÌîÎïÏoOóÓòÒôÔöÖõÕøØuUúÚùÙûÛůŮüÜyYýÝÿŸ",
+            "AEIOUYaeiouyÀÁÂÃÄÅÆÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæèéêëìíîïòóôõöøùúûüýÿŮůŸ",
             RANK_VOWEL,
         );
-        add("wW", RANK_GLIDE);
-        add("lLrRřŘ", RANK_LIQUID);
-        add("çÇðÐfFhHmMnNňŇñÑsSšŠßvVzZžŽþÞ", RANK_NASAL_FRICATIVE);
-        add("bBcCčČdDďĎgGjJkKpPqQtTťŤxX", RANK_STOP);
+        add("Ww", RANK_GLIDE);
+        add("LRlrŘř", RANK_LIQUID);
+        add("FHMNSVZfhmnsvzÇÐÑÞßçðñþŇňŠšŽž", RANK_NASAL_FRICATIVE);
+        add("BCDGJKPQTXbcdgjkpqtxČčĎďŤť", RANK_STOP);
 
         Self::Ssp { ranks }
     }

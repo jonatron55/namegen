@@ -20,14 +20,14 @@ type FreqMap = HashMap<Option<String>, i32>;
 /// Maximum length of generated string to prevent infinite loops in cyclic or near-cyclic models.
 pub const MAX_LEN: usize = 100;
 
-pub struct MarkovGen {
+pub struct Markov {
     freqs: HashMap<Option<String>, FreqMap>,
     target_len: Option<usize>,
     cutoff_len: Option<usize>,
     reject: Vec<String>,
 }
 
-impl MarkovGen {
+impl Markov {
     pub fn train(
         data: &[impl AsRef<str>],
         target_len: Option<usize>,
@@ -68,7 +68,7 @@ impl MarkovGen {
     }
 }
 
-impl Generator for MarkovGen {
+impl Generator for Markov {
     fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
         let mut name = String::new();
         let mut token: Option<String> = None;

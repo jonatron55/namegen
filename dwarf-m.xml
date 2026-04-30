@@ -1,204 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
   <Concat joiner=" ">
     <Markov cutoff_len="10">
-      <SplitTokenizer/>
-      A/nd/or
-      A/nth/or
-      Ag/n/ar
-      Ag/n/ur
-      Agr/o/nn
-      Ar/n/st/ei/nn
-      As/b/jar/n
-      As/b/jor/n
-      As/b/ro/nd
-      As/g/or/n
-      As/gr/o/nd
-      As/mu/nd/or
-      Au/th/u/n
-      B/eo/gr/i/m
-      B/eo/w/u/lf
-      B/jar/n
-      B/jor/n
-      B/ra/nd
-      Br/o/ck
-      Br/o/nd
-      Br/o/nn
-      D/a/g
-      D/a/gf/i/nn
-      D/a/gn
-      Ei/dr/i/th
-      Ei/n/ar/r
-      Ei/r/ic/k
-      Er/l/e/nd
-      F/a/st/u/lf
-      F/o/lk/i
-      Fl/ae/m/i/ng
-      Fr/o/th/i
-      G/eir/
-      Hr/o/a/ld/or
-      Hr/o/ar
-      Hr/o/th/g/ar
-      Ur/ist
-      <Reject>
-        Beowulf
-        Hrothgar
-      </Reject>
+      <SplitTokenizer split_chars="/" />
+      A/nd/or A/nth/or Ag/n/ar Ag/n/ur Agr/o/nn Ar/n/st/ei/nn As/b/jar/n As/b/jor/n
+      As/b/ro/nd As/g/or/n As/gr/o/nd As/mu/nd/or Au/th/u/n B/eo/gr/i/m B/eo/w/u/lf
+      B/jar/n B/jor/n B/ra/nd Br/o/ck Br/o/nd Br/o/nn D/a/g D/a/gf/i/nn D/a/gn
+      Ei/dr/i/th Ei/n/ar/r Ei/r/ic/k Er/l/e/nd F/a/st/u/lf F/o/lk/i Fl/ae/m/i/ng
+      Fr/o/th/i G/eir/ Hr/o/a/ld/or Hr/o/ar Hr/o/th/g/ar Ur/ist
     </Markov>
-    <Concat>
-      <Words>
-        Battle
-        Bear
-        Beer
-        Bold
-        Boulder
-        Brave
-        Copper
-        Dark
-        Deep
-        Diamond
-        Doom
-        Fine
-        Fire
-        Flint
-        Glory
-        Gold
-        Gravel
-        Great
-        Grim
-        Grumble
-        Hard
-        Heavy
-        Honour
-        Humble
-        Iron
-        Master
-        Mountain
-        Old
-        Pale
-        Pebble
-        Proud
-        Red
-        Rocky
-        Rough
-        Ruby
-        Rust
-        Rusty
-        Silver
-        Slumber
-        Snow
-        Steel
-        Stone
-        Stout
-        Strong
-        Thunder
-        Tough
-        Troll
-        True
-        War
-        Winter
-        Wise
-        Worg
-      </Words>
-      <Words>
-        anvil
-        arm
-        axe
-        bastard
-        beard
-        bellows
-        belly
-        belt
-        blade
-        boulder
-        buckle
-        chest
-        chin
-        chisel
-        craft
-        dark
-        deep
-        delver
-        digger
-        drinker
-        face
-        fall
-        fast
-        feast
-        fire
-        fist
-        flame
-        forge
-        gate
-        gem
-        glory
-        gold
-        gravel
-        grim
-        grip
-        ground
-        grumble
-        guard
-        guts
-        hammer
-        hard
-        heart
-        helm
-        hide
-        iron
-        jewel
-        keg
-        labour
-        lord
-        master
-        metal
-        might
-        miner
-        mood
-        pebble
-        pick
-        rock
-        rust
-        shield
-        silver
-        slayer
-        smith
-        song
-        soul
-        spell
-        spirit
-        steel
-        stone
-        stout
-        strength
-        strike
-        strong
-        wise
-      </Words>
-      <Reject>
-        Darkdark
-        Deepdeep
-        Doomdoom
-        Drunkdrunk
-        Gloryglory
-        Gloryhammer
-        Glumglum
-        Goldgold
-        Gravelgravel
-        Grimgrim
-        Grumblegrumble
-        Hardhard
-        Ironiron
-        Mastermaster
-        Pebblepebble
-        Rockrock
-        Silversilver
-        Steelsteel
-        Stonestone
-        Stoutstout
-        Wisewise
-      </Reject>
-    </Concat>
+    <Capitalize>
+      <Concat>
+        <Repeat min="2" max="2">
+          <Words>
+            anvil arm axe bastard battle bear beard beer bellows belly belt blade bold
+            boulder boulder brave buckle chest chin chisel copper craft dark dark deep deep
+            delver diamond digger doom drinker face fall fast feast fine fire fire fist
+            flame flint forge gate gem glory glory gold gold gravel gravel great grim grim
+            grip ground grumble grumble guard guts hammer hard hard heart heavy helm hide
+            honour humble iron iron jewel keg labour lord master master metal might miner
+            mood mountain old pale pebble pebble pick proud red rock rocky rough ruby rust
+            rust rusty shield silver silver slayer slumber smith snow song soul spell spirit
+            steel steel stone stone stout stout strength strike strong strong thunder tough
+            troll true war winter wise wise worg
+          </Words>
+        </Repeat>
+      </Concat>
+    </Capitalize>
   </Concat>
 </NameGen>

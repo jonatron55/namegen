@@ -1,45 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
   <Concat joiner=" ">
     <Markov cutoff_len="12">
       <SspTokenizer>
         <Class rank="5">AEIOUYaeiouy</Class>
         <Class rank="4">Ww</Class>
-        <Class rank="3">LRHlrh</Class>
-        <Class rank="2">MNFSVZmnfsvz</Class>
+        <Class rank="3">HLRhlr</Class>
+        <Class rank="2">FMNSVZfmnsvz</Class>
         <Class rank="1">BCDGJKPQTXbcdgjkpqtx</Class>
       </SspTokenizer>
-      Aderyn Aerafrin Aerathielle Aeronvia Aeronwen Aerona Anwen
-      Branwenne Bronwyn
-      Carrian Corianna
-      Eafrin Eawen Eawynne Eonoa Eonthia Eilwyn Eirian Eirwen Ellarwyn
-      Ellethia Ellonvia Elluthia Elluvia
-      Faewen Faewynne Fayelle Fayonelle Feyarwyn Feyelle Feyonoa
-      Gloriel Gwenda Gwendolynne Gwenna Gwennyth Gwynna Gwynnyth Glorafrin
-      Iriel Iruthia
-      Jasianna
-      Luthiel Luvioa Lythianna
-      Morafrin Morgan Morwen Morwynne Merrianna
-      Nolwen Nunvioa
-      Quennalynne
-      Rheva Rhiannon Rhiva Rhonwynne Rhosyn
-      Syarelle Syareth Saphielle Shyannon Shyarwen Sophia
-      Taegen Tarieth Tolwyn Toria Tannaquille
-      Urosynne Ursalynne Ursula Urwyn
+      Aderyn Aerafrin Aerathielle Aerona Aeronvia Aeronwen Anwen Branwenne Bronwyn
+      Carrian Corianna Eafrin Eawen Eawynne Eilwyn Eirian Eirwen Ellarwyn Ellethia
+      Ellonvia Elluthia Elluvia Eonoa Eonthia Faewen Faewynne Fayelle Fayonelle
+      Feyarwyn Feyelle Feyonoa Glorafrin Gloriel Gwenda Gwendolynne Gwenna Gwennyth
+      Gwynna Gwynnyth Iriel Iruthia Jasianna Luthiel Luvioa Lythianna Merrianna
+      Morafrin Morgan Morwen Morwynne Nolwen Nunvioa Quennalynne Rheva Rhiannon Rhiva
+      Rhonwynne Rhosyn Saphielle Shyannon Shyarwen Sophia Syarelle Syareth Taegen
+      Tannaquille Tarieth Tolwyn Toria Urosynne Ursalynne Ursula Urwyn
     </Markov>
     <Concat>
-      <Words>
-        Birch Blue Bramble Bright Dawn Dream Dusk Ever Fair Fenn Fey Frost Green Grey Merry Mist
-        Light Moon Night Oaken Ocean Pale Quick Rain River Sea Shade Shadow Silver Sky Star Storm
-        Sun Summer Swift Wander Wild Willow Wind Winter Wise
-      </Words>
-      <Words>
-        bark birch bloom blossom bow bramble branch bright caller caster cloud dancer dawn dream
-        dreamer drifter dusk dweller heart hunter leaf light mist nettle rain sapling seed seeker
-        seer shade shadow shrub singer song soul spell staff stave strider summer treader tree twig
-        twigs twiggy thorn vine walker wanderer whisper willow wind wing winter
-      </Words>
+      <Capitalize>
+        <Concat>
+          <Repeat min="2" max="2">
+            <Words>
+              bark birch birch bloom blossom blue bow bramble bramble branch bright bright
+              caller caster cloud dancer dawn dawn dream dream dreamer drifter dusk dusk
+              dweller ever fair fenn fey frost green grey heart hunter leaf light light merry
+              mist mist moon nettle night oaken ocean pale quick rain rain river sapling sea
+              seed seeker seer shade shade shadow shadow shrub silver singer sky song soul
+              spell staff star stave storm strider summer summer sun swift thorn treader tree
+              twig twiggy twigs vine walker wander wanderer whisper wild willow willow wind
+              wind wing winter winter wise
+            </Words>
+          </Repeat>
+        </Concat>
+      </Capitalize>
     </Concat>
   </Concat>
 </NameGen>

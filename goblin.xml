@@ -1,231 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
   <Concat joiner=" ">
-    <Markov cutoff_len="11">
-      Argwog
-      Arklesnarck
-      Arzlewig
-      Barklesnurg
-      Bogsnoggle
-      Buckyuck
-      Buggleyuck
-      Burglebung
-      Bnarzleback
-      Bnitzlebong
-      Bnurklesnang
-      Dunzledim
-      Dnitzlediz
-      Eckblozzo
-      Eckblurgle
-      Ecksnitz
-      Erckorg
-      Erckozzle
-      Fnarkle
-      Fnarz
-      Fnazzle
-      Fnitz
-      Fnig
-      Fniggleblurk
-      Fnog
-      Fnurglebonk
-      Fnurz
-      Glark
-      Gloggo
-      Glugglesnog
-      Glurg
-      Glurk
-      Gluzzleblark
-      Grazlesnub
-      Grark
-      Gritzlebing
-      Gricklesnip
-      Groggo
-      Grozzo
-      Gruggle
-      Grurg
-      Grurk
-      Gruzzle
-      Irklebirkle
-      Irkobbork
-      Itzleblurk
-      Kergrozzle
-      Kurgo
-      Krackleblaz
-      Krucko
-      Narglebargle
-      Nitzsnitz
-      Ogg
-      Ogglebog
-      Piggle
-      Pirklesnitz
-      Pockle
-      Poggo
-      Porgle
-      Pucksnitz
-      Puggle
-      Purkle
-      Pnitzig
-      Pnucko
-      Sockobbock
-      Soggo
-      Suckobruck
-      Suggle
-      Snaggle
-      Snitzleburk
-      Snuggo
-      Tangle
-      Targle
-      Tuggo
-      Turnglebling
-      Tniggle
-      Tnurglurk
-      Ugglebiggle
-      Uggrug
-      Uggoboggo
-      Warckle
-      Warzle
-      Wigglerug
-      Woggo
-      Wozzo
-      Wugglewug
-      Wurgle
-      Wuzzlewog
-      Whoggo
-      Whuggle
-      Yockoblock
-      Yogle
-      Yucko
-      Yuggo
+    <Markov cutoff_len="11" uniform="false" reject_training="false">
+      Aggro Arg Argleblargle Argwog Arklesnarck Arzlewig Barklesnurg Bnarzleback
+      Bnitzlebong Bnurklesnang Bogsnoggle Buckyuck Buggleyuck Burglebung Buzzlebong
+      Buzzlegunk Dnitzlediz Dunzledim Eckblozzo Eckblurgle Ecksnitz Erckorg Erckozzle
+      Fnarkle Fnarz Fnazzle Fnig Fniggleblurk Fnitz Fnog Fnurglebonk Fnurz Fonk Fonkle
+      Glark Gloggo Glugglesnog Glurg Glurk Gluzzleblark Gnargle Gnarkle Gnurklesnargle
+      Gonko Gorgle Gorgo Grackle Grark Grazlesnub Gricklesnip Gritzlebing Grizzle
+      Grizzleblargle Grizzleblark Grizzleblurgle Groggo Grozzo Gruggle Grurg Grurk
+      Gruzzle Gullybung Gullywog Hargle Hargleblargle Hargleblurgle Harglebluzzle
+      Irklebirkle Irkobbork Itzleblurk Kergrozzle Kludge Krackleblaz Krucko Kurgo
+      Narglebargle Nitzsnitz Ogg Ogglebog Piggle Pirklesnitz Platzle Plunk Pnitzig
+      Pnucko Pockle Poggo Pollywog Porgle Pucksnitz Puggle Punkle Purkle Snaggle
+      Snitzleburk Snubblub Snuggo Snuzangle Snuzle Sockobbock Soggo Splutz Splutzle
+      Suckobruck Suggle Tangle Targle Targle Tniggle Tnurglurk Tuggo Turnglebling Ugg
+      Ugglebiggle Uggoboggo Uggrug Urgle Warckle Warzle Whoggo Whuggle Wigglerug Woggo
+      Wozzo Wugglewug Wurgle Wuzzlewog Yaggle Yockoblock Yogle Yucko Yuggo
     </Markov>
-    <Concat>
-      <Words>
-        Anger
-        Bad
-        Blood
-        Bone
-        Bug
-        Cackle
-        Cave
-        Crooked
-        Cruel
-        Dark
-        Dirt
-        Dread
-        Dumb
-        Evil
-        Fear
-        Filth
-        Foul
-        Gloom
-        Glum
-        Green
-        Grey
-        Grim
-        Grime
-        Grit
-        Horror
-        Little
-        Mad
-        Mean
-        Mud
-        Murder
-        Pain
-        Poison
-        Rat
-        Rot
-        Scream
-        Shadow
-        Sick
-        Smash
-        Snake
-        Snarl
-        Snatch
-        Sneak
-        Spider
-        Stab
-        Stink
-        Switch
-        Tangle
-        Terror
-        Twist
-        Twisted
-        Weasle
-        Worg
-        Worm
-        Yellow
-      </Words>
-      <Words>
-        bite
-        biter
-        blade
-        breaker
-        bug
-        claw
-        club
-        crazed
-        dirt
-        doom
-        dread
-        eater
-        eye
-        face
-        fear
-        filth
-        fist
-        foot
-        glare
-        gloom
-        grim
-        grime
-        grin
-        grip
-        grit
-        hand
-        hide
-        hunter
-        killer
-        knife
-        knuckle
-        lash
-        lasher
-        mad
-        mud
-        murmur
-        mutter
-        nose
-        rotten
-        skull
-        slicer
-        smack
-        snapper
-        snare
-        snarl
-        snatcher
-        sneak
-        stab
-        stare
-        steel
-        stinker
-        swipe
-        teeth
-        thief
-        toe
-        tooth
-        trap
-        twist
-      </Words>
-      <Reject>
-        Dirtdirt
-        Dreaddread
-        Fearfear
-        Filthfilth
-        Grimegrime
-        Madmad
-        Mudmud
-        Twisttwist
-        Twistedtwist
-      </Reject>
-    </Concat>
+    <Capitalize>
+      <Concat>
+        <Repeat min="2" max="2">
+          <Words>
+            anger bad bite biter blade blood bone breaker bug bug cackle cave claw club
+            crazed crooked cruel dark dirt dirt doom dread dread dumb eater evil eye face
+            fear fear filth filth fist foot foul glare gloom gloom glum green grey grim grim
+            grime grime grin grip grit grit hand hide horror hunter killer knife knuckle
+            lash lasher little mad mad mean mud mud murder murmur mutter nose pain poison
+            rat rot rotten scream shadow sick skull slicer smack smash snake snapper snare
+            snarl snarl snatch snatcher sneak sneak spider stab stab stare steel stink
+            stinker swipe switch tangle teeth terror thief toe tooth trap twist twist
+            twisted weasle worg worm yellow
+          </Words>
+        </Repeat>
+      </Concat>
+    </Capitalize>
   </Concat>
 </NameGen>

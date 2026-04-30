@@ -3,7 +3,6 @@ mod concatter;
 mod markov;
 mod numberer;
 mod optional;
-mod parser;
 mod repeater;
 mod switcher;
 
@@ -12,9 +11,13 @@ use std::result::Result as StdResult;
 use rand::{Rng, seq::IndexedRandom};
 use thiserror::Error as ThisError;
 
-pub use parser::from_xml;
-
-use markov::{MarkovGen, Tokenizer};
+pub use capitalizer::{Capitalizer, CapitalizerMode};
+pub use concatter::Concatter;
+pub use markov::{Markov, Tokenizer};
+pub use numberer::{NumberStyle, Numberer};
+pub use optional::Optional;
+pub use repeater::Repeater;
+pub use switcher::Switcher;
 
 use crate::styles::ELEM;
 
@@ -42,16 +45,4 @@ impl Generator for Vec<String> {
         let indent_str = " ".repeat(indent);
         println!("{}{ELEM}Words:{ELEM:#} {} options", indent_str, self.len());
     }
-}
-
-pub fn from_text(text: &str) -> Box<dyn Generator> {
-    let words: Vec<&str> = text.split_whitespace().collect();
-    Box::new(MarkovGen::train(
-        &words,
-        None,
-        None,
-        vec![],
-        &Tokenizer::default_ssp(),
-        false,
-    ))
 }
