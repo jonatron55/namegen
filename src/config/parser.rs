@@ -1,9 +1,11 @@
 use std::{
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     io::{Error as IoError, Read},
     result::Result as StdResult,
 };
 
+use lazy_static::lazy_static;
+use regex::{Error as RegexError, Regex};
 use thiserror::Error as ThisError;
 use xml::{
     attribute::OwnedAttribute,
@@ -14,14 +16,19 @@ use xml::{
 use crate::{
     config::{
         GeneratorConfig, capitalizer::CapitalizerConfig, concatter::ConcatterConfig, markov::MarkovConfig,
-        numberer::NumbererConfig, optional::OptionalConfig, repeater::RepeaterConfig, switcher::SwitcherConfig,
+        matcher::MatcherConfig, numberer::NumbererConfig, optional::OptionalConfig, repeater::RepeaterConfig,
+        switcher::SwitcherConfig,
     },
     generator::{CapitalizerMode, NumberStyle, Tokenizer},
 };
 
 const ELEM_CAPITALIZE: &str = "Capitalize";
+const ELEM_CASE: &str = "Case";
 const ELEM_CONCAT: &str = "Concat";
+const ELEM_DEFAULT: &str = "Default";
+const ELEM_LITERAL: &str = "Literal";
 const ELEM_MARKOV: &str = "Markov";
+const ELEM_MATCH: &str = "Match";
 const ELEM_NUMBER: &str = "Number";
 const ELEM_OPTION: &str = "Option";
 const ELEM_REPEAT: &str = "Repeat";
@@ -33,16 +40,20 @@ const ELEM_CHUNK_TOKENIZER: &str = "ChunkTokenizer";
 const ELEM_SSP_TOKENIZER: &str = "SspTokenizer";
 const ELEM_CLASS: &str = "Class";
 
-const VALID_PART_TYPES: [&str; 8] = [
-    ELEM_CAPITALIZE,
-    ELEM_CONCAT,
-    ELEM_MARKOV,
-    ELEM_NUMBER,
-    ELEM_OPTION,
-    ELEM_REPEAT,
-    ELEM_SWITCH,
-    ELEM_WORDS,
-];
+lazy_static! {
+    static ref VALID_PART_TYPES: HashSet<&'static str> = HashSet::from([
+        ELEM_CAPITALIZE,
+        ELEM_CONCAT,
+        ELEM_LITERAL,
+        ELEM_MARKOV,
+        ELEM_MATCH,
+        ELEM_NUMBER,
+        ELEM_OPTION,
+        ELEM_REPEAT,
+        ELEM_SWITCH,
+        ELEM_WORDS,
+    ]);
+}
 
 #[derive(ThisError, Debug)]
 pub enum Error {
@@ -69,6 +80,13 @@ pub enum Error {
         attribute: String,
         value: String,
         position: TextPosition,
+    },
+
+    #[error("Invalid {attribute} value: {err}")]
+    InvalidRegex {
+        attribute: String,
+        position: TextPosition,
+        err: RegexError,
     },
 
     #[error("Missing attribute: \"{0}\"")]
@@ -200,6 +218,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     XmlEvent::EndElement { name } => {
                         if name.local_name == ELEM_MARKOV {
                             let tokenizer = tokenizer.unwrap_or_default();
+                            training_data.dedup();
 
                             return Ok(Box::new(MarkovConfig::new(
                                 training_data,
@@ -213,6 +232,91 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name,
+                                position: reader.position(),
+                            });
+                        }
+                    }
+                    other => {
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
+                    }
+                }
+            }
+        }
+        XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_MATCH => {
+            let mut base = None;
+            let mut cases = Vec::new();
+            let mut default = None;
+
+            for attr in attributes {
+                return Err(Error::UnexpectedAttribute {
+                    name: attr.name.local_name.clone(),
+                    position: reader.position(),
+                });
+            }
+
+            loop {
+                let event = reader.next()?;
+                match event {
+                    XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
+                        base = Some(inner_from_xml(&event, reader)?);
+                    }
+                    XmlEvent::StartElement {
+                        ref name, attributes, ..
+                    } if name.local_name == ELEM_CASE => {
+                        let mut expr = None;
+
+                        for attr in attributes {
+                            if attr.name.local_name == "expr" {
+                                expr = Some(Regex::new(&attr.value).map_err(|err| Error::InvalidRegex {
+                                    attribute: "expr".to_string(),
+                                    position: reader.position(),
+                                    err,
+                                })?);
+                            } else {
+                                return Err(Error::UnexpectedAttribute {
+                                    name: attr.name.local_name.clone(),
+                                    position: reader.position(),
+                                });
+                            }
+                        }
+
+                        if let Some(expr) = expr {
+                            let event = reader.next()?;
+                            let case = inner_from_xml(&event, reader)?;
+                            cases.push((expr, case));
+                        } else {
+                            return Err(Error::MissingAttribute("expr".to_string()));
+                        }
+                    }
+                    XmlEvent::StartElement {
+                        ref name, attributes, ..
+                    } if name.local_name == ELEM_DEFAULT => {
+                        if default.is_some() {
+                            return Err(Error::UnexpectedElement {
+                                name: name.local_name.clone(),
+                                position: reader.position(),
+                            });
+                        }
+
+                        for attr in attributes {
+                            return Err(Error::UnexpectedAttribute {
+                                name: attr.name.local_name.clone(),
+                                position: reader.position(),
+                            });
+                        }
+
+                        let event = reader.next()?;
+                        default = Some(inner_from_xml(&event, reader)?);
+                    }
+                    XmlEvent::EndElement { name } if name.local_name == ELEM_MATCH => {
+                        if let Some(base) = base {
+                            return Ok(Box::new(MatcherConfig::new(base, cases, default)));
+                        } else {
+                            return Err(Error::UnexpectedEnd {
+                                name: name.local_name.clone(),
                                 position: reader.position(),
                             });
                         }
@@ -279,6 +383,35 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             }
         }
 
+        XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_LITERAL => {
+            let mut literal = String::new();
+
+            for attr in attributes {
+                if attr.name.local_name == "text" {
+                    literal = attr.value.clone();
+                } else {
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
+                }
+            }
+
+            loop {
+                match reader.next()? {
+                    XmlEvent::EndElement { name } if name.local_name == ELEM_LITERAL => {
+                        return Ok(Box::new(literal));
+                    }
+                    other => {
+                        return Err(Error::UnexpectedEvent {
+                            event: other,
+                            position: reader.position(),
+                        });
+                    }
+                }
+            }
+        }
+
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_SWITCH => {
             let mut subparts = Vec::new();
 
@@ -326,6 +459,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::Whitespace(_) => {}
                     XmlEvent::EndElement { name } if name.local_name == ELEM_WORDS => {
+                        options.dedup();
                         return Ok(Box::new(options));
                     }
                     other => {
@@ -785,7 +919,8 @@ impl Error {
             | Error::UnexpectedElement { position, .. }
             | Error::UnexpectedEnd { position, .. }
             | Error::UnexpectedAttribute { position, .. }
-            | Error::InvalidValue { position, .. } => Some(*position),
+            | Error::InvalidValue { position, .. }
+            | Error::InvalidRegex { position, .. } => Some(*position),
         }
     }
 }

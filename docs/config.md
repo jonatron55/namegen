@@ -237,7 +237,7 @@ element, which can be any generator or combiner.
 
 #### Attributes ####
 
-- `joiner` (optional): A single character to intersperse between the outputs of
+- `joiner` (optional): A string to intersperse between the outputs of
   the child elements. If not specified, then the outputs will be concatenated
   with no separator.
 

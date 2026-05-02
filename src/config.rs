@@ -1,6 +1,7 @@
 mod capitalizer;
 mod concatter;
 mod markov;
+mod matcher;
 mod numberer;
 mod optional;
 mod parser;
@@ -66,6 +67,23 @@ pub fn read(reader: impl Read, src_type: ConfigSourceType) -> Result<Box<dyn Gen
                 .create_reader(reader);
             from_xml(&mut xml)
         }
+    }
+}
+
+impl GeneratorConfig for String {
+    fn into_generator(self: Box<Self>) -> Box<dyn Generator> {
+        self
+    }
+
+    fn write_xml(
+        self: Box<Self>,
+        writer: &mut XmlWriter<&mut Box<dyn Write>>,
+        _indent: usize,
+    ) -> Result<(), WriteError> {
+        writer.write(XmlEvent::start_element("Literal").attr("text", &self))?;
+        writer.write(XmlEvent::end_element())?;
+
+        Ok(())
     }
 }
 

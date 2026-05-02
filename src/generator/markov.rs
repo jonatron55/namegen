@@ -6,6 +6,7 @@ use std::{
     io::{Write, stdout},
 };
 
+use itertools::Itertools;
 use rand::{Rng, RngExt};
 
 use crate::{
@@ -203,7 +204,8 @@ impl Generator for Markov {
 
         if verbose {
             println!("{} ---", indent_str);
-            for (token, freq) in &self.freqs {
+            for token in self.freqs.keys().sorted_unstable() {
+                let freq = &self.freqs[token];
                 print!("{} ", indent_str);
 
                 if let Some(token) = token {

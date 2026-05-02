@@ -1,6 +1,7 @@
 mod capitalizer;
 mod concatter;
 mod markov;
+mod matcher;
 mod numberer;
 mod optional;
 mod repeater;
@@ -14,6 +15,7 @@ use thiserror::Error as ThisError;
 pub use capitalizer::{Capitalizer, CapitalizerMode};
 pub use concatter::Concatter;
 pub use markov::{Markov, Tokenizer};
+pub use matcher::Matcher;
 pub use numberer::{NumberStyle, Numberer};
 pub use optional::Optional;
 pub use repeater::Repeater;
@@ -34,6 +36,17 @@ pub type Result<T> = StdResult<T, Error>;
 pub trait Generator {
     fn generate(&self, rng: &mut dyn Rng) -> Result<Vec<String>>;
     fn analyze(&self, verbose: bool, indent: usize);
+}
+
+impl Generator for String {
+    fn generate(&self, _rand: &mut dyn Rng) -> Result<Vec<String>> {
+        Ok(vec![self.to_string()])
+    }
+
+    fn analyze(&self, _verbose: bool, indent: usize) {
+        let indent_str = " ".repeat(indent);
+        println!("{}{ELEM}Literal:{ELEM:#} {:?}", indent_str, self);
+    }
 }
 
 impl Generator for Vec<String> {
