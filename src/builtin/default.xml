@@ -2,9 +2,9 @@
 <NameGen>
   <Concat>
     <Concat joiner=" ">
-      <Switch>
+      <Switch id="gender">
         <Concat joiner=" ">
-          <Option probability="0.3">
+          <Option id="title" probability="0.3">
             <Words>
               Adm. Baron Capt. Cmdr. Cmdre. Col. Count DCI Dr. Earl Gen. Granddad HRH HRM
               Insp. Lord Lt. Mr. PC Prince Prof. Sen. Sgt. Sir Sr. Uncle
@@ -17,7 +17,7 @@
                   Mc
                 </Words>
               </Option>
-              <Markov target_len="5" cutoff_len="12">
+              <Markov id="firstname" target_len="5" cutoff_len="12">
                 Abraham Achilles Adam Adolphus Alastair Albert Aldous Alexander Alfred Algernon
                 Aloysius Alphonse Alvin Angus Antonio Anubis Apollo Apophis Archibald Archilles
                 Ares Arnold Arthur Atlas Augustus Aurelius Avery Axel Azrael Barbarossa
@@ -69,14 +69,14 @@
           </Option>
         </Concat>
         <Concat joiner=" ">
-          <Option probability="0.2">
+          <Option id="title" probability="0.2">
             <Words>
               Adm. Aunt Baroness Capt. Cmdr. Cmdre. Col. Countess DCI Dame Dr. Gen. Grandma
               HRH HRM Insp. Lt. Mdme. Mrs. Ms. PC Princess Prof. Sen. Sgt. Sra. Srta.
             </Words>
           </Option>
           <Repeat min="1" max="2">
-            <Markov target_len="5" cutoff_len="12">
+            <Markov id="firstname" target_len="5" cutoff_len="12">
               Agatha Agnes Amelia Angelica Annabelle Antonia Aphrodite Arabella Aria Ariadne
               Ariel Artemis Astrid Atalanta Athena Audrey Augusta Barbara Bast Beatrice
               Bernadette Bernadine Bernice Beryl Beverly Bianca Bonita Bonnie Bridget Bronwyn
@@ -121,7 +121,7 @@
             Mc
           </Words>
         </Option>
-        <Markov target_len="6" cutoff_len="12">
+        <Markov id="surname" target_len="6" cutoff_len="12">
           Aardvark Abacus Abbey Aberration Abracadabra Absurdity Accident Accolade
           Addendum Adjective Aerodrome Albatross Albertosaurus Alligator Allosaurus
           Aluminum Amargasaurus Amoeba Anaconda Anemone Ankylosaurus Anomaly Antelope
@@ -194,54 +194,55 @@
         </Markov>
       </Concat>
     </Concat>
-    <Option probability="0.3">
+    <Option id="suffix" probability="0.3">
       <Switch>
         <Switch>
           <Concat>
             <Literal text=", " />
-            <Words>
+            <Words id="postnominal">
               CA DDS DVM Esq. Jr. MD MP OBE PhD Sr. VC
             </Words>
           </Concat>
           <Concat>
             <Literal text=" " />
-            <Number min="1" max="29" style="RomanUpper" />
+            <Number id="ordinal" min="1" max="29" style="RomanUpper" />
           </Concat>
         </Switch>
         <Concat>
           <Literal text=" the " />
-          <Words>
+          <Words id="epithet">
             Adorable Amazing Amusing Angry Anxious Apprehensive Arrogant Awesome Awkward Bad
             Barbarian Beautiful Bewildered Bizarre Blithering Boastful Brash Brave
-            Cantankerous Clever Clumsy Comical Confused Cool Cranky Crazy Cryptic
-            Curmudgeonly Dapper Devious Diligent Discombocbulated Disgruntled Dreadful
-            Drunken Eccentric Elegant Elusive Embarrassed Enigmatic Eternal Evil Exasperated
-            Excellent Exceptional Excited Extraordinary Fabulous Fantastic Fierce
-            Flabbergasted Flammable Fluffy Foolish Fragrant Frightened Funky Funny Furious
-            Fuzzy Glorious Good Great Grim Grizzled Groovy Grouchy Grumpy Handsome Hangry
-            Happy Heavy Helpless Hideous Hilarious Holy Huggable Humble Humorous Hyperbolic
-            Iconic Imaginative Impish Important Impossible Impressive Improbable
-            Incomprehensible Inconceivable Incredible Incredulous Indignant Ingenious
-            Inquisitive Inscrutable Intrepid Ironic Irrational Irrelevant Irreverent
-            Irritable Jealous Jolly Jovial Joyous Jubilant Judicious Jumpy Kooky Lanky Lazy
-            Legendary Lethargic Loopy Loquacious Loud Lovely Ludicrous Lyrical Mad Magical
-            Magnificent Maladroit Malodorous Maniac Marvelous Mischievous Miserable Mistaken
-            Modest Monstrous Monumental Morbid Mysterious Nasty Naughty Nefarious Noble
-            Noisy Nonchalant Nonplussed Nonsensical Normal Nosy Noxious Nutty Obese
-            Obnoxious Occupied Octagonal Odd Offensive Ogre Old Ominous Oneiric Optimistic
-            Ordinary Original Ornery Outrageous Outstanding Panicky Paranoid Pathetic
-            Peculiar Perfect Perky Perplexed Petty Phantasmagorical Philosophical Pompous
-            Preposterous Proud Psychotic Putrid Puzzling Quaint Qualified Quintessential
-            Quixotic Quizzical Rambunctious Rascally Reclusive Regal Relevant Reluctant
-            Remarkable Repulsive Resilient Respectable Restless Robust Rude Ruthless Sad
-            Sarcastic Sassy Secretive Serious Shady Shameless Shifty Shy Silly Sleepy
-            Slippery Slothful Smelly Smug Snarky Soggy Spiffy Spunky Stately Stubborn
-            Sublime Superfluous Suspicious Swaggering Swanky Swift Tactful Talented
-            Tenacious Terrible Thankful Theological Thoughtful Thoughtless Thundering Timid
-            Trickster Troubling Ubiquitous Ugly Unacceptable Unbelievable Uncanny Undead
-            Unflappable Unforgettable Unimpressive Unpronounceable Unruly Unscrupulous
-            Unstoppable Upbeat Upset Upstanding Urgent Useful Vagrant Valiant Valid Valorous
-            Vapid Vegetarian Vehement Versatile Vexing Vibrant Vicious Victorious Vigilant
+            Cantankerous Cheeky Chilly Chubby Chubby Chummy Chunky Churlish Clever Clueless
+            Clumsy Clumsy Colossal Comical Confused Cool Cranky Crazy Cryptic Curmudgeonly
+            Dapper Devious Diligent Discombocbulated Disgruntled Dreadful Drunken Eccentric
+            Elegant Elusive Embarrassed Enigmatic Eternal Evil Exasperated Excellent
+            Exceptional Excited Extraordinary Fabulous Fantastic Fierce Flabbergasted
+            Flammable Fluffy Foolish Fragrant Frightened Funky Funny Furious Fuzzy Glorious
+            Good Great Grim Grizzled Groovy Grouchy Grumpy Handsome Hangry Happy Heavy
+            Helpless Hideous Hilarious Holy Huggable Humble Humorous Hyperbolic Iconic
+            Imaginative Impish Important Impossible Impressive Improbable Incomprehensible
+            Inconceivable Incredible Incredulous Indignant Ingenious Inquisitive Inscrutable
+            Intrepid Ironic Irrational Irrelevant Irreverent Irritable Jealous Jolly Jovial
+            Joyous Jubilant Judicious Jumpy Kooky Lanky Lazy Legendary Lethargic Loopy
+            Loquacious Loud Lovely Ludicrous Lyrical Mad Magical Magnificent Maladroit
+            Malodorous Maniac Marvelous Mischievous Miserable Mistaken Modest Monstrous
+            Monumental Morbid Mysterious Nasty Naughty Nefarious Noble Noisy Nonchalant
+            Nonplussed Nonsensical Normal Nosy Noxious Nutty Obese Obnoxious Occupied
+            Octagonal Odd Offensive Ogre Old Ominous Oneiric Optimistic Ordinary Original
+            Ornery Outrageous Outstanding Panicky Paranoid Pathetic Peculiar Perfect Perky
+            Perplexed Petty Phantasmagorical Philosophical Pompous Preposterous Proud
+            Psychotic Putrid Puzzling Quaint Qualified Quintessential Quixotic Quizzical
+            Rambunctious Rascally Reclusive Regal Relevant Reluctant Remarkable Repulsive
+            Resilient Respectable Restless Robust Rude Ruthless Sad Sarcastic Sassy
+            Secretive Serious Shady Shameless Shifty Shy Silly Sleepy Slippery Slothful
+            Smelly Smug Snarky Soggy Spiffy Spunky Stately Stubborn Sublime Superfluous
+            Suspicious Swaggering Swanky Swift Tactful Talented Tenacious Terrible Thankful
+            Theological Thoughtful Thoughtless Thundering Timid Trickster Troubling
+            Ubiquitous Ugly Unacceptable Unbelievable Uncanny Undead Unflappable
+            Unforgettable Unimpressive Unpronounceable Unruly Unscrupulous Unstoppable
+            Upbeat Upset Upstanding Urgent Useful Vagrant Valiant Valid Valorous Vapid
+            Vegetarian Vehement Versatile Vexing Vibrant Vicious Victorious Vigilant
             Vindictive Vivacious Vulgar Wacky Wandering Wanted Weird Wise Wistful Wizard
             Wonderful Wretched Yawning Yummy Zany Zealous Zesty
           </Words>

@@ -9,6 +9,7 @@ use crate::{
 };
 
 pub struct MatcherConfig {
+    id: Option<String>,
     base: Box<dyn GeneratorConfig>,
     cases: Vec<(Regex, Box<dyn GeneratorConfig>)>,
     default: Option<Box<dyn GeneratorConfig>>,
@@ -16,17 +17,24 @@ pub struct MatcherConfig {
 
 impl MatcherConfig {
     pub fn new(
+        id: Option<String>,
         base: Box<dyn GeneratorConfig>,
         cases: Vec<(Regex, Box<dyn GeneratorConfig>)>,
         default: Option<Box<dyn GeneratorConfig>>,
     ) -> Self {
-        Self { base, cases, default }
+        Self {
+            id,
+            base,
+            cases,
+            default,
+        }
     }
 }
 
 impl GeneratorConfig for MatcherConfig {
     fn into_generator(self: Box<Self>) -> Box<dyn Generator> {
         Box::new(Matcher::new(
+            self.id,
             self.base.into_generator(),
             self.cases
                 .into_iter()
@@ -41,7 +49,11 @@ impl GeneratorConfig for MatcherConfig {
         writer: &mut XmlWriter<&mut Box<dyn Write>>,
         indent: usize,
     ) -> Result<(), WriteError> {
-        writer.write(XmlEvent::start_element("Match"))?;
+        let mut ev = XmlEvent::start_element("Match");
+        if let Some(id) = &self.id {
+            ev = ev.attr("id", id);
+        }
+        writer.write(ev)?;
         self.base.write_xml(writer, indent + 2)?;
 
         for (regex, config) in self.cases {

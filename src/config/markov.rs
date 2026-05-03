@@ -9,6 +9,7 @@ use crate::{
 };
 
 pub struct MarkovConfig {
+    id: Option<String>,
     data: Vec<String>,
     target_len: Option<usize>,
     cutoff_len: Option<usize>,
@@ -20,6 +21,7 @@ pub struct MarkovConfig {
 
 impl MarkovConfig {
     pub fn new(
+        id: Option<String>,
         data: Vec<String>,
         target_len: Option<usize>,
         cutoff_len: Option<usize>,
@@ -29,6 +31,7 @@ impl MarkovConfig {
         tokenizer: Tokenizer,
     ) -> Self {
         Self {
+            id,
             data,
             target_len,
             cutoff_len,
@@ -48,11 +51,12 @@ impl GeneratorConfig for MarkovConfig {
         }
 
         Box::new(Markov::train(
+            self.id,
             &self.data,
             self.target_len,
             self.cutoff_len,
             self.reject,
-            &self.tokenizer,
+            self.tokenizer,
             self.uniform,
         ))
     }
@@ -62,30 +66,33 @@ impl GeneratorConfig for MarkovConfig {
         writer: &mut XmlWriter<&mut Box<dyn Write>>,
         indent: usize,
     ) -> Result<(), WriteError> {
-        let mut builder = XmlEvent::start_element("Markov");
+        let mut ev = XmlEvent::start_element("Markov");
+        if let Some(id) = &self.id {
+            ev = ev.attr("id", id);
+        }
 
         let target_len_str: String;
         let cutoff_len_str: String;
 
         if let Some(target_len) = self.target_len {
             target_len_str = target_len.to_string();
-            builder = builder.attr("target_len", &target_len_str);
+            ev = ev.attr("target_len", &target_len_str);
         }
 
         if let Some(cutoff_len) = self.cutoff_len {
             cutoff_len_str = cutoff_len.to_string();
-            builder = builder.attr("cutoff_len", &cutoff_len_str);
+            ev = ev.attr("cutoff_len", &cutoff_len_str);
         }
 
         if self.uniform {
-            builder = builder.attr("uniform", "true");
+            ev = ev.attr("uniform", "true");
         }
 
         if self.reject_training {
-            builder = builder.attr("reject_training", "true");
+            ev = ev.attr("reject_training", "true");
         }
 
-        writer.write(builder)?;
+        writer.write(ev)?;
 
         if self.tokenizer != Tokenizer::default_ssp() {
             match self.tokenizer {

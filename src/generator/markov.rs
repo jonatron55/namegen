@@ -11,7 +11,7 @@ use rand::{Rng, RngExt};
 
 use crate::{
     generator::{Error, Generator, MAX_REJECTIONS, Result},
-    styles::{ELEM, PROP, PUNCT, SPEC, TOKEN},
+    styles::{ELEM, ID, PROP, PUNCT, SPEC, TOKEN},
 };
 
 pub use tokenizer::Tokenizer;
@@ -22,19 +22,22 @@ type FreqMap = HashMap<Option<String>, i32>;
 pub const MAX_LEN: usize = 100;
 
 pub struct Markov {
+    id: Option<String>,
     freqs: HashMap<Option<String>, FreqMap>,
     target_len: Option<usize>,
     cutoff_len: Option<usize>,
     reject: Vec<String>,
+    tokenizer: Tokenizer,
 }
 
 impl Markov {
     pub fn train(
+        id: Option<String>,
         data: &[impl AsRef<str>],
         target_len: Option<usize>,
         cutoff_len: Option<usize>,
         reject: Vec<String>,
-        tokenizer: &Tokenizer,
+        tokenizer: Tokenizer,
         uniform: bool,
     ) -> Self {
         let mut freqs = HashMap::new();
@@ -61,24 +64,36 @@ impl Markov {
         }
 
         Self {
+            id,
             freqs,
             target_len,
             cutoff_len,
             reject,
+            tokenizer: tokenizer,
         }
     }
 }
 
 impl Generator for Markov {
-    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         let mut name = String::new();
         let mut token: Option<String> = None;
         let mut attempt = 0;
+
+        let hint_tokens = if let Some(id) = self.id.as_deref()
+            && let Some(hint) = hints.get(id)
+        {
+            self.tokenizer.tokenize(hint)
+        } else {
+            Vec::new()
+        };
 
         loop {
             if attempt > MAX_REJECTIONS {
                 return Err(Error::MaxRejectionsExceeded);
             }
+
+            let mut hint_tokens = hint_tokens.iter();
 
             'inner: loop {
                 if name.len() >= MAX_LEN {
@@ -98,7 +113,7 @@ impl Generator for Markov {
 
                 // If we're under the target length and there are some valid continuations,
                 // remove the halt option to avoid early termination
-                let freq = if let Some(target_len) = self.target_len
+                let mut freq = if let Some(target_len) = self.target_len
                     && name.len() < target_len
                     && freq.keys().any(|k| k.is_some())
                 {
@@ -107,6 +122,27 @@ impl Generator for Markov {
                     Cow::Owned(freq)
                 } else {
                     Cow::Borrowed(freq)
+                };
+
+                if let Some(hint_token) = hint_tokens.next() {
+                    let mut filtered = HashMap::new();
+                    for (k, v) in freq.iter() {
+                        if let Some(k) = k {
+                            if k.starts_with(hint_token) {
+                                filtered.insert(Some(k.clone()), *v);
+                            }
+                        } else {
+                            filtered.insert(None, *v);
+                        }
+                    }
+
+                    if filtered.is_empty() {
+                        // If the hint leads us to a dead end, reject and try again.
+                        attempt += 1;
+                        break 'inner;
+                    } else {
+                        freq = Cow::Owned(filtered);
+                    }
                 };
 
                 let total: i32 = freq.values().sum();
@@ -178,8 +214,9 @@ impl Generator for Markov {
         let indent_str = " ".repeat(indent);
 
         println!(
-            "{}{ELEM}Markov generator:{ELEM:#} {} states",
+            "{}{ELEM}Markov generator{ELEM:#} {ID}{}{ID:#}: {} states",
             indent_str,
+            self.id.as_deref().unwrap_or("unnamed"),
             self.freqs.len()
         );
 

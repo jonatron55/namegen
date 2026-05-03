@@ -8,14 +8,16 @@ use crate::{
 };
 
 pub struct ConcatterConfig {
+    id: Option<String>,
     subparts: Vec<Box<dyn GeneratorConfig>>,
     joiner: String,
     reject: Vec<String>,
 }
 
 impl ConcatterConfig {
-    pub fn new(subparts: Vec<Box<dyn GeneratorConfig>>, reject: Vec<String>) -> Self {
+    pub fn new(id: Option<String>, subparts: Vec<Box<dyn GeneratorConfig>>, reject: Vec<String>) -> Self {
         Self {
+            id,
             subparts,
             joiner: "".to_string(),
             reject,
@@ -31,6 +33,7 @@ impl ConcatterConfig {
 impl GeneratorConfig for ConcatterConfig {
     fn into_generator(self: Box<Self>) -> Box<dyn Generator> {
         Box::new(Concatter::new(
+            self.id,
             self.subparts.into_iter().map(|config| config.into_generator()).collect(),
             self.joiner,
             self.reject,
@@ -42,10 +45,15 @@ impl GeneratorConfig for ConcatterConfig {
         writer: &mut XmlWriter<&mut Box<dyn Write>>,
         indent: usize,
     ) -> Result<(), WriteError> {
+        let mut ev = XmlEvent::start_element("Concat");
+        if let Some(id) = &self.id {
+            ev = ev.attr("id", id);
+        }
+
         if self.joiner.len() > 0 {
-            writer.write(XmlEvent::start_element("Concat").attr("joiner", &self.joiner))?;
+            writer.write(ev.attr("joiner", &self.joiner))?;
         } else {
-            writer.write(XmlEvent::start_element("Concat"))?;
+            writer.write(ev)?;
         }
 
         for subpart in self.subparts {

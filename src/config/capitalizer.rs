@@ -8,20 +8,21 @@ use crate::{
 };
 
 pub struct CapitalizerConfig {
+    id: Option<String>,
     subpart: Box<dyn GeneratorConfig>,
     mode: CapitalizerMode,
 }
 
 impl CapitalizerConfig {
-    pub fn new(subpart: Box<dyn GeneratorConfig>, mode: CapitalizerMode) -> Self {
-        Self { subpart, mode }
+    pub fn new(id: Option<String>, subpart: Box<dyn GeneratorConfig>, mode: CapitalizerMode) -> Self {
+        Self { id, subpart, mode }
     }
 }
 
 impl GeneratorConfig for CapitalizerConfig {
     fn into_generator(self: Box<Self>) -> Box<dyn Generator> {
         let subgen = self.subpart.into_generator();
-        Box::new(Capitalizer::new(subgen, self.mode))
+        Box::new(Capitalizer::new(self.id, subgen, self.mode))
     }
 
     fn write_xml(
@@ -32,7 +33,11 @@ impl GeneratorConfig for CapitalizerConfig {
         if matches!(self.mode, CapitalizerMode::FirstUpper) {
             writer.write(XmlEvent::start_element("Capitalize"))?;
         } else {
-            writer.write(XmlEvent::start_element("Capitalize").attr("mode", &format!("{:?}", self.mode)))?;
+            let mut ev = XmlEvent::start_element("Capitalize");
+            if let Some(id) = &self.id {
+                ev = ev.attr("id", id);
+            }
+            writer.write(ev.attr("mode", &format!("{:?}", self.mode)))?;
         }
         self.subpart.write_xml(writer, indent + 2)?;
         writer.write(XmlEvent::end_element())?;

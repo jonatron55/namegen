@@ -1,12 +1,15 @@
+use std::collections::HashMap;
+
+use crate::{
+    generator::{Error, Generator, Result},
+    styles::{ELEM, ID, PROP},
+};
+
 pub struct Capitalizer {
+    id: Option<String>,
     subpart: Box<dyn Generator>,
     mode: CapitalizerMode,
 }
-
-use crate::{
-    generator::{Generator, Result},
-    styles::{ELEM, PROP},
-};
 
 #[derive(Clone, Debug)]
 pub enum CapitalizerMode {
@@ -16,8 +19,8 @@ pub enum CapitalizerMode {
 }
 
 impl Capitalizer {
-    pub fn new(subpart: Box<dyn Generator>, mode: CapitalizerMode) -> Self {
-        Self { subpart, mode }
+    pub fn new(id: Option<String>, subpart: Box<dyn Generator>, mode: CapitalizerMode) -> Self {
+        Self { id, subpart, mode }
     }
 
     fn capitalize(&self, s: String) -> String {
@@ -41,15 +44,28 @@ impl Capitalizer {
 }
 
 impl Generator for Capitalizer {
-    fn generate(&self, rand: &mut dyn rand::Rng) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn rand::Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+        if let Some(id) = self.id.as_deref()
+            && let Some(hint) = hints.get(id)
+        {
+            return Err(Error::InvalidHint {
+                hint: hint.to_string(),
+                id: id.to_string(),
+            });
+        }
+
         self.subpart
-            .generate(rand)
+            .generate(rand, hints)
             .and_then(|vec| Ok(vec.into_iter().map(|s| self.capitalize(s)).collect()))
     }
 
     fn analyze(&self, verbose: bool, indent: usize) {
         let indent_str = " ".repeat(indent);
-        println!("{}{ELEM}Capitalizer:{ELEM:#}", indent_str);
+        println!(
+            "{}{ELEM}Capitalizer{ELEM:#} {ID}{}{ID:#}",
+            indent_str,
+            self.id.as_deref().unwrap_or("unnamed")
+        );
         println!("{} {PROP}Mode: {PROP:#}{:?}", indent_str, self.mode);
         self.subpart.analyze(verbose, indent + 2);
     }

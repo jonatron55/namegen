@@ -15,9 +15,9 @@ use xml::{
 
 use crate::{
     config::{
-        GeneratorConfig, capitalizer::CapitalizerConfig, concatter::ConcatterConfig, markov::MarkovConfig,
-        matcher::MatcherConfig, numberer::NumbererConfig, optional::OptionalConfig, repeater::RepeaterConfig,
-        switcher::SwitcherConfig,
+        GeneratorConfig, capitalizer::CapitalizerConfig, concatter::ConcatterConfig, literal::LiteralConfig,
+        markov::MarkovConfig, matcher::MatcherConfig, numberer::NumbererConfig, optional::OptionalConfig,
+        repeater::RepeaterConfig, switcher::SwitcherConfig, words::WordsConfig,
     },
     generator::{CapitalizerMode, NumberStyle, Tokenizer},
 };
@@ -145,6 +145,7 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn Generato
 fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Result<Box<dyn GeneratorConfig>> {
     match event {
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_MARKOV => {
+            let mut id = None;
             let mut training_data = Vec::new();
             let mut reject = Vec::new();
             let mut reject_training = false;
@@ -154,35 +155,44 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             let mut tokenizer: Option<Tokenizer> = None;
 
             for attr in attributes {
-                if attr.name.local_name == "target_len" {
-                    target_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                        attribute: "target_len".to_string(),
-                        value: attr.value.clone(),
-                        position: reader.position(),
-                    })?);
-                } else if attr.name.local_name == "cutoff_len" {
-                    cutoff_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                        attribute: "cutoff_len".to_string(),
-                        value: attr.value.clone(),
-                        position: reader.position(),
-                    })?);
-                } else if attr.name.local_name == "reject_training" {
-                    reject_training = attr.value.parse().map_err(|_| Error::InvalidValue {
-                        attribute: "reject_training".to_string(),
-                        value: attr.value.clone(),
-                        position: reader.position(),
-                    })?;
-                } else if attr.name.local_name == "uniform" {
-                    uniform = attr.value.parse().map_err(|_| Error::InvalidValue {
-                        attribute: "uniform".to_string(),
-                        value: attr.value.clone(),
-                        position: reader.position(),
-                    })?;
-                } else {
-                    return Err(Error::UnexpectedAttribute {
-                        name: attr.name.local_name.clone(),
-                        position: reader.position(),
-                    });
+                match attr.name.local_name.as_str() {
+                    "id" => {
+                        id = Some(attr.value.clone());
+                    }
+                    "target_len" => {
+                        target_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: "target_len".to_string(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?);
+                    }
+                    "cutoff_len" => {
+                        cutoff_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: "cutoff_len".to_string(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?);
+                    }
+                    "reject_training" => {
+                        reject_training = attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: "reject_training".to_string(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?;
+                    }
+                    "uniform" => {
+                        uniform = attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: "uniform".to_string(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?;
+                    }
+                    _ => {
+                        return Err(Error::UnexpectedAttribute {
+                            name: attr.name.local_name.clone(),
+                            position: reader.position(),
+                        });
+                    }
                 }
             }
 
@@ -221,6 +231,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                             training_data.dedup();
 
                             return Ok(Box::new(MarkovConfig::new(
+                                id,
                                 training_data,
                                 target_len,
                                 cutoff_len,
@@ -246,15 +257,23 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             }
         }
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_MATCH => {
+            let mut id = None;
             let mut base = None;
             let mut cases = Vec::new();
             let mut default = None;
 
             for attr in attributes {
-                return Err(Error::UnexpectedAttribute {
-                    name: attr.name.local_name.clone(),
-                    position: reader.position(),
-                });
+                match attr.name.local_name.as_str() {
+                    "id" => {
+                        id = Some(attr.value.clone());
+                    }
+                    _ => {
+                        return Err(Error::UnexpectedAttribute {
+                            name: attr.name.local_name.clone(),
+                            position: reader.position(),
+                        });
+                    }
+                }
             }
 
             loop {
@@ -269,17 +288,20 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         let mut expr = None;
 
                         for attr in attributes {
-                            if attr.name.local_name == "expr" {
-                                expr = Some(Regex::new(&attr.value).map_err(|err| Error::InvalidRegex {
-                                    attribute: "expr".to_string(),
-                                    position: reader.position(),
-                                    err,
-                                })?);
-                            } else {
-                                return Err(Error::UnexpectedAttribute {
-                                    name: attr.name.local_name.clone(),
-                                    position: reader.position(),
-                                });
+                            match attr.name.local_name.as_str() {
+                                "expr" => {
+                                    expr = Some(Regex::new(&attr.value).map_err(|err| Error::InvalidRegex {
+                                        attribute: "expr".to_string(),
+                                        position: reader.position(),
+                                        err,
+                                    })?);
+                                }
+                                _ => {
+                                    return Err(Error::UnexpectedAttribute {
+                                        name: attr.name.local_name.clone(),
+                                        position: reader.position(),
+                                    });
+                                }
                             }
                         }
 
@@ -313,7 +335,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_MATCH => {
                         if let Some(base) = base {
-                            return Ok(Box::new(MatcherConfig::new(base, cases, default)));
+                            return Ok(Box::new(MatcherConfig::new(id, base, cases, default)));
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
@@ -332,12 +354,15 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_CONCAT => {
+            let mut id = None;
             let mut subparts = Vec::new();
             let mut reject = Vec::new();
             let mut joiner = String::new();
 
             for attr in attributes {
-                if attr.name.local_name == "joiner" {
+                if attr.name.local_name == "id" {
+                    id = Some(attr.value.clone());
+                } else if attr.name.local_name == "joiner" {
                     joiner = attr.value.clone();
                 } else {
                     return Err(Error::UnexpectedAttribute {
@@ -371,7 +396,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         }
                     },
                     XmlEvent::EndElement { name } if name.local_name == ELEM_CONCAT => {
-                        return Ok(Box::new(ConcatterConfig::new(subparts, reject).with_joiner(joiner)));
+                        return Ok(Box::new(ConcatterConfig::new(id, subparts, reject).with_joiner(joiner)));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -384,10 +409,13 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_LITERAL => {
+            let mut id = None;
             let mut literal = String::new();
 
             for attr in attributes {
-                if attr.name.local_name == "text" {
+                if attr.name.local_name == "id" {
+                    id = Some(attr.value.clone());
+                } else if attr.name.local_name == "text" {
                     literal = attr.value.clone();
                 } else {
                     return Err(Error::UnexpectedAttribute {
@@ -400,7 +428,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             loop {
                 match reader.next()? {
                     XmlEvent::EndElement { name } if name.local_name == ELEM_LITERAL => {
-                        return Ok(Box::new(literal));
+                        return Ok(Box::new(LiteralConfig::new(id, literal)));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -413,13 +441,18 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_SWITCH => {
+            let mut id = None;
             let mut subparts = Vec::new();
 
             for attr in attributes {
-                return Err(Error::UnexpectedAttribute {
-                    name: attr.name.local_name.clone(),
-                    position: reader.position(),
-                });
+                if attr.name.local_name == "id" {
+                    id = Some(attr.value.clone());
+                } else {
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
+                }
             }
 
             loop {
@@ -430,7 +463,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         subparts.push(inner_from_xml(&event, reader)?);
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_SWITCH => {
-                        return Ok(Box::new(SwitcherConfig::new(subparts)));
+                        return Ok(Box::new(SwitcherConfig::new(id, subparts)));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -443,13 +476,18 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_WORDS => {
+            let mut id = None;
             let mut options = Vec::new();
 
             for attr in attributes {
-                return Err(Error::UnexpectedAttribute {
-                    name: attr.name.local_name.clone(),
-                    position: reader.position(),
-                });
+                if attr.name.local_name == "id" {
+                    id = Some(attr.value.clone());
+                } else {
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
+                }
             }
 
             loop {
@@ -460,7 +498,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     XmlEvent::Whitespace(_) => {}
                     XmlEvent::EndElement { name } if name.local_name == ELEM_WORDS => {
                         options.dedup();
-                        return Ok(Box::new(options));
+                        return Ok(Box::new(WordsConfig::new(id, options)));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -473,21 +511,28 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_OPTION => {
+            let mut id = None;
             let mut probability = 0.5;
             let mut subpart = None;
 
             for attr in attributes {
-                if attr.name.local_name == "probability" {
-                    probability = attr.value.parse().map_err(|_| Error::InvalidValue {
-                        attribute: attr.name.local_name.clone(),
-                        value: attr.value.clone(),
-                        position: reader.position(),
-                    })?;
-                } else {
-                    return Err(Error::UnexpectedAttribute {
-                        name: attr.name.local_name.clone(),
-                        position: reader.position(),
-                    });
+                match attr.name.local_name.as_str() {
+                    "id" => {
+                        id = Some(attr.value.clone());
+                    }
+                    "probability" => {
+                        probability = attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: attr.name.local_name.clone(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?;
+                    }
+                    other => {
+                        return Err(Error::UnexpectedAttribute {
+                            name: other.to_string(),
+                            position: reader.position(),
+                        });
+                    }
                 }
             }
 
@@ -506,7 +551,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_OPTION => {
                         if let Some(subpart) = subpart {
-                            return Ok(Box::new(OptionalConfig::new(subpart, probability)));
+                            return Ok(Box::new(OptionalConfig::new(id, subpart, probability)));
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
@@ -525,12 +570,16 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_REPEAT => {
+            let mut id = None;
             let mut min = 1;
             let mut max = 2;
             let mut subpart = None;
 
             for attr in attributes {
                 match attr.name.local_name.as_str() {
+                    "id" => {
+                        id = Some(attr.value.clone());
+                    }
                     "min" => {
                         min = attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
@@ -577,7 +626,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                                 });
                             }
 
-                            return Ok(Box::new(RepeaterConfig::new(subpart, min, max)));
+                            return Ok(Box::new(RepeaterConfig::new(id, subpart, min, max)));
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
@@ -596,12 +645,17 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_NUMBER => {
+            let mut id = None;
+
             let mut min = 1;
             let mut max = 99;
             let mut style = NumberStyle::Decimal;
 
             for attr in attributes {
                 match attr.name.local_name.as_str() {
+                    "id" => {
+                        id = Some(attr.value.clone());
+                    }
                     "min" => {
                         min = attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
@@ -656,7 +710,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                             });
                         }
 
-                        return Ok(Box::new(NumbererConfig::new(min, max).with_style(style)));
+                        return Ok(Box::new(NumbererConfig::new(id, min, max).with_style(style)));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -669,9 +723,13 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
         }
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_CAPITALIZE => {
+            let mut id = None;
             let mut mode = CapitalizerMode::FirstUpper;
             for attr in attributes {
                 match attr.name.local_name.as_str() {
+                    "id" => {
+                        id = Some(attr.value.clone());
+                    }
                     "mode" => {
                         mode = match attr.value.as_str() {
                             "AllLower" => CapitalizerMode::AllLower,
@@ -720,6 +778,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::EndElement { ref name } if name.local_name == ELEM_CAPITALIZE => {
                         return Ok(Box::new(CapitalizerConfig::new(
+                            id,
                             subpart.ok_or_else(|| Error::UnexpectedEvent {
                                 event: event.clone(),
                                 position: reader.position(),
@@ -777,13 +836,16 @@ fn parse_tokenizer<R: Read>(
         ELEM_SPLIT_TOKENIZER => {
             let mut chars: Vec<char> = Vec::new();
             for attr in attributes {
-                if attr.name.local_name == "split_chars" {
-                    chars = attr.value.chars().collect();
-                } else {
-                    return Err(Error::UnexpectedAttribute {
-                        name: attr.name.local_name.clone(),
-                        position: reader.position(),
-                    });
+                match attr.name.local_name.as_str() {
+                    "split_chars" => {
+                        chars = attr.value.chars().collect();
+                    }
+                    other => {
+                        return Err(Error::UnexpectedAttribute {
+                            name: other.to_string(),
+                            position: reader.position(),
+                        });
+                    }
                 }
             }
             if chars.is_empty() {
@@ -796,18 +858,20 @@ fn parse_tokenizer<R: Read>(
         ELEM_CHUNK_TOKENIZER => {
             let mut len: Option<usize> = None;
             for attr in attributes {
-                if attr.name.local_name == "len" {
-                    len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                        attribute: attr.name.local_name.clone(),
-                        value: attr.value.clone(),
-                        position: reader.position(),
-                    })?);
-                } else {
-                    return Err(Error::InvalidValue {
-                        attribute: attr.name.local_name.clone(),
-                        value: attr.value.clone(),
-                        position: reader.position(),
-                    });
+                match attr.name.local_name.as_str() {
+                    "len" => {
+                        len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: attr.name.local_name.clone(),
+                            value: attr.value.clone(),
+                            position: reader.position(),
+                        })?);
+                    }
+                    other => {
+                        return Err(Error::UnexpectedAttribute {
+                            name: other.to_string(),
+                            position: reader.position(),
+                        });
+                    }
                 }
             }
 

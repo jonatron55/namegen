@@ -1,5 +1,6 @@
 mod capitalizer;
 mod concatter;
+mod literal;
 mod markov;
 mod matcher;
 mod numberer;
@@ -7,6 +8,7 @@ mod optional;
 mod parser;
 mod repeater;
 mod switcher;
+mod words;
 
 use std::io::{self, Error as IoError, Read, Write};
 
@@ -50,6 +52,7 @@ pub fn read(reader: impl Read, src_type: ConfigSourceType) -> Result<Box<dyn Gen
             let text = io::read_to_string(reader)?;
             let data = text.split_whitespace().map(|s| s.to_string()).collect();
             Ok(Box::new(MarkovConfig::new(
+                Some("name".to_string()),
                 data,
                 None,
                 None,
@@ -67,43 +70,6 @@ pub fn read(reader: impl Read, src_type: ConfigSourceType) -> Result<Box<dyn Gen
                 .create_reader(reader);
             from_xml(&mut xml)
         }
-    }
-}
-
-impl GeneratorConfig for String {
-    fn into_generator(self: Box<Self>) -> Box<dyn Generator> {
-        self
-    }
-
-    fn write_xml(
-        self: Box<Self>,
-        writer: &mut XmlWriter<&mut Box<dyn Write>>,
-        _indent: usize,
-    ) -> Result<(), WriteError> {
-        writer.write(XmlEvent::start_element("Literal").attr("text", &self))?;
-        writer.write(XmlEvent::end_element())?;
-
-        Ok(())
-    }
-}
-
-impl GeneratorConfig for Vec<String> {
-    fn into_generator(self: Box<Self>) -> Box<dyn Generator> {
-        self
-    }
-
-    fn write_xml(
-        mut self: Box<Self>,
-        writer: &mut XmlWriter<&mut Box<dyn Write>>,
-        indent: usize,
-    ) -> Result<(), WriteError> {
-        self.sort_unstable();
-
-        writer.write(XmlEvent::start_element("Words"))?;
-        write_indented_lines(*self, indent + 2, writer)?;
-        writer.write(XmlEvent::end_element())?;
-
-        Ok(())
     }
 }
 

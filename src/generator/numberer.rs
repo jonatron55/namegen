@@ -1,14 +1,17 @@
+use std::collections::HashMap;
+
 use rand::{Rng, RngExt};
 
 pub struct Numberer {
+    id: Option<String>,
     min: usize,
     max: usize,
     style: NumberStyle,
 }
 
 use crate::{
-    generator::{Generator, Result},
-    styles::{ELEM, PROP},
+    generator::{Error, Generator, Result},
+    styles::{ELEM, ID, PROP},
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -23,20 +26,39 @@ pub enum NumberStyle {
 }
 
 impl Numberer {
-    pub fn new(min: usize, max: usize, style: NumberStyle) -> Self {
-        Self { min, max, style }
+    pub fn new(id: Option<String>, min: usize, max: usize, style: NumberStyle) -> Self {
+        Self { id, min, max, style }
     }
 }
 
 impl Generator for Numberer {
-    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
-        let num = rand.random_range(self.min..=self.max);
+    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+        let num = if let Some(id) = self.id.as_deref()
+            && let Some(hint) = hints.get(id)
+        {
+            match hint.parse::<usize>() {
+                Ok(value) => value,
+                Err(_) => {
+                    return Err(Error::InvalidHint {
+                        hint: hint.to_string(),
+                        id: id.to_string(),
+                    });
+                }
+            }
+        } else {
+            rand.random_range(self.min..=self.max)
+        };
+
         Ok(vec![self.style.format(num)])
     }
 
     fn analyze(&self, _verbose: bool, indent: usize) {
         let indent_str = " ".repeat(indent);
-        println!("{}{ELEM}Number generator:{ELEM:#}", indent_str);
+        println!(
+            "{}{ELEM}Number generator{ELEM:#} {ID}{}{ID:#}:",
+            indent_str,
+            self.id.as_deref().unwrap_or("unnamed")
+        );
         println!("{} {PROP}Min: {PROP:#}{}", indent_str, self.min);
         println!("{} {PROP}Max: {PROP:#}{}", indent_str, self.max);
         println!("{} {PROP}Style: {PROP:#}{:?}", indent_str, self.style);

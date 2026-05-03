@@ -84,6 +84,17 @@ struct Args {
     #[arg(long, short, conflicts_with = "analyze", conflicts_with = "count")]
     export: bool,
 
+    /// Provide a hint for a particular generator with the given ID. Behaviour
+    /// differs based on the generator type.
+    ///
+    /// The allows you to steer the generation process by providing specific
+    /// values for certain generators. This option can be used multiple times to
+    /// provide hints for multiple generators. It should be provided in the
+    /// format `ID:HINT`, where `ID` is the ID of the generator you want to
+    /// provide a hint for, and `HINT` is the hint value itself.
+    #[arg(long, short = 'H', conflicts_with = "export")]
+    hint: Vec<String>,
+
     /// Random seed for name generation.
     #[arg(long, short)]
     seed: Option<u64>,
@@ -247,12 +258,23 @@ fn main() -> ExitCode {
         None => Box::new(rand::rng()),
     };
 
+    let hints: HashMap<&str, &str> = args
+        .hint
+        .iter()
+        .filter_map(|hint| {
+            let mut parts = hint.splitn(2, ':');
+            let id = parts.next()?.trim();
+            let value = parts.next()?.trim();
+            Some((id, value))
+        })
+        .collect();
+
     if args.analyze {
         generator.analyze(args.verbose, 0);
         ExitCode::SUCCESS
     } else {
         for _ in 0..args.count {
-            match generator.generate(&mut rand) {
+            match generator.generate(&mut rand, &hints) {
                 Ok(names) => {
                     for name in names {
                         print!("{name}");

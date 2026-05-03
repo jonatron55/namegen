@@ -1,27 +1,29 @@
 mod capitalizer;
 mod concatter;
+mod literal;
 mod markov;
 mod matcher;
 mod numberer;
 mod optional;
 mod repeater;
 mod switcher;
+mod words;
 
-use std::result::Result as StdResult;
+use std::{collections::HashMap, result::Result as StdResult};
 
-use rand::{Rng, seq::IndexedRandom};
+use rand::Rng;
 use thiserror::Error as ThisError;
 
 pub use capitalizer::{Capitalizer, CapitalizerMode};
 pub use concatter::Concatter;
+pub use literal::Literal;
 pub use markov::{Markov, Tokenizer};
 pub use matcher::Matcher;
 pub use numberer::{NumberStyle, Numberer};
 pub use optional::Optional;
 pub use repeater::Repeater;
 pub use switcher::Switcher;
-
-use crate::styles::ELEM;
+pub use words::Words;
 
 pub const MAX_REJECTIONS: usize = 100;
 
@@ -29,33 +31,20 @@ pub const MAX_REJECTIONS: usize = 100;
 pub enum Error {
     #[error("Exceeded 100 rejections during generation.")]
     MaxRejectionsExceeded,
+
+    #[error("Invalid hint \"{hint}\" for generator with ID \"{id}\".")]
+    InvalidHint { hint: String, id: String },
+
+    #[error("Generator with ID \"{id}\" cannot produce output matching the given hints.")]
+    Overconstrained { id: String },
 }
 
 pub type Result<T> = StdResult<T, Error>;
 
 pub trait Generator {
-    fn generate(&self, rng: &mut dyn Rng) -> Result<Vec<String>>;
+    fn generate(&self, rng: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>>;
     fn analyze(&self, verbose: bool, indent: usize);
-}
-
-impl Generator for String {
-    fn generate(&self, _rand: &mut dyn Rng) -> Result<Vec<String>> {
-        Ok(vec![self.to_string()])
-    }
-
-    fn analyze(&self, _verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!("{}{ELEM}Literal:{ELEM:#} {:?}", indent_str, self);
-    }
-}
-
-impl Generator for Vec<String> {
-    fn generate(&self, rand: &mut dyn Rng) -> Result<Vec<String>> {
-        Ok(self.choose(rand).map(|s| s.to_string()).into_iter().collect())
-    }
-
-    fn analyze(&self, _verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!("{}{ELEM}Words:{ELEM:#} {} options", indent_str, self.len());
+    fn id(&self) -> Option<&str> {
+        None
     }
 }
