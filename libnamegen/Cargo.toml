@@ -1,0 +1,13 @@
+[package]
+name = "libnamegen"
+authors.workspace = true
+version.workspace = true
+edition = "2024"
+
+[dependencies]
+itertools.workspace = true
+lazy_static.workspace = true
+rand.workspace = true
+regex.workspace = true
+thiserror.workspace = true
+xml.workspace = true

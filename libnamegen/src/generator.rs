@@ -43,7 +43,6 @@ pub type Result<T> = StdResult<T, Error>;
 
 pub trait Generator {
     fn generate(&self, rng: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>>;
-    fn analyze(&self, verbose: bool, indent: usize);
     fn id(&self) -> Option<&str> {
         None
     }

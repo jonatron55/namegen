@@ -1,0 +1,17 @@
+[package]
+name = "namegen-cli"
+authors.workspace = true
+version.workspace = true
+edition = "2024"
+
+[[bin]]
+name = "namegen"
+path = "src/main.rs"
+
+[dependencies]
+anstream.workspace = true
+anstyle.workspace = true
+clap = { workspace = true, features = ["derive"] }
+rand.workspace = true
+libnamegen = { path = "../libnamegen" }
+xml.workspace = true

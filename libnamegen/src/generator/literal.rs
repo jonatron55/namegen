@@ -2,10 +2,7 @@ use std::collections::HashMap;
 
 use rand::Rng;
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID, PROP},
-};
+use crate::generator::{Error, Generator, Result};
 
 pub struct Literal {
     id: Option<String>,
@@ -30,15 +27,5 @@ impl Generator for Literal {
         }
 
         Ok(vec![self.text.clone()])
-    }
-
-    fn analyze(&self, _verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Literal{ELEM:#} {ID}{}{ID:#}: {PROP}text: {PROP:#}\"{}\"",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed"),
-            self.text
-        );
     }
 }

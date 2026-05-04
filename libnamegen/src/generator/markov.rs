@@ -6,13 +6,9 @@ use std::{
     io::{Write, stdout},
 };
 
-use itertools::Itertools;
 use rand::{Rng, RngExt};
 
-use crate::{
-    generator::{Error, Generator, MAX_REJECTIONS, Result},
-    styles::{ELEM, ID, PROP, PUNCT, SPEC, TOKEN},
-};
+use crate::generator::{Error, Generator, MAX_REJECTIONS, Result};
 
 pub use tokenizer::Tokenizer;
 
@@ -28,6 +24,14 @@ pub struct Markov {
     cutoff_len: Option<usize>,
     reject: Vec<String>,
     tokenizer: Tokenizer,
+}
+
+pub struct MarkovStats {
+    pub total_states: usize,
+    pub avg_branching: f64,
+    pub avg_entropy: f64,
+    pub perplexity: f64,
+    pub dead_ends: usize,
 }
 
 impl Markov {
@@ -70,6 +74,49 @@ impl Markov {
             cutoff_len,
             reject,
             tokenizer: tokenizer,
+        }
+    }
+
+    pub fn analyze(&self) -> MarkovStats {
+        // Branching metrics
+        let mut total_succ = 0usize;
+        let mut weighted_entropy = 0.0f64;
+        let mut grand_total = 0i64;
+        let mut dead_ends = 0usize;
+
+        for freq in self.freqs.values() {
+            let n = freq.len();
+            total_succ += n;
+            if n == 1 && freq.contains_key(&None) {
+                dead_ends += 1;
+            }
+
+            let total: i32 = freq.values().sum();
+            grand_total += total as i64;
+
+            // H(s) in bits
+            let h: f64 = freq
+                .values()
+                .map(|&c| {
+                    let p = c as f64 / total as f64;
+                    if p > 0.0 { -p * p.log2() } else { 0.0 }
+                })
+                .sum();
+
+            // weight by state frequency (outgoing count as proxy)
+            weighted_entropy += h * total as f64;
+        }
+
+        let avg_branching = total_succ as f64 / self.freqs.len() as f64;
+        let avg_entropy = weighted_entropy / grand_total as f64;
+        let perplexity = avg_entropy.exp2();
+
+        MarkovStats {
+            total_states: self.freqs.len(),
+            avg_branching,
+            avg_entropy,
+            perplexity,
+            dead_ends,
         }
     }
 }
@@ -177,88 +224,7 @@ impl Generator for Markov {
         }
     }
 
-    fn analyze(&self, verbose: bool, indent: usize) {
-        // Branching metrics
-        let mut total_succ = 0usize;
-        let mut weighted_entropy = 0.0f64;
-        let mut grand_total = 0i64;
-        let mut dead_ends = 0usize;
-
-        for freq in self.freqs.values() {
-            let n = freq.len();
-            total_succ += n;
-            if n == 1 && freq.contains_key(&None) {
-                dead_ends += 1;
-            }
-
-            let total: i32 = freq.values().sum();
-            grand_total += total as i64;
-
-            // H(s) in bits
-            let h: f64 = freq
-                .values()
-                .map(|&c| {
-                    let p = c as f64 / total as f64;
-                    if p > 0.0 { -p * p.log2() } else { 0.0 }
-                })
-                .sum();
-
-            // weight by state frequency (outgoing count as proxy)
-            weighted_entropy += h * total as f64;
-        }
-
-        let avg_branching = total_succ as f64 / self.freqs.len() as f64;
-        let avg_entropy = weighted_entropy / grand_total as f64;
-        let perplexity = avg_entropy.exp2();
-
-        let indent_str = " ".repeat(indent);
-
-        println!(
-            "{}{ELEM}Markov generator{ELEM:#} {ID}{}{ID:#}: {} states",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed"),
-            self.freqs.len()
-        );
-
-        println!(
-            "{} {PROP}Average branching factor: {PROP:#}{:.2}",
-            indent_str, avg_branching
-        );
-        println!(
-            "{} {PROP}Average entropy (bits):   {PROP:#}{:.2}",
-            indent_str, avg_entropy
-        );
-        println!(
-            "{} {PROP}Perplexity:               {PROP:#}{:.2}",
-            indent_str, perplexity
-        );
-        println!(
-            "{} {PROP}Dead-end states:          {PROP:#}{} / {}",
-            indent_str,
-            dead_ends,
-            self.freqs.len()
-        );
-
-        if verbose {
-            println!("{} ---", indent_str);
-            for token in self.freqs.keys().sorted_unstable() {
-                let freq = &self.freqs[token];
-                print!("{} ", indent_str);
-
-                if let Some(token) = token {
-                    print!("{TOKEN}\"{token}\"{TOKEN:#} {PUNCT}->{PUNCT:#} ");
-                } else {
-                    print!("{SPEC}BEGIN{SPEC:#} {PUNCT}->{PUNCT:#} ");
-                }
-                for (next, count) in freq {
-                    if let Some(next) = next {
-                        print!("[{TOKEN}\"{next}\"{TOKEN:#}{PUNCT}: {count}{PUNCT:#}], ");
-                    } else {
-                        print!("[{SPEC}HALT{SPEC:#}{PUNCT}: {count}{PUNCT:#}], ");
-                    }
-                }
-                println!();
-            }
-        }
+    fn id(&self) -> Option<&str> {
+        self.id.as_deref()
     }
 }

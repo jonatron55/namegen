@@ -9,10 +9,7 @@ pub struct Numberer {
     style: NumberStyle,
 }
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID, PROP},
-};
+use crate::generator::{Error, Generator, Result};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NumberStyle {
@@ -50,18 +47,6 @@ impl Generator for Numberer {
         };
 
         Ok(vec![self.style.format(num)])
-    }
-
-    fn analyze(&self, _verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Number generator{ELEM:#} {ID}{}{ID:#}:",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed")
-        );
-        println!("{} {PROP}Min: {PROP:#}{}", indent_str, self.min);
-        println!("{} {PROP}Max: {PROP:#}{}", indent_str, self.max);
-        println!("{} {PROP}Style: {PROP:#}{:?}", indent_str, self.style);
     }
 }
 

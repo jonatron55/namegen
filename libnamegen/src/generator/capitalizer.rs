@@ -1,9 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID, PROP},
-};
+use crate::generator::{Error, Generator, Result};
 
 pub struct Capitalizer {
     id: Option<String>,
@@ -57,16 +54,5 @@ impl Generator for Capitalizer {
         self.subpart
             .generate(rand, constraints)
             .and_then(|vec| Ok(vec.into_iter().map(|s| self.capitalize(s)).collect()))
-    }
-
-    fn analyze(&self, verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Capitalizer{ELEM:#} {ID}{}{ID:#}",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed")
-        );
-        println!("{} {PROP}Mode: {PROP:#}{:?}", indent_str, self.mode);
-        self.subpart.analyze(verbose, indent + 2);
     }
 }

@@ -5,10 +5,7 @@ use rand::{
     seq::{IndexedRandom, IteratorRandom},
 };
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID},
-};
+use crate::generator::{Error, Generator, Result};
 
 pub struct Words {
     id: Option<String>,
@@ -35,15 +32,5 @@ impl Generator for Words {
         } else {
             Ok(self.words.choose(rand).map(|s| s.to_string()).into_iter().collect())
         }
-    }
-
-    fn analyze(&self, _verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Words{ELEM:#} {ID}{}{ID:#}: {} words",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed"),
-            self.words.len()
-        );
     }
 }

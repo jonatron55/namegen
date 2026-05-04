@@ -3,10 +3,7 @@ use std::collections::HashMap;
 use itertools::Itertools;
 use rand::Rng;
 
-use crate::{
-    generator::{Error, Generator, MAX_REJECTIONS, Result},
-    styles::{ELEM, ID},
-};
+use crate::generator::{Error, Generator, MAX_REJECTIONS, Result};
 
 pub struct Joiner {
     id: Option<String>,
@@ -62,20 +59,6 @@ impl Generator for Joiner {
             if !self.reject.contains(&name) {
                 return Ok(vec![name]);
             }
-        }
-    }
-
-    fn analyze(&self, verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Concatter{ELEM:#} {ID}{}{ID:#}: {} subparts",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed"),
-            self.subparts.len()
-        );
-
-        for subpart in self.subparts.iter() {
-            subpart.analyze(verbose, indent + 2);
         }
     }
 }

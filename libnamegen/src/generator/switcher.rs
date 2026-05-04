@@ -3,10 +3,7 @@ use std::collections::HashMap;
 use rand::Rng;
 use rand::seq::IndexedRandom;
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID},
-};
+use crate::generator::{Error, Generator, Result};
 
 pub struct Switcher {
     id: Option<String>,
@@ -42,18 +39,5 @@ impl Generator for Switcher {
             .choose(rand)
             .map(|part| part.generate(rand, constraints))
             .unwrap_or_else(|| Ok(vec![]))
-    }
-
-    fn analyze(&self, verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Switcher{ELEM:#} {ID}{}{ID:#}: {} subparts",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed"),
-            self.subparts.len()
-        );
-        for subpart in self.subparts.iter() {
-            subpart.analyze(verbose, indent + 2);
-        }
     }
 }

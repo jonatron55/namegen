@@ -1,6 +1,3 @@
-mod acsii_map;
-mod config;
-mod generator;
 mod styles;
 
 use std::{
@@ -14,16 +11,17 @@ use std::{
 
 use anstream::eprintln;
 use clap::Parser;
+use libnamegen::{
+    acsii_map,
+    config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml},
+};
 use rand::{Rng, SeedableRng, rngs::StdRng};
 use xml::{EmitterConfig as XmlEmitterConfig, writer::XmlEvent};
 
-use crate::{
-    config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml},
-    styles::{ERROR, PATH, WARN},
-};
+use crate::styles::{ERROR, PATH, WARN};
 
-const DEFAULT_CONFIG: &[u8] = include_bytes!("builtin/default.xml");
-const THING_CONFIG: &[u8] = include_bytes!("builtin/thing.xml");
+const DEFAULT_CONFIG: &[u8] = include_bytes!("../../configs/default.xml");
+const THING_CONFIG: &[u8] = include_bytes!("../../configs/thing.xml");
 
 /// Generates random names from a given configuration.
 #[derive(Parser)]
@@ -63,15 +61,8 @@ struct Args {
     /// The output will be formatted with indentation and line breaks. Elements
     /// such as <Markov> and <Words> will be sorted and deduplicated. Plain text
     /// configurations will be converted to XML.
-    #[arg(long, short, conflicts_with = "count")]
+    #[arg(long, short, conflicts_with = "count", conflicts_with = "export")]
     beautify: bool,
-
-    /// Analyze the given config file without generating names.
-    ///
-    /// This will output statistics about the Markov chain frequencies and
-    /// other statistics.
-    #[arg(long, short = 'A', conflicts_with = "count")]
-    analyze: bool,
 
     /// Converts non-ASCII characters in the generated names to their closest
     /// ASCII equivalent.
@@ -83,16 +74,9 @@ struct Args {
     #[arg(long, short)]
     ascii: bool,
 
-    /// Enable verbose output in analysis mode.
-    ///
-    /// This will include the complete frequency table in the '--analyze'
-    /// output.
-    #[arg(long, short)]
-    verbose: bool,
-
     /// Exports an example configuration file to the specified path instead of
     /// generating names.
-    #[arg(long, short, conflicts_with = "analyze", conflicts_with = "count")]
+    #[arg(long, short, conflicts_with = "count", conflicts_with = "beautify")]
     export: bool,
 
     /// Constrain the output of a particular generator with the given ID.
@@ -102,11 +86,11 @@ struct Args {
     /// constraints for certain generators. This option can be used multiple
     /// times to provide constraints for multiple generators. It should be
     /// provided in the format `<id>:<constraint>`.
-    #[arg(long, short = 'C', conflicts_with = "export")]
+    #[arg(long, short = 'C', conflicts_with = "export", conflicts_with = "beautify")]
     constrain: Vec<String>,
 
     /// Random seed for name generation.
-    #[arg(long, short, conflicts_with = "export", conflicts_with = "analyze")]
+    #[arg(long, short, conflicts_with = "export", conflicts_with = "beautify")]
     seed: Option<u64>,
 }
 
@@ -279,30 +263,25 @@ fn main() -> ExitCode {
         })
         .collect();
 
-    if args.analyze {
-        generator.analyze(args.verbose, 0);
-        ExitCode::SUCCESS
-    } else {
-        for _ in 0..args.count {
-            match generator.generate(&mut rand, &constraints) {
-                Ok(names) => {
-                    for name in names {
-                        if args.ascii {
-                            let ascii_name = acsii_map::to_ascii(&name);
-                            print!("{ascii_name}");
-                        } else {
-                            print!("{name}");
-                        }
+    for _ in 0..args.count {
+        match generator.generate(&mut rand, &constraints) {
+            Ok(names) => {
+                for name in names {
+                    if args.ascii {
+                        let ascii_name = acsii_map::to_ascii(&name);
+                        print!("{ascii_name}");
+                    } else {
+                        print!("{name}");
                     }
-                    println!();
                 }
-                Err(err) => {
-                    eprintln!("{ERROR}Error:{ERROR:#} {err}");
-                    return ExitCode::FAILURE;
-                }
+                println!();
+            }
+            Err(err) => {
+                eprintln!("{ERROR}Error:{ERROR:#} {err}");
+                return ExitCode::FAILURE;
             }
         }
-
-        ExitCode::SUCCESS
     }
+
+    ExitCode::SUCCESS
 }

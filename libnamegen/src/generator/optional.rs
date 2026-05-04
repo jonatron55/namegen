@@ -2,10 +2,7 @@ use std::collections::HashMap;
 
 use rand::{Rng, RngExt};
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID, PROP},
-};
+use crate::generator::{Error, Generator, Result};
 
 pub struct Optional {
     id: Option<String>,
@@ -46,16 +43,5 @@ impl Generator for Optional {
         } else {
             Ok(vec![])
         }
-    }
-
-    fn analyze(&self, verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Optional{ELEM:#} {ID}{}{ID:#}:",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed")
-        );
-        println!("{} {PROP}probability: {PROP:#}{:.2}", indent_str, self.probability);
-        self.generator.analyze(verbose, indent + 2);
     }
 }

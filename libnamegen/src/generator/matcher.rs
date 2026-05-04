@@ -3,10 +3,7 @@ use std::collections::HashMap;
 use rand::Rng;
 use regex::Regex;
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID},
-};
+use crate::generator::{Error, Generator, Result};
 
 pub struct Matcher {
     id: Option<String>,
@@ -58,26 +55,5 @@ impl Generator for Matcher {
         }
 
         Ok(base_outputs)
-    }
-
-    fn analyze(&self, verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Matcher{ELEM:#} {ID}{}{ID:#}:",
-            indent_str,
-            self.id.as_deref().unwrap_or("unnamed")
-        );
-
-        self.base.analyze(verbose, indent + 2);
-
-        for (regex, generator) in &self.cases {
-            println!("{}{ELEM}Case:{ELEM:#} Regex: {:?}", indent_str, regex);
-            generator.analyze(verbose, indent + 4);
-        }
-
-        if let Some(default_gen) = &self.default {
-            println!("{}{ELEM}Default:{ELEM:#}", indent_str);
-            default_gen.analyze(verbose, indent + 2);
-        }
     }
 }

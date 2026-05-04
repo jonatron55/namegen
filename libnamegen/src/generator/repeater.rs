@@ -2,10 +2,7 @@ use std::collections::HashMap;
 
 use rand::{Rng, RngExt};
 
-use crate::{
-    generator::{Error, Generator, Result},
-    styles::{ELEM, ID, PROP},
-};
+use crate::generator::{Error, Generator, Result};
 
 pub struct Repeater {
     id: Option<String>,
@@ -49,18 +46,6 @@ impl Generator for Repeater {
                 acc
             })
         })
-    }
-
-    fn analyze(&self, verbose: bool, indent: usize) {
-        let indent_str = " ".repeat(indent);
-        println!(
-            "{}{ELEM}Repeater{ELEM:#} {ID}{}{ID:#}:",
-            indent_str,
-            self.id().unwrap_or("unnamed")
-        );
-        println!("{} {PROP}Min: {PROP:#}{}", indent_str, self.min);
-        println!("{} {PROP}Max: {PROP:#}{}", indent_str, self.max);
-        self.generator.analyze(verbose, indent + 2);
     }
 
     fn id(&self) -> Option<&str> {
