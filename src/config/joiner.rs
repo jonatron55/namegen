@@ -4,38 +4,38 @@ use xml::{EventWriter as XmlWriter, writer::XmlEvent};
 
 use crate::{
     config::{GeneratorConfig, WriteError, write_indented_lines},
-    generator::{Concatter, Generator},
+    generator::{Generator, Joiner},
 };
 
-pub struct ConcatterConfig {
+pub struct JoinerConfig {
     id: Option<String>,
     subparts: Vec<Box<dyn GeneratorConfig>>,
-    joiner: String,
+    sep: String,
     reject: Vec<String>,
 }
 
-impl ConcatterConfig {
+impl JoinerConfig {
     pub fn new(id: Option<String>, subparts: Vec<Box<dyn GeneratorConfig>>, reject: Vec<String>) -> Self {
         Self {
             id,
             subparts,
-            joiner: "".to_string(),
+            sep: "".to_string(),
             reject,
         }
     }
 
-    pub fn with_joiner(mut self, joiner: String) -> Self {
-        self.joiner = joiner;
+    pub fn with_sep(mut self, sep: String) -> Self {
+        self.sep = sep;
         self
     }
 }
 
-impl GeneratorConfig for ConcatterConfig {
+impl GeneratorConfig for JoinerConfig {
     fn into_generator(self: Box<Self>) -> Box<dyn Generator> {
-        Box::new(Concatter::new(
+        Box::new(Joiner::new(
             self.id,
             self.subparts.into_iter().map(|config| config.into_generator()).collect(),
-            self.joiner,
+            self.sep,
             self.reject,
         ))
     }
@@ -45,13 +45,13 @@ impl GeneratorConfig for ConcatterConfig {
         writer: &mut XmlWriter<&mut Box<dyn Write>>,
         indent: usize,
     ) -> Result<(), WriteError> {
-        let mut ev = XmlEvent::start_element("Concat");
+        let mut ev = XmlEvent::start_element("Join");
         if let Some(id) = &self.id {
             ev = ev.attr("id", id);
         }
 
-        if self.joiner.len() > 0 {
-            writer.write(ev.attr("joiner", &self.joiner))?;
+        if self.sep.len() > 0 {
+            writer.write(ev.attr("sep", &self.sep))?;
         } else {
             writer.write(ev)?;
         }

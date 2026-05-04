@@ -1,5 +1,5 @@
 mod capitalizer;
-mod concatter;
+mod joiner;
 mod literal;
 mod markov;
 mod matcher;
@@ -15,7 +15,7 @@ use rand::Rng;
 use thiserror::Error as ThisError;
 
 pub use capitalizer::{Capitalizer, CapitalizerMode};
-pub use concatter::Concatter;
+pub use joiner::Joiner;
 pub use literal::Literal;
 pub use markov::{Markov, Tokenizer};
 pub use matcher::Matcher;
@@ -32,17 +32,17 @@ pub enum Error {
     #[error("Exceeded 100 rejections during generation.")]
     MaxRejectionsExceeded,
 
-    #[error("Invalid hint \"{hint}\" for generator with ID \"{id}\".")]
-    InvalidHint { hint: String, id: String },
+    #[error("Invalid constraint \"{constraint}\" for generator with ID \"{id}\".")]
+    InvalidHint { constraint: String, id: String },
 
-    #[error("Generator with ID \"{id}\" cannot produce output matching the given hints.")]
+    #[error("Generator with ID \"{id}\" cannot produce output matching the given constraints.")]
     Overconstrained { id: String },
 }
 
 pub type Result<T> = StdResult<T, Error>;
 
 pub trait Generator {
-    fn generate(&self, rng: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>>;
+    fn generate(&self, rng: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>>;
     fn analyze(&self, verbose: bool, indent: usize);
     fn id(&self) -> Option<&str> {
         None

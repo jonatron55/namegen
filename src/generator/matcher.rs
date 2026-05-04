@@ -32,14 +32,14 @@ impl Matcher {
 }
 
 impl Generator for Matcher {
-    fn generate(&self, rng: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
-        let mut base_outputs = self.base.generate(rng, hints)?;
+    fn generate(&self, rng: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+        let mut base_outputs = self.base.generate(rng, constraints)?;
 
         if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
             return Err(Error::InvalidHint {
-                hint: hint.to_string(),
+                constraint: constraint.to_string(),
                 id: id.to_string(),
             });
         }
@@ -47,14 +47,14 @@ impl Generator for Matcher {
         if let Some(output) = base_outputs.last() {
             for (regex, generator) in &self.cases {
                 if regex.is_match(output) {
-                    base_outputs.append(&mut generator.generate(rng, hints)?);
+                    base_outputs.append(&mut generator.generate(rng, constraints)?);
                     return Ok(base_outputs);
                 }
             }
         }
 
         if let Some(default_gen) = &self.default {
-            base_outputs.append(&mut default_gen.generate(rng, hints)?);
+            base_outputs.append(&mut default_gen.generate(rng, constraints)?);
         }
 
         Ok(base_outputs)

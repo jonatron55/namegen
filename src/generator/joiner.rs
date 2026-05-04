@@ -8,32 +8,32 @@ use crate::{
     styles::{ELEM, ID},
 };
 
-pub struct Concatter {
+pub struct Joiner {
     id: Option<String>,
     subparts: Vec<Box<dyn Generator>>,
-    joiner: String,
+    sep: String,
     reject: Vec<String>,
 }
 
-impl Concatter {
-    pub fn new(id: Option<String>, subparts: Vec<Box<dyn Generator>>, joiner: String, reject: Vec<String>) -> Self {
+impl Joiner {
+    pub fn new(id: Option<String>, subparts: Vec<Box<dyn Generator>>, sep: String, reject: Vec<String>) -> Self {
         Self {
             id,
             subparts,
-            joiner,
+            sep,
             reject,
         }
     }
 }
 
-impl Generator for Concatter {
+impl Generator for Joiner {
     #[allow(unstable_name_collisions)] // `intersperse` may at some point be incorporated into the standard library, but for now we need to use the one from itertools
-    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
             return Err(Error::InvalidHint {
-                hint: hint.to_string(),
+                constraint: constraint.to_string(),
                 id: id.to_string(),
             });
         }
@@ -47,7 +47,7 @@ impl Generator for Concatter {
             attempt += 1;
 
             let name: Vec<String> = self.subparts.iter().try_fold(Vec::new(), |mut acc, part| {
-                part.generate(rand, hints).map(|mut v| {
+                part.generate(rand, constraints).map(|mut v| {
                     acc.append(&mut v);
                     acc
                 })
@@ -58,7 +58,7 @@ impl Generator for Concatter {
                 continue;
             }
 
-            let name = name.join(&self.joiner);
+            let name = name.join(&self.sep);
             if !self.reject.contains(&name) {
                 return Ok(vec![name]);
             }

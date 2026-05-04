@@ -19,12 +19,12 @@ impl Literal {
 }
 
 impl Generator for Literal {
-    fn generate(&self, _rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, _rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
             return Err(Error::InvalidHint {
-                hint: hint.to_string(),
+                constraint: constraint.to_string(),
                 id: id.to_string(),
             });
         }

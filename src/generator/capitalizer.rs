@@ -44,18 +44,18 @@ impl Capitalizer {
 }
 
 impl Generator for Capitalizer {
-    fn generate(&self, rand: &mut dyn rand::Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn rand::Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
             return Err(Error::InvalidHint {
-                hint: hint.to_string(),
+                constraint: constraint.to_string(),
                 id: id.to_string(),
             });
         }
 
         self.subpart
-            .generate(rand, hints)
+            .generate(rand, constraints)
             .and_then(|vec| Ok(vec.into_iter().map(|s| self.capitalize(s)).collect()))
     }
 

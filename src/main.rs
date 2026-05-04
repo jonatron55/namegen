@@ -95,16 +95,15 @@ struct Args {
     #[arg(long, short, conflicts_with = "analyze", conflicts_with = "count")]
     export: bool,
 
-    /// Provide a hint for a particular generator with the given ID. Behaviour
-    /// differs based on the generator type.
+    /// Constrain the output of a particular generator with the given ID.
+    /// Behaviour differs based on the generator type.
     ///
-    /// The allows you to steer the generation process by providing specific
-    /// values for certain generators. This option can be used multiple times to
-    /// provide hints for multiple generators. It should be provided in the
-    /// format `ID:HINT`, where `ID` is the ID of the generator you want to
-    /// provide a hint for, and `HINT` is the hint value itself.
-    #[arg(long, short = 'H', conflicts_with = "export")]
-    hint: Vec<String>,
+    /// This allows you to steer the generation process by providing specific
+    /// constraints for certain generators. This option can be used multiple
+    /// times to provide constraints for multiple generators. It should be
+    /// provided in the format `<id>:<constraint>`.
+    #[arg(long, short = 'C', conflicts_with = "export")]
+    constrain: Vec<String>,
 
     /// Random seed for name generation.
     #[arg(long, short, conflicts_with = "export", conflicts_with = "analyze")]
@@ -269,11 +268,11 @@ fn main() -> ExitCode {
         None => Box::new(rand::rng()),
     };
 
-    let hints: HashMap<&str, &str> = args
-        .hint
+    let constraints: HashMap<&str, &str> = args
+        .constrain
         .iter()
-        .filter_map(|hint| {
-            let mut parts = hint.splitn(2, ':');
+        .filter_map(|constraint| {
+            let mut parts = constraint.splitn(2, ':');
             let id = parts.next()?.trim();
             let value = parts.next()?.trim();
             Some((id, value))
@@ -285,7 +284,7 @@ fn main() -> ExitCode {
         ExitCode::SUCCESS
     } else {
         for _ in 0..args.count {
-            match generator.generate(&mut rand, &hints) {
+            match generator.generate(&mut rand, &constraints) {
                 Ok(names) => {
                     for name in names {
                         if args.ascii {

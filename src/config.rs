@@ -1,5 +1,5 @@
 mod capitalizer;
-mod concatter;
+mod joiner;
 mod literal;
 mod markov;
 mod matcher;

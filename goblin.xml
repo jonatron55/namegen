@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Concat joiner=" ">
+  <Join sep=" ">
     <Markov cutoff_len="11">
       Aggro Arg Argleblargle Argwog Arklesnarck Arzlewig Barklesnurg Blarkblark Blurm
       Bnarzleback Bnitzlebong Bnurklesnang Bogsnoggle Booglin Braggle Brizzle Buckyuck
@@ -26,7 +26,7 @@
       Yaggle Yockoblock Yogle Yucko Yuggo
     </Markov>
     <Capitalize>
-      <Concat>
+      <Join>
         <Repeat min="2" max="2">
           <Words>
             anger bad bite biter blade blood bone breaker bug cackle cave claw club crazed
@@ -39,7 +39,7 @@
             weasle worg worm yellow
           </Words>
         </Repeat>
-      </Concat>
+      </Join>
     </Capitalize>
-  </Concat>
+  </Join>
 </NameGen>

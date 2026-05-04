@@ -24,15 +24,15 @@ impl Optional {
 }
 
 impl Generator for Optional {
-    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         let roll = if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
-            match hint.parse::<bool>() {
+            match constraint.parse::<bool>() {
                 Ok(value) => value,
                 Err(_) => {
                     return Err(Error::InvalidHint {
-                        hint: hint.to_string(),
+                        constraint: constraint.to_string(),
                         id: id.to_string(),
                     });
                 }
@@ -42,7 +42,7 @@ impl Generator for Optional {
         };
 
         if roll {
-            self.generator.generate(rand, hints)
+            self.generator.generate(rand, constraints)
         } else {
             Ok(vec![])
         }

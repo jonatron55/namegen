@@ -22,11 +22,11 @@ impl Words {
 }
 
 impl Generator for Words {
-    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
-            let words = self.words.iter().filter(|w| w.starts_with(hint));
+            let words = self.words.iter().filter(|w| w.starts_with(constraint));
             if words.clone().count() == 0 {
                 return Err(Error::Overconstrained { id: id.to_string() });
             }

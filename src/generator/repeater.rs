@@ -26,15 +26,15 @@ impl Repeater {
 }
 
 impl Generator for Repeater {
-    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         let count = if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
-            match hint.parse::<usize>() {
+            match constraint.parse::<usize>() {
                 Ok(value) => value,
                 Err(_) => {
                     return Err(Error::InvalidHint {
-                        hint: hint.to_string(),
+                        constraint: constraint.to_string(),
                         id: id.to_string(),
                     });
                 }
@@ -44,7 +44,7 @@ impl Generator for Repeater {
         };
 
         (0..count).try_fold(Vec::new(), |mut acc, _| {
-            self.generator.generate(rand, hints).map(|mut v| {
+            self.generator.generate(rand, constraints).map(|mut v| {
                 acc.append(&mut v);
                 acc
             })

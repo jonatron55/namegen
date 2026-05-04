@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Concat joiner=" ">
+  <Join sep=" ">
     <Switch id="gender">
       <Markov id="firstname" target_len="4" cutoff_len="10">
         Aderiol Adeth Adiol Aerand Aerannol Aerathiand Aeriol Aeron Aerond Ailill
@@ -36,7 +36,7 @@
       </Markov>
     </Switch>
     <Capitalize>
-      <Concat>
+      <Join>
         <Repeat min="2" max="2">
           <Words id="surname">
             ash autumn bark birch bird bloom blossom blue bow bracken bramble branch brave
@@ -49,7 +49,7 @@
             wander wanderer whisper wild willow wind wing winter wise wood wren yew
           </Words>
         </Repeat>
-      </Concat>
+      </Join>
     </Capitalize>
-  </Concat>
+  </Join>
 </NameGen>

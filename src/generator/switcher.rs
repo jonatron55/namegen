@@ -20,27 +20,27 @@ impl Switcher {
 }
 
 impl Generator for Switcher {
-    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
-            let idx = hint.parse::<usize>().map_err(|_| Error::InvalidHint {
+            let idx = constraint.parse::<usize>().map_err(|_| Error::InvalidHint {
                 id: id.to_string(),
-                hint: hint.to_string(),
+                constraint: constraint.to_string(),
             })?;
             if idx < self.subparts.len() {
-                return self.subparts[idx].generate(rand, hints);
+                return self.subparts[idx].generate(rand, constraints);
             } else {
                 return Err(Error::InvalidHint {
                     id: id.to_string(),
-                    hint: hint.to_string(),
+                    constraint: constraint.to_string(),
                 });
             }
         }
 
         self.subparts
             .choose(rand)
-            .map(|part| part.generate(rand, hints))
+            .map(|part| part.generate(rand, constraints))
             .unwrap_or_else(|| Ok(vec![]))
     }
 

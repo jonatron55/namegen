@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Concat joiner=" ">
+  <Join sep=" ">
     <Markov target_len="8" cutoff_len="15">
       Abandoned Aberrant Abhorrent Abominable Absolute Abstract Absurd Academic
       Acceptable Accessible Accidental Acclaimed Accommodating Accomplished Accurate
@@ -128,7 +128,7 @@
       Woeful Wondrous Wondrous Zany Zany Zealous Zealous Zenlike Zenlike Zigzag Zigzag
     </Markov>
     <Capitalize>
-      <Concat joiner="-">
+      <Join sep="-">
         <Option probability="0.2">
           <Words>
             Aero Astro Auto Bio Chrono Cyber Electro Geo Giga Hemi Hexa Hydro Hyper Hypno
@@ -211,7 +211,7 @@
           Xylophone Yak Yodeler Yoyo Ytterbium Yurt Zebra Zephyr Zeppelin Zither Zither
           Zombie Zoologist Zucchini
         </Markov>
-      </Concat>
+      </Join>
     </Capitalize>
     <Markov target_len="8" cutoff_len="14">
       Abbreviator Accelerator Accumulator Adapter Adhesivator Adjudicator Aerator
@@ -282,5 +282,5 @@
       Vocalizer Volatilizer Vortexizer Vulcanizer Waffleizer Waterer Weakener
       Weaponizer Wonderizer Worker Wrangler Wrongdoer Wrongifier
     </Markov>
-  </Concat>
+  </Join>
 </NameGen>

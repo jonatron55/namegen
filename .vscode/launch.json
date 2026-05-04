@@ -3,10 +3,10 @@
     {
       "args": [
         "--count=25",
-        "--hint=suffix:false",
-        "--hint=title:false",
-        "--hint=firstname:P",
-        "--hint=surname:P"
+        "--constraint=suffix:false",
+        "--constraint=title:false",
+        "--constraint=firstname:P",
+        "--constraint=surname:P"
       ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",

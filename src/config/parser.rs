@@ -15,7 +15,7 @@ use xml::{
 
 use crate::{
     config::{
-        GeneratorConfig, capitalizer::CapitalizerConfig, concatter::ConcatterConfig, literal::LiteralConfig,
+        GeneratorConfig, capitalizer::CapitalizerConfig, joiner::JoinerConfig, literal::LiteralConfig,
         markov::MarkovConfig, matcher::MatcherConfig, numberer::NumbererConfig, optional::OptionalConfig,
         repeater::RepeaterConfig, switcher::SwitcherConfig, words::WordsConfig,
     },
@@ -24,7 +24,7 @@ use crate::{
 
 const ELEM_CAPITALIZE: &str = "Capitalize";
 const ELEM_CASE: &str = "Case";
-const ELEM_CONCAT: &str = "Concat";
+const ELEM_JOIN: &str = "Join";
 const ELEM_DEFAULT: &str = "Default";
 const ELEM_LITERAL: &str = "Literal";
 const ELEM_MARKOV: &str = "Markov";
@@ -43,7 +43,7 @@ const ELEM_CLASS: &str = "Class";
 lazy_static! {
     static ref VALID_PART_TYPES: HashSet<&'static str> = HashSet::from([
         ELEM_CAPITALIZE,
-        ELEM_CONCAT,
+        ELEM_JOIN,
         ELEM_LITERAL,
         ELEM_MARKOV,
         ELEM_MATCH,
@@ -352,17 +352,17 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             }
         }
 
-        XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_CONCAT => {
+        XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_JOIN => {
             let mut id = None;
             let mut subparts = Vec::new();
             let mut reject = Vec::new();
-            let mut joiner = String::new();
+            let mut sep = String::new();
 
             for attr in attributes {
                 if attr.name.local_name == "id" {
                     id = Some(attr.value.clone());
-                } else if attr.name.local_name == "joiner" {
-                    joiner = attr.value.clone();
+                } else if attr.name.local_name == "sep" {
+                    sep = attr.value.clone();
                 } else {
                     return Err(Error::UnexpectedAttribute {
                         name: attr.name.local_name.clone(),
@@ -394,8 +394,8 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                             }
                         }
                     },
-                    XmlEvent::EndElement { name } if name.local_name == ELEM_CONCAT => {
-                        return Ok(Box::new(ConcatterConfig::new(id, subparts, reject).with_joiner(joiner)));
+                    XmlEvent::EndElement { name } if name.local_name == ELEM_JOIN => {
+                        return Ok(Box::new(JoinerConfig::new(id, subparts, reject).with_sep(sep)));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {

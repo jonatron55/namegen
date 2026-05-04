@@ -75,15 +75,15 @@ impl Markov {
 }
 
 impl Generator for Markov {
-    fn generate(&self, rand: &mut dyn Rng, hints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
         let mut name = String::new();
         let mut token: Option<String> = None;
         let mut attempt = 0;
 
         let hint_tokens = if let Some(id) = self.id.as_deref()
-            && let Some(hint) = hints.get(id)
+            && let Some(constraint) = constraints.get(id)
         {
-            self.tokenizer.tokenize(hint)
+            self.tokenizer.tokenize(constraint)
         } else {
             Vec::new()
         };
@@ -137,7 +137,7 @@ impl Generator for Markov {
                     }
 
                     if filtered.is_empty() {
-                        // If the hint leads us to a dead end, reject and try again.
+                        // If the constraint leads us to a dead end, reject and try again.
                         attempt += 1;
                         break 'inner;
                     } else {

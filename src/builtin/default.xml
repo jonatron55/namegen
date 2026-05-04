@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Concat>
-    <Concat joiner=" ">
+  <Join>
+    <Join sep=" ">
       <Switch id="gender">
-        <Concat joiner=" ">
+        <Join sep=" ">
           <Option id="title" probability="0.3">
             <Words>
               Adm. Baron Capt. Cmdr. Cmdre. Col. Count DCI Dr. Earl Gen. Granddad HRH HRM
@@ -11,7 +11,7 @@
             </Words>
           </Option>
           <Repeat min="1" max="2">
-            <Concat>
+            <Join>
               <Option probability="0.1">
                 <Words>
                   Mc
@@ -60,15 +60,15 @@
                 Wilson Winston Wolfgang Woodrow Wyatt Xander Xavier Xeno Xerxes Xylon Zacharias
                 Zachary Zane Zebedee Zephyr Zeus
               </Markov>
-            </Concat>
+            </Join>
           </Repeat>
           <Option probability="0.1">
             <Words>
               von
             </Words>
           </Option>
-        </Concat>
-        <Concat joiner=" ">
+        </Join>
+        <Join sep=" ">
           <Option id="title" probability="0.2">
             <Words>
               Adm. Aunt Baroness Capt. Cmdr. Cmdre. Col. Countess DCI Dame Dr. Gen. Grandma
@@ -113,9 +113,9 @@
               van
             </Words>
           </Option>
-        </Concat>
+        </Join>
       </Switch>
-      <Concat>
+      <Join>
         <Option probability="0.1">
           <Words>
             Mc
@@ -192,23 +192,23 @@
           Xylophone Yak Yodeler Yogurt Yoyo Ytterbium Yurt Zamboni Zebra Zephyr Zeppelin
           Zither Zombie Zucchini
         </Markov>
-      </Concat>
-    </Concat>
+      </Join>
+    </Join>
     <Option id="suffix" probability="0.3">
       <Switch>
         <Switch>
-          <Concat>
+          <Join>
             <Literal text=", " />
             <Words id="postnominal">
               CA DDS DVM Esq. Jr. MD MP OBE PhD Sr. VC
             </Words>
-          </Concat>
-          <Concat>
+          </Join>
+          <Join>
             <Literal text=" " />
             <Number id="ordinal" min="1" max="29" style="RomanUpper" />
-          </Concat>
+          </Join>
         </Switch>
-        <Concat>
+        <Join>
           <Literal text=" the " />
           <Words id="epithet">
             Adorable Amazing Amusing Angry Anxious Apprehensive Arrogant Awesome Awkward Bad
@@ -246,8 +246,8 @@
             Vindictive Vivacious Vulgar Wacky Wandering Wanted Weird Wise Wistful Wizard
             Wonderful Wretched Yawning Yummy Zany Zealous Zesty
           </Words>
-        </Concat>
+        </Join>
       </Switch>
     </Option>
-  </Concat>
+  </Join>
 </NameGen>
