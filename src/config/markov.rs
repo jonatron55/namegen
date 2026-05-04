@@ -22,7 +22,7 @@ pub struct MarkovConfig {
 impl MarkovConfig {
     pub fn new(
         id: Option<String>,
-        data: Vec<String>,
+        mut data: Vec<String>,
         target_len: Option<usize>,
         cutoff_len: Option<usize>,
         reject: Vec<String>,
@@ -30,6 +30,8 @@ impl MarkovConfig {
         uniform: bool,
         tokenizer: Tokenizer,
     ) -> Self {
+        data.dedup();
+
         Self {
             id,
             data,

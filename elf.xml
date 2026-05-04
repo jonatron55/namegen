@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NameGen>
+  <Concat joiner=" ">
+    <Switch id="gender">
+      <Markov id="firstname" target_len="4" cutoff_len="10">
+        Aderiol Adeth Adiol Aerand Aerannol Aerathiand Aeriol Aeron Aerond Ailill
+        Amaethon Aneirin Aodh Aonghus Arawn Arthfael Bedivere Belanor Belenos Brandior
+        Brochfael Cadfael Cael Carrinnor Cernunnos Connla Conor Coriand Cynwrig Dagda
+        Deimne Deinniol Dewydd Diarmaid Dylan Eannin Earand Earin Earond Eilieth Eiliol
+        Einion Einiond Eirdor Ellarond Ellethiand Ellonviol Elluthiol Elluvior Eoghan
+        Eonthiol Eremon Evand Evandiol Faedior Faennin Faeonel Fearghas Fionn Gareth
+        Glenndower Gofannon Goronwy Gwenddoleu Gwydion Halamar Heilyn Herule Heruli
+        Ianiol Ianor Iorwerth Iriol Iruthiond Iuand Iuthol Ivaran Jannalor Lamruil Llew
+        Llyr Luthais Luthior Luvieth Lythinn Maelgwn Manawydan Mealcun Merfyn Mermin
+        Morcant Myarand Myaron Myrddin Naoise Neirin Nuada Nunviond Nuvian Nynniaw
+        Oissine Parthalan Peredur Pwyll Rheviand Rhiviond Rhondor Rhosior Segdae Seisyll
+        Sharian Shariand Sharinnor Slaine Sudiond Syareth Syorond Taliesin Tanriond
+        Taranis Tariond Thaliand Thardiond Tharidinn Toriand Trahern Tryariol Tutgual
+        Tyorwer Uthyr Vandiol Voridower Vorior Ywain Zelphar
+      </Markov>
+      <Markov id="firstname" target_len="4" cutoff_len="10">
+        Aderyn Aerafrin Aerathielle Aerona Aeronvia Aeronwen Agrona Aife Ailbhe Andraste
+        Angharad Anwen Aoife Ayda Blathine Blodeuedde Branwen Branwenne Bronwyn Carrian
+        Ceibfionne Cithrel Cliodna Corianna Daireanne Dairine Derdriu Eadan Eadaoinne
+        Eafrin Eawen Eawynne Eilwyn Eirian Eirwen Eithne Ellarwyn Ellethia Ellonvia
+        Elluthia Elluvia Eonoa Eonthia Etainne Faewen Faewynne Fayelle Fayonelle
+        Feyarwyn Feyelle Feyonoa Finnguala Fionnuala Gladys Glorafrin Gloriel Grainne
+        Gwenda Gwendolynne Gwenna Gwennyth Gwynna Gwynnyth Iriel Iruthia Jasianna
+        Lorasatra Luthiel Luvioa Lythianna Maeve Matrona Merethyl Merialeth Merrianna
+        Morafrin Morgan Morriganne Morwen Morwynne Muirenne Muirne Neamhainne Neasa
+        Nithenoel Nolwen Nunvioa Olwenne Paphyra Quennalynne Rheva Rhiannon Rhiva
+        Rhonwynne Rhosyn Rigantona Sabia Saphielle Shyannon Shyarwen Sinanne Sionanne
+        Sirona Solana Sophia Syarelle Syareth Taegen Tanila Tannaquille Tarieth Tiriana
+        Tolwyn Toria Urosynne Ursalynne Ursula Urwyn Violette Voriel Vorionia Yvaine
+        Yvonne Zaleria
+      </Markov>
+    </Switch>
+    <Capitalize>
+      <Concat>
+        <Repeat min="2" max="2">
+          <Words id="surname">
+            ash autumn bark birch bird bloom blossom blue bow bracken bramble branch brave
+            breeze briar bright brook bush caller caster cliff cloud dance dancer dawn day
+            dream dreamer drifter dusk dweller ember ever fair fenn fern fey fire flame
+            frost gale green grey hail heart hunter leaf light merry mist moon moss nettle
+            night oak oaken ocean pale pine quick rain river sapling sea seed seeker seer
+            shade shadow shore shrub silver singer sky song soul spell staff star stave
+            storm strider summer sun swift thorn treader tree twig twiggy twigs vine walker
+            wander wanderer whisper wild willow wind wing winter wise wood wren yew
+          </Words>
+        </Repeat>
+      </Concat>
+    </Capitalize>
+  </Concat>
+</NameGen>

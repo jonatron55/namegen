@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NameGen>
+  <Concat joiner=" ">
+    <Switch id="gender">
+      <Concat>
+      <Markov id="firstname" cutoff_len="10">
+        <SspTokenizer>
+          <Class rank="5">AEIOUYaeiouy</Class>
+          <Class rank="4">JWjw</Class>
+          <Class rank="3">HLRhlr</Class>
+          <Class rank="2">FMNSVZfmnsvzÐÞðþ</Class>
+          <Class rank="1">BCDGKPQTXbcdgkpqtx</Class>
+        </SspTokenizer>
+        Agmundr Agnar Agnarr Agnur Agronn Aleifr Alfarr Alfrikr Alfvin Algautr Andor
+        Anundr Anðor Arnfinnr Arnorr Arnsteinn Arnviðr Arnþorr Asbjarn Asbjorn
+        Asbrond Asgeirr Asgorn Asgrond Asketill Asmundor Asmundr Asvaldr Authun Auðr
+        Auðun Aðalsteinn Bada Baggi Barðr Beogrim Beorhtric Beorhtsige Beornræd
+        Beowulf Birgir Bjarn Bjarni Bjartr Bjorn Botwulf Brand Brandr Brock Brond Bronn
+        Broðir Brynjarr Burgheard Dag Dagfinn Dagfinnr Dagn Dagr Danr Dudda Dunstan
+        Eadwulf Ealdhelm Ealdræd Ealhstan Eardwulf Egill Eidriþ Eileifr Einarr
+        Eindriði Eirick Eirikr Erlend Erlendr Erlingr Eysteinn Eyvindr Fastulf Fastulfr
+        Felagi Finnr Flaeming Flæmingr Folki Friðþjofr Froði Froþi Gauti Gautstafr
+        Geir Geirmundr Geirr Gisli Gjord Gjurd Godric Gulbrandr Gunni Gunnvaldr
+        Guðbrandr Guðfrøðr Guðini Guðleifr Guðmundr Guðormr Guðrøðr
+        Guðþormr Hakon Halfdan Hallbjorn Halli Hallr Hallsteinn Hallvarðr Hallþorr
+        Hamundr Haraldr Harðaknutr Haukr Havarðr Helgi Hemingr Hereward Herleifr
+        Hildræd Hjalmarr Holmgeirr Hoskuldr Hrafn Hreiðarr Hroaldor Hroaldr Hroar
+        Hroarr Hrolfr Hroðgar Hroðgeirr Hroðulf Hroðulfr Hroðvaldr Hroðwulf
+        Hroþgar Hrœrekr Hrǿrikr Hugleikr Hæth Ingi Ingimarr Ingolfr Ivarr Joarr
+        Josteinn Kalfr Kari Ketill Knutr Kolr Kori Leifr Mundi Njall Odalric Oddbjorn
+        Oddgeirr Oddr Oddvarr Olvir Orsic Osgar Ottarr Ragnarr Ragnvaldr Randulfr
+        Raðulfr Runi Sigeberht Sigeweard Sigfrøðr Sigsteinn Sigurðr Snorri Solvi
+        Somerled Stali Steinarr Steingrimr Steinn Stigandr Stigr Stiþwulf Sture Sturla
+        Styrmir Sumarliði Sundri Suni Sveinn Sveinungr Sverrir Swiðhun Tofi Toki
+        Tryggvi Ulfr Ulrich Uni Urist Vagn Valdimarr Valþjofr Vebjorn Vegarðr Vemundr
+        Vetrliði Vigi Vikingr Vragi Widogast Wighard Woden Wulfgang Wulfgeirr Wulfgrim
+        Wulfhard Wulfhram Yngvarr Yrian Ælfgar Ælfræd Æsc Æthelberht Æðelbeald
+        Æðelfrið Æðelmær Æðelric Æðelræd Æðelstan Æðelwine Æðelwulf
+        Æþelbald Æþelbeorht Æþelnoð Æþelræd Æþelweald Æþelweard Æþelwulf
+        Þorarinn Þorbjorn Þorfastr Þorfinnr Þorfreðr Þorgeirr Þorgisl Þorgnyr
+        Þorgrimr Þorir Þorketill Þorleifr Þorleikr Þormoðr Þorsteinn Þorvaldr
+        Þorðr Þrondr Þunor
+      </Markov>
+      <Option probability="0.25">
+        <Literal text="son"/>
+      </Option>
+      </Concat>
+      <Markov id="firstname" cutoff_len="10">
+        <SspTokenizer>
+          <Class rank="5">AEIOUYaeiouy</Class>
+          <Class rank="4">JWjw</Class>
+          <Class rank="3">HLRhlr</Class>
+          <Class rank="2">FMNSVZfmnsvzÐÞðþ</Class>
+          <Class rank="1">BCDGKPQTXbcdgkpqtx</Class>
+        </SspTokenizer>
+        Alfhildr Alof Angrboða Arnbjorg Asa Asgerðr Ashildr Aslaug Asny Asta Astriðr
+        Auðrhildr Bealdhild Bergljot Birna Bjorg Borghild Borghildr Borgny Bothildr
+        Brynhild Brynhildr Cyneburga Cyneswiþ Cyneðryð Dagmær Dagny Dagrun Eadburga
+        Eadgyð Ealdgyð Ealhswiþ Eir Elli Embla Eoforhild Eoforhildr Eormenhild Erna
+        Eydis Eyvor Frea Freya Freyja Frig Frigg Friða Friðuswiþ Gefion Gefjon Gerd
+        Gerðr Godgifu Godgyð Grid Grimhild Grimhildr Griðr Groa Gudrun Gulla
+        Gunnbjorg Gunnhildr Gunnr Gunnvor Guðbjorg Guðlaug Guðleif Guðny Guðriðr
+        Guðrun Gyða Hallbjorg Hallþora Heidrun Heiðrun Hel Hilda Hildigunnr Hildr
+        Hjordis Hlif Holmfriðr Hrafnhildr Hreiðunn Hrǫnn Huld Hulda Idun Idunn
+        Ingibjorg Ingigerðr Ingriðr Ingvildr Iðunn Jorunnr Kara Ketillaug Ketilriðr
+        Kolbrun Laufey Leofdæg Leofflæd Leofgyð Magnhildr Malmfriðr Milburga
+        Mildþryð Myrgjol Nal Nanna Oddbjorg Oddny Oddrun Olaug Ragnbjorg Ragnfriðr
+        Ragnheiðr Ragnhildr Ran Runa Saga Salbjorg Saldis Sif Signy Sigriðr Sigrun
+        Sigyn Siv Skadi Skaði Skuld Sol Solveig Sunngifu Sunnifa Sunniva Svanhild
+        Svanhildr Thrud Tofa Unnr Urd Urðr Valdis Vanadis Verdandi Verðandi Vigdis
+        Wihtburg Wilburg Wulfflæd Wulfgifu Wulfrun Wulfwynn Wulfþryð Wynnflæd
+        Yngvildr Yrsa Æbbe Ælfthryth Ælfþryð Æðelflæd Æðelþryð Þone Þora
+        Þorbjorg Þordis Þorfriðr Þorgunnr Þorhildr Þorny Þorunn Þorveig Þorvi
+        Þruðr Þyri
+      </Markov>
+    </Switch>
+    <Concat>
+      <Words id="surname">
+        Ale Aluminium Amber Anvil Ashen Battle Bear Beer Black Bold Brass Brave Bronze
+        Brown Coal Copper Crimson Dark Deep Diamond Diamond Dig Doom Drunken Emerald
+        Flint Gem Giant Glory Gold Golden Gravel Great Grey Grumble Hammer Hard Heavy
+        Iron Lead Metal Noble Oaken Old  Pale Pebble Proud Quartz Red Rock Rough
+        Ruby Rust Silver Steel Stone Stout Strong Stronginthe Thunder Tin Troll Tungsten
+        War White Wild Yellow Ember Cave Under Dirt Earth Cavern Honour Glory
+        Blue Green Chisel Mountain Graven Epic Legend Grendel Dragon
+      </Words>
+      <Words>
+        arm axe bastard beard bellow belly belt blade bold boot boulder buckle chest
+        chin chisel crafter deep delver depth digger diggy doom drinker face fall fast
+        feast fire fist flame flint forge forged gate glory grim grip ground grumble guard guts
+        hammer heart hearth helm hide honour humble jewel keg labour master mighty miner
+        mood mountain pebble pick rock rocky ruby rust rusty shield slayer slumber smith
+        snow song soul spell spirit stone stoney strength strike striker strong sword
+        timber tough true winter wise wolf worg worker wrath wrought quake quartz quarry gold armour hall
+        hound born saga legend kin
+      </Words>
+      <Reject>
+        Brownface Blackface
+      </Reject>
+    </Concat>
+  </Concat>
+</NameGen>

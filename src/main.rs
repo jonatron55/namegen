@@ -1,3 +1,4 @@
+mod acsii_map;
 mod config;
 mod generator;
 mod styles;
@@ -68,9 +69,19 @@ struct Args {
     /// Analyze the given config file without generating names.
     ///
     /// This will output statistics about the Markov chain frequencies and
-    /// combinatorial counts for the given config.
-    #[arg(long, short, conflicts_with = "count")]
+    /// other statistics.
+    #[arg(long, short = 'A', conflicts_with = "count")]
     analyze: bool,
+
+    /// Converts non-ASCII characters in the generated names to their closest
+    /// ASCII equivalent.
+    ///
+    /// TThis flag maps accented characters to their unaccented counterparts, and
+    /// replaces other non-ASCII characters with their closest approximations
+    /// (for example, "ð" becomes "th", and "ß" becomes "ss"). Characters that
+    /// do not have a clear ASCII equivalent will be removed.
+    #[arg(long, short)]
+    ascii: bool,
 
     /// Enable verbose output in analysis mode.
     ///
@@ -96,7 +107,7 @@ struct Args {
     hint: Vec<String>,
 
     /// Random seed for name generation.
-    #[arg(long, short)]
+    #[arg(long, short, conflicts_with = "export", conflicts_with = "analyze")]
     seed: Option<u64>,
 }
 
@@ -277,7 +288,12 @@ fn main() -> ExitCode {
             match generator.generate(&mut rand, &hints) {
                 Ok(names) => {
                     for name in names {
-                        print!("{name}");
+                        if args.ascii {
+                            let ascii_name = acsii_map::to_ascii(&name);
+                            print!("{ascii_name}");
+                        } else {
+                            print!("{name}");
+                        }
                     }
                     println!();
                 }

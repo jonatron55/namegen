@@ -13,7 +13,8 @@ pub struct WordsConfig {
 }
 
 impl WordsConfig {
-    pub fn new(id: Option<String>, words: Vec<String>) -> Self {
+    pub fn new(id: Option<String>, mut words: Vec<String>) -> Self {
+        words.dedup();
         Self { id, words }
     }
 }

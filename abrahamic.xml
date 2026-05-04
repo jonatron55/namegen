@@ -1,266 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-    <Markov  reject_training="true">
-      Abatur
-      Abbadon
-      Adathan
-      Adriel
-      Agares
-      Aglibol
-      Aguarès
-      Aim
-      Alloces
-      Alocer
-      Amduscias
-      Amdusias
-      Amon
-      Amy
-      Ananiel
-      Andras
-      Andrealphus
-      Andromalius
-      Anush
-      Arakiel
-      Ariel
-      Armaros
-      Artiya'il
-      Asbeel
-      Asmodel
-      Asmodeus
-      Astaroth
-      Aym
-      Azazel
-      Baël
-      Balam
-      Baphomet
-      Barachiel
-      Baraqiel
-      Barbas
-      Barbatos
-      Barbiel
-      Bathin
-      Bathym
-      Beburos
-      Beëlzebub
-      Beleth
-      Belial
-      Bene Elohim
-      Berith
-      Bezaliel
-      Bifrons
-      Bihram
-      Botis
-      Buer
-      Bune
-      Byleth
-      Caim
-      Camael
-      Cambiel
-      Cassiel
-      Caym
-      Chalkydri
-      Chamuel
-      Chax
-      Chazaqiel
-      Cherub
-      Cimeries
-      Crocell
-      Dadrail
-      Daniel
-      Dantalion
-      Daveithai
-      Decarabia
-      Dominion
-      Dumah
-      Eleleth
-      Eligos
-      Etinsib Ziwa
-      Flauros
-      Focalor
-      Foras
-      Forneus
-      Forras
-      Furcas
-      Furfur
-      Gäap
-      Gadreel
-      Glasya
-      Gomory
-      Gremory
-      Gubran
-      Gusion
-      Gusoyn
-      Haagenti
-      Hadraniel
-      Hahasiah
-      Halphas
-      Hamalat
-      Hanibal
-      Haniel
-      Harmozel
-      Harut
-      Hashmal
-      Hayyi
-      Hibil
-      Hofniel
-      Ieshim
-      Imamiah
-      Ipes
-      Ipos
-      Israfil
-      Jegudiel
-      Jehoel
-      Jequn
-      Jerahmeel
-      Jophiel
-      Kadkadael
-      Katibin
-      Kepharel
-      Kerubiel
-      Kimaris
-      Kiraman
-      Kokabiel
-      Kushiel
-      Labolas
-      Lailah
-      Lamassu
-      Leraje
-      Loray
-      Maalik
-      Macroprosopus
-      Malakbel
-      Malphas
-      Manda
-      Marbas
-      Marchosias
-      Marfeil
-      Marut
-      Matriel
-      Mebahiah
-      Melek
-      Mephistopheles
-      Metatron
-      Michael
-      Mitzrael
-      Morax
-      Moroni
-      Munkar
-      Muriel
-      Murmur
-      Naberius
-      Nakir
-      Nanael
-      Nathaniel
-      Nbat
-      Netzach
-      Nidbai
-      Nithael
-      Nsab
-      Nuriel
-      Ophaniel
-      Orias
-      Orobas
-      Oroiael
-      Ose
-      Oze
-      Pahaliah
-      Paimon
-      Penemue
-      Phanuel
-      Phenex
-      Phoenix
-      Poyel
-      Pravuil
-      Pruflas
-      Ptahil
-      Pucel
-      Puriel
-      Pursan
-      Purson
-      Rabba
-      Radueriel
-      Raguel
-      Ramiel
-      Raphael
-      Räum
-      Raziel
-      Rikbiel
-      Roneve
-      Sabnac
-      Sabnock
-      Sabriel
-      Sachiel
-      Sahaquiel
-      Saleos
-      Sallos
-      Sam
-      Samael
-      Samigina
-      Samyaza
-      Sandalphon
-      Sarathiel
-      Sariel
-      Saureil
-      Schemhampharae
-      Seere
-      Selaphiel
-      Seraphiel
-      Seraphim
-      Shamnail
-      Shamsiel
-      Shax
-      Sheetil
-      Shihlun
-      Shilmai
-      Sidonay
-      Sidriel
-      Simat
-      Sitri
-      Stolas
-      Sytry
-      Tamiel
-      Tarwan
-      Taus
-      Temeluchus
-      Tennin
-      Throne
-      Turail
-      Turiel
-      Urfeil
-      Uriel
-      Uziel
-      Valac
-      Valefor
-      Vapula
-      Vasiariah
-      Vassago
-      Vehuel
-      Vepar
-      Vine
-      Viné
-      Volac
-      Vual
-      Vuall
-      Wormwood
-      Yadathan
-      Yarhibol
-      Yawar
-      Yomiel
-      Yukabar
-      Yukasar
-      Yurba
-      Yushamin
-      Zachariel
-      Zadkiel
-      Zagagel
-      Zagan
-      Zaphkiel
-      Zaqiel
-      Zepar
-      Zephaniel
-      Zephon
-      Zihrun
-      Ziwa
+  <Markov target_len="4" cutoff_len="12" reject_training="true">
+    Aaron Abacuc Abatur Abbadon Abdias Abel Abia Abidan Abigail Abimelech Abisai
+    Abner Abraham Absalom Achab Achaicus Adam Adathan Adina Adonai Adriel Agabus
+    Agar Agares Aggaeus Aggeus Aglibol Aguarès Ahab Ahoth Aim Alloces Alocer
+    Alphaeus Amduscias Amdusias Amnon Amon Amos Amram Amy Ananias Ananiel Anath
+    Andras Andrealphus Andreas Andromalius Andronicus Anna Annas Anush Arakiel Aram
+    Archelaus Archippus Ariel Arihel Aristobulus Armaros Artiya'il Asbeel Aseneth
+    Aser Ashmedai Asmodai Asmodel Asmodeus Astaroth Aym Azareel Azarias Azazel
+    Azazias Azrael Azrahel Baal Bael Bala Balam Baltassar Baltazar Balthasar
+    Balthazar Baphomet Barachiel Baraqiel Barbas Barbatos Barbiel Barlaam Barnabas
+    Bartholomeus Baruch Basemath Basmath Bathin Bathym Baël Beburos Beelzebub
+    Beleth Belial Bene Beniamin Berith Bernice Bethsabee Bezaliel Beëlzebub Bifrons
+    Bihram Bilqis Blaphomet Booz Botis Buer Bune Buné Byleth Bélial Caiaphas Caim
+    Cain Cainan Camael Cambiel Candace Carpus Caspar Cassiel Castiel Caym Cephas
+    Chaleb Chalkydri Chamuel Chanaan Chax Chazaqiel Cherub Chloe Christ Christos
+    Cimeries Claudia Cleopas Cleophas Crescens Crocell Cyrus Dadrail Dalila Damaris
+    Daniel Danihel Dantalion Darius Daveithai David Debbora Decarabia Dina Dismas
+    Dominion Drusilla Dumah Eleazar Eleleth Elias Eliezer Eligos Elisabeth Eliseus
+    Eliud Elohim Emmanuhel Enoch Enos Epaphras Epaphroditus Ephraim Ephrath Erastus
+    Esaias Esau Esther Ethan Etinsib Eunice Eutychus Eva Ezechias Ezechiel Ezras
+    Felix Festus Finees Flauros Focalor Foras Forneus Forras Furcas Furfur Gaap
+    Gabriel Gabrihel Gadreel Gaius Gamigin Gaspar Gedeon Glasya Glasya-Labolas
+    Goliath Gomory Gremory Gubran Gusion Gusoyn Gäap Haagenti Habacuc Hadraniel
+    Hahasiah Halphas Hamalat Hanibal Haniel Hanniel Harmozel Harut Hashmal Hava
+    Hayyi Heli Helias Helihel Herodes Herodias Herodion Hester Hibil Hieremias
+    Hieremihel Hieu Hiezabel Hiezechiel Hiezecihel Hofniel Iachin Iacob Iacobus
+    Iafeth Iahel Iair Iairus Iared Iason Idida Iepthae Ieremahel Ieshim Iesse Iesus
+    Imamiah Ioab Ioachim Ioakeim Ioas Iob Iohanna Iohannes Iohel Iona Ionas Ionathan
+    Ioram Iosaphat Ioseph Iosias Iosue Ipes Ipos Isaac Ismahel Israfil Israhel
+    Issachar Ithamar Iudas Iudith Iunia Izrail Jasper Jegudiel Jehoel Jehovah Jequn
+    Jerahmeel Jeremiel Joachim Jophiel Kadkadael Katibin Kepharel Kerubiel Kimaris
+    Kiraman Kokabiel Kushiel Labolas Lailah Lamassu Lamech Lazarus Leraje Levi Lia
+    Lilith Lois Loray Lucas Lucifer Lydia Maala Maalik Macroprosopus Maeleth
+    Magdalene Malachi Malachias Malakbel Malphas Manahem Manasses Manda Marbas
+    Marchocias Marchosias Marcus Mardocheus Marfeil Maria Martha Marut Mathusalam
+    Matriel Matthan Mattheus Matthias Mebahiah Melcha Melchior Melek Mephistopheles
+    Merob Metatron Micha Michaeas Michael Michahel Micheas Michol Mitzrael Mnason
+    Morax Moroni Moses Moyses Munkar Muriel Murmur Naberius Nabuchodonosor Nadab
+    Nakir Nanael Nathan Nathanahel Nathaniel Naum Nbat Necoda Neemias Nereus Netzach
+    Nicanor Nicodemus Nidbai Nithael Noe Noemi Nsab Nuriel Obed Olympas Onesimus
+    Onesiphorus Ophaniel Orias Orobas Oroiael Orpha Ose Oseas Osee Oze Ozi Ozias
+    Ozihel Pahaliah Paimon Paulus Penemue Petrus Phanuel Phanuhel Phares Phenex
+    Philemon Philetus Philippus Phoebe Phoenix Phunihel Pontius Poyel Pravuil Prisca
+    Priscilla Prochorus Pruflas Ptahil Pucel Pudens Puriel Pursan Purson Qaftzi'el
+    Rabba Rachel Radueriel Rafahel Raguel Raguhel Rahel Ramiel Raphael Rauhel Raum
+    Raziel Rebecca Rhode Rikbiel Roneve Ronové Ruben Ruth Räum Sabnac Sabnock
+    Sabriel Sachiel Saffira Sahaquiel Salathihel Saleos Sallos Salome Salomon Sam
+    Samael Samigina Samson Samuhel Samyaza Sandalphon Sara Sarai Sarathiel Sariel
+    Sarra Satan Saul Saureil Schemhampharae Seere Seffora Selaphiel Sem Sennacherib
+    Seraphiel Seraphim Sergius Seth Shamnail Shamsiel Shax Sheetil Shihlun Shilmai
+    Sidonay Sidriel Silas Silvanus Simat Simon Sitri Sofonias Solomon Stephanus
+    Stolas Susanna Symeon Sytry Tabita Tamiel Tarwan Taus Temeluchus Tennin Tertius
+    Thaddaeus Thaddeus Thamar Thersa Thomas Throne Timaeus Timon Timotheus Titus
+    Tobias Tobit Trophimus Turail Turiel Urbanus Urfeil Uri Urias Uriel Uziel Valac
+    Valefor Vapula Vasiariah Vassago Vehuel Vepar Vine Viné Volac Vual Vuall
+    Wormwood Yadathan Yahveh Yahweh Yarhibol Yasu Yawar Yehowah Yomiel Yukabar
+    Yukasar Yurba Yushamin Zabulon Zaccharias Zaccheus Zacharias Zachariel Zadkiel
+    Zagagel Zagan Zaphkiel Zaqiel Zelpha Zepar Zephaniel Zephon Zerachiel Zihrun
+    Ziwa labolas
   </Markov>
 </NameGen>

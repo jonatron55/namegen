@@ -228,7 +228,6 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     XmlEvent::EndElement { name } => {
                         if name.local_name == ELEM_MARKOV {
                             let tokenizer = tokenizer.unwrap_or_default();
-                            training_data.dedup();
 
                             return Ok(Box::new(MarkovConfig::new(
                                 id,
@@ -497,7 +496,6 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::Whitespace(_) => {}
                     XmlEvent::EndElement { name } if name.local_name == ELEM_WORDS => {
-                        options.dedup();
                         return Ok(Box::new(WordsConfig::new(id, options)));
                     }
                     other => {
