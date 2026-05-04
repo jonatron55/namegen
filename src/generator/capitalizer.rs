@@ -11,7 +11,7 @@ pub struct Capitalizer {
     mode: CapitalizerMode,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum CapitalizerMode {
     AllLower,
     FirstUpper,

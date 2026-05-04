@@ -14,11 +14,7 @@ use xml::{
 };
 
 use crate::{
-    config::{
-        GeneratorConfig, capitalizer::CapitalizerConfig, joiner::JoinerConfig, literal::LiteralConfig,
-        markov::MarkovConfig, matcher::MatcherConfig, numberer::NumbererConfig, optional::OptionalConfig,
-        repeater::RepeaterConfig, switcher::SwitcherConfig, words::WordsConfig,
-    },
+    config::GeneratorConfig,
     generator::{CapitalizerMode, NumberStyle, Tokenizer},
 };
 
@@ -95,7 +91,7 @@ pub enum Error {
 
 pub type Result<T> = StdResult<T, Error>;
 
-pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn GeneratorConfig>> {
+pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<GeneratorConfig>> {
     let event = reader.next()?;
 
     match event {
@@ -142,7 +138,7 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<dyn Generato
     }
 }
 
-fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Result<Box<dyn GeneratorConfig>> {
+fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Result<Box<GeneratorConfig>> {
     match event {
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_MARKOV => {
             let mut id = None;
@@ -228,17 +224,18 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     XmlEvent::EndElement { name } => {
                         if name.local_name == ELEM_MARKOV {
                             let tokenizer = tokenizer.unwrap_or_default();
+                            training_data.dedup();
 
-                            return Ok(Box::new(MarkovConfig::new(
+                            return Ok(Box::new(GeneratorConfig::Markov {
                                 id,
-                                training_data,
+                                data: training_data,
                                 target_len,
                                 cutoff_len,
                                 reject,
                                 reject_training,
                                 uniform,
                                 tokenizer,
-                            )));
+                            }));
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name,
@@ -334,7 +331,12 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_MATCH => {
                         if let Some(base) = base {
-                            return Ok(Box::new(MatcherConfig::new(id, base, cases, default)));
+                            return Ok(Box::new(GeneratorConfig::Matcher {
+                                id,
+                                base,
+                                cases,
+                                default,
+                            }));
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
@@ -395,7 +397,12 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         }
                     },
                     XmlEvent::EndElement { name } if name.local_name == ELEM_JOIN => {
-                        return Ok(Box::new(JoinerConfig::new(id, subparts, reject).with_sep(sep)));
+                        return Ok(Box::new(GeneratorConfig::Joiner {
+                            id,
+                            subparts,
+                            sep,
+                            reject,
+                        }));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -427,7 +434,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             loop {
                 match reader.next()? {
                     XmlEvent::EndElement { name } if name.local_name == ELEM_LITERAL => {
-                        return Ok(Box::new(LiteralConfig::new(id, literal)));
+                        return Ok(Box::new(GeneratorConfig::Literal { id, text: literal }));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -462,7 +469,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         subparts.push(inner_from_xml(&event, reader)?);
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_SWITCH => {
-                        return Ok(Box::new(SwitcherConfig::new(id, subparts)));
+                        return Ok(Box::new(GeneratorConfig::Switcher { id, subparts }));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -476,7 +483,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_WORDS => {
             let mut id = None;
-            let mut options = Vec::new();
+            let mut words = Vec::new();
 
             for attr in attributes {
                 if attr.name.local_name == "id" {
@@ -492,11 +499,12 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             loop {
                 match reader.next()? {
                     XmlEvent::Characters(data) => {
-                        options.extend(data.split_whitespace().map(|s| s.to_string()));
+                        words.extend(data.split_whitespace().map(|s| s.to_string()));
                     }
                     XmlEvent::Whitespace(_) => {}
                     XmlEvent::EndElement { name } if name.local_name == ELEM_WORDS => {
-                        return Ok(Box::new(WordsConfig::new(id, options)));
+                        words.dedup();
+                        return Ok(Box::new(GeneratorConfig::Words { id, words }));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -549,7 +557,11 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_OPTION => {
                         if let Some(subpart) = subpart {
-                            return Ok(Box::new(OptionalConfig::new(id, subpart, probability)));
+                            return Ok(Box::new(GeneratorConfig::Optional {
+                                id,
+                                generator: subpart,
+                                probability,
+                            }));
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
@@ -624,7 +636,12 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                                 });
                             }
 
-                            return Ok(Box::new(RepeaterConfig::new(id, subpart, min, max)));
+                            return Ok(Box::new(GeneratorConfig::Repeater {
+                                id,
+                                generator: subpart,
+                                min,
+                                max,
+                            }));
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
@@ -708,7 +725,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                             });
                         }
 
-                        return Ok(Box::new(NumbererConfig::new(id, min, max).with_style(style)));
+                        return Ok(Box::new(GeneratorConfig::Numberer { id, min, max, style }));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {
@@ -775,14 +792,14 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         subpart = Some(inner_from_xml(&event, reader)?);
                     }
                     XmlEvent::EndElement { ref name } if name.local_name == ELEM_CAPITALIZE => {
-                        return Ok(Box::new(CapitalizerConfig::new(
+                        return Ok(Box::new(GeneratorConfig::Capitalizer {
                             id,
-                            subpart.ok_or_else(|| Error::UnexpectedEvent {
+                            subpart: subpart.ok_or_else(|| Error::UnexpectedEvent {
                                 event: event.clone(),
                                 position: reader.position(),
                             })?,
                             mode,
-                        )));
+                        }));
                     }
                     other => {
                         return Err(Error::UnexpectedEvent {

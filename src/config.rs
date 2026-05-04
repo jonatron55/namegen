@@ -1,30 +1,19 @@
-mod capitalizer;
-mod joiner;
-mod literal;
-mod markov;
-mod matcher;
-mod numberer;
-mod optional;
+mod into_generator;
 mod parser;
-mod repeater;
-mod switcher;
-mod words;
+mod write_xml;
 
-use std::io::{self, Error as IoError, Read, Write};
+use std::io::{self, Error as IoError, Read};
 
+use regex::Regex;
 use thiserror::Error as ThisError;
-use xml::{
-    EventWriter as XmlWriter, ParserConfig as XmlParserConfig,
-    writer::{Error as XmlWriteError, XmlEvent},
-};
+use xml::{ParserConfig as XmlParserConfig, writer::Error as XmlWriteError};
 
+pub use into_generator::IntoGenerator;
 pub use parser::Error as ParseError;
 use parser::from_xml;
+pub use write_xml::WriteXml;
 
-use crate::{
-    config::markov::MarkovConfig,
-    generator::{Generator, Tokenizer},
-};
+use crate::generator::{CapitalizerMode, NumberStyle, Tokenizer};
 
 pub enum ConfigSourceType {
     PlainText,
@@ -40,75 +29,92 @@ pub enum WriteError {
     Xml(#[from] XmlWriteError),
 }
 
-pub trait GeneratorConfig {
-    fn into_generator(self: Box<Self>) -> Box<dyn Generator>;
-    fn write_xml(self: Box<Self>, writer: &mut XmlWriter<&mut Box<dyn Write>>, indent: usize)
-    -> Result<(), WriteError>;
+pub enum GeneratorConfig {
+    Capitalizer {
+        id: Option<String>,
+        subpart: Box<GeneratorConfig>,
+        mode: CapitalizerMode,
+    },
+    Joiner {
+        id: Option<String>,
+        subparts: Vec<Box<GeneratorConfig>>,
+        sep: String,
+        reject: Vec<String>,
+    },
+    Literal {
+        id: Option<String>,
+        text: String,
+    },
+    Markov {
+        id: Option<String>,
+        data: Vec<String>,
+        target_len: Option<usize>,
+        cutoff_len: Option<usize>,
+        reject: Vec<String>,
+        uniform: bool,
+        reject_training: bool,
+        tokenizer: Tokenizer,
+    },
+    Matcher {
+        id: Option<String>,
+        base: Box<GeneratorConfig>,
+        cases: Vec<(Regex, Box<GeneratorConfig>)>,
+        default: Option<Box<GeneratorConfig>>,
+    },
+    Numberer {
+        id: Option<String>,
+        min: usize,
+        max: usize,
+        style: NumberStyle,
+    },
+    Optional {
+        id: Option<String>,
+        generator: Box<GeneratorConfig>,
+        probability: f64,
+    },
+    Repeater {
+        id: Option<String>,
+        generator: Box<GeneratorConfig>,
+        min: usize,
+        max: usize,
+    },
+    Switcher {
+        id: Option<String>,
+        subparts: Vec<Box<GeneratorConfig>>,
+    },
+    Words {
+        id: Option<String>,
+        words: Vec<String>,
+    },
 }
 
-pub fn read(reader: impl Read, src_type: ConfigSourceType) -> Result<Box<dyn GeneratorConfig>, ParseError> {
-    match src_type {
-        ConfigSourceType::PlainText => {
-            let text = io::read_to_string(reader)?;
-            let data = text.split_whitespace().map(|s| s.to_string()).collect();
-            Ok(Box::new(MarkovConfig::new(
-                Some("name".to_string()),
-                data,
-                None,
-                None,
-                vec![],
-                false,
-                false,
-                Tokenizer::default_ssp(),
-            )))
-        }
-        ConfigSourceType::Xml => {
-            let mut xml = XmlParserConfig::new()
-                .trim_whitespace(true)
-                .whitespace_to_characters(true)
-                .ignore_comments(true)
-                .create_reader(reader);
-            from_xml(&mut xml)
+impl GeneratorConfig {
+    pub fn read(reader: impl Read, src_type: ConfigSourceType) -> Result<Box<GeneratorConfig>, ParseError> {
+        match src_type {
+            ConfigSourceType::PlainText => {
+                let text = io::read_to_string(reader)?;
+                let mut data: Vec<String> = text.split_whitespace().map(|s| s.to_string()).collect();
+                data.dedup();
+
+                Ok(Box::new(GeneratorConfig::Markov {
+                    id: Some("name".to_string()),
+                    data,
+                    target_len: None,
+                    cutoff_len: None,
+                    reject: vec![],
+                    uniform: false,
+                    reject_training: false,
+                    tokenizer: Tokenizer::default_ssp(),
+                }))
+            }
+            ConfigSourceType::Xml => {
+                let mut xml = XmlParserConfig::new()
+                    .trim_whitespace(true)
+                    .whitespace_to_characters(true)
+                    .ignore_comments(true)
+                    .create_reader(reader);
+                from_xml(&mut xml)
+            }
         }
     }
-}
-
-const WRAP_WIDTH: usize = 80;
-
-fn write_indented_lines(
-    mut words: Vec<String>,
-    indent: usize,
-    writer: &mut XmlWriter<&mut Box<dyn Write>>,
-) -> Result<(), WriteError> {
-    let indent_str = " ".repeat(indent);
-    writer.write(XmlEvent::characters("\n"))?;
-    writer.write(XmlEvent::characters(&indent_str))?;
-
-    words.sort_unstable();
-    let mut line = String::with_capacity(WRAP_WIDTH);
-
-    for word in words.iter() {
-        if line.len() > 0 && line.len() + word.len() + 1 > WRAP_WIDTH {
-            writer.write(XmlEvent::characters(&line))?;
-            writer.write(XmlEvent::characters("\n"))?;
-            writer.write(XmlEvent::characters(&indent_str))?;
-
-            line.clear();
-        }
-
-        if !line.is_empty() {
-            line.push(' ');
-        }
-
-        line.push_str(&word);
-    }
-
-    if !line.is_empty() {
-        writer.write(XmlEvent::characters(&line))?;
-        writer.write(XmlEvent::characters("\n"))?;
-        let indent_str = " ".repeat(indent.saturating_sub(2));
-        writer.write(XmlEvent::characters(&indent_str))?;
-    }
-
-    Ok(())
 }

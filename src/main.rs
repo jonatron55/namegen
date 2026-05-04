@@ -18,7 +18,7 @@ use rand::{Rng, SeedableRng, rngs::StdRng};
 use xml::{EmitterConfig as XmlEmitterConfig, writer::XmlEvent};
 
 use crate::{
-    config::ConfigSourceType,
+    config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml},
     styles::{ERROR, PATH, WARN},
 };
 
@@ -181,7 +181,7 @@ fn main() -> ExitCode {
         }
     };
 
-    let config = match config::read(
+    let config = match GeneratorConfig::read(
         reader,
         if is_xml {
             ConfigSourceType::Xml
