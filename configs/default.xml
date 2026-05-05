@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
+  <Description display_name="Default">
+    <Param id="epithet" display_name="Epithet" />
+    <Param id="firstname" display_name="First name" />
+    <Param id="gender" display_name="Gender (0: masculine, 1: feminine)" />
+    <Param id="has-infix" display_name="Include an infix" />
+    <Param id="has-suffix" display_name="Include a suffix" />
+    <Param id="has-title" display_name="Include a title" />
+    <Param id="name-count" display_name="Number of first names" />
+    <Param id="ordinal" display_name="Ordinal suffix" />
+    <Param id="postnominal" display_name="Post-nominal letters" />
+    <Param id="suffix-type" display_name="Suffix type (0: postnominal/ordinal, 1: epithet)" />
+    <Param id="surname" display_name="Surname" />
+    A default name generator configuration, which produces humourous personal names.
+    Excellent if you're planning on running for parliament under the Silly Party.
+  </Description>
   <Join>
     <Join sep=" ">
       <Switch id="gender">
         <Join sep=" ">
-          <Option id="title" probability="0.3">
+          <Option id="has-title" probability="0.3">
             <Words>
               Adm. Baron Capt. Cmdr. Cmdre. Col. Count DCI Dr. Earl Gen. Granddad HRH HRM
               Insp. Lord Lt. Mr. PC Prince Prof. Sen. Sgt. Sir Sr. Uncle
             </Words>
           </Option>
-          <Repeat min="1" max="2">
+          <Repeat id="name-count" min="1" max="2">
             <Join>
-              <Option probability="0.1">
-                <Words>
-                  Mc
-                </Words>
-              </Option>
               <Markov id="firstname" target_len="5" cutoff_len="12">
                 Abraham Achilles Adam Adolphus Alastair Albert Aldous Alexander Alfred Algernon
                 Aloysius Alphonse Alvin Angus Antonio Anubis Apollo Apophis Archibald Archilles
@@ -25,57 +35,61 @@
                 Bob Bobby Bogart Boris Bradbury Braxton Broderick Brody Buckminster Burnaby
                 Buster Calvin Carlson Ceasar Charlemagne Charlie Chester Christopher Clarence
                 Clifford Clinton Clyde Colby Colin Columbus Conrad Cornelius Cosmo Cronus
-                Dashiell Davy Delbert Desmond Dexter Dimitri Dionysus Dominic Donald Donovan
-                Dorian Douglas Dracula Drake Dudley Duncan Dwayne Dwight Edgar Edison Edmund
-                Edward Edwin Egbert Einstein Elmer Elon Emerson Emory Enzo Ephraim Erasmus
-                Excalibur Ezekiel Ezra Fabian Fairbanks Felix Ferdinand Fergus Finn Finnegan
-                Fitzgerald Fitzpatrick Fletcher Frankenstein Frankie Franklin Freddy Frederick
-                Fritz Furio Gabriel Genghis Geoffrey Gerald Gideon Gilbert Giles Godfrey Gordon
-                Graham Grant Gregory Grover Guillermo Gus Gustav Hades Hannibal Harold Harrison
-                Harry Harvey Heathcliff Hector Helios Henry Hephaestus Herbert Herman Hermes
-                Homer Horace Horatio Horus Howard Howell Hubert Hudson Hugo Humphrey Huxley Hyde
-                Hyperion Hypnos Ian Icarus Ictor Ignatius Immanuel Irving Isaac Isaiah Isidore
-                Ismael Ivan James Janus Jefferson Jehovah Jekyll Jenkins Jeremiah Jethro Jimbo
-                Jimbob Jimmy Johnny Jonathan Joseph Joshua Judas Julius Jupiter Kennedy Kerberos
-                Lancelot Laszlo Lawrence Leonard Leonidas Leopold Leroy Lincoln Lionel Loki
-                Lorenzo Louis Lucas Lucifer Lucius Luther Lysander Marcellus Marcus Mars Martin
-                Maximus Maxwell Melvin Mephisto Mephistopheles Mercury Merlin Merrick Metatron
-                Michael Midas Miles Milton Moby Modred Mohammed Montgomery Mordecai Mordred
-                Moriarty Morpheus Mortimer Moses Muhammad Murphy Murray Mustafa Napoleon Nathan
-                Nathaniel Neptune Neville Newton Nigel Norbert Norman Norris Norton O' O'Brian
-                O'Connor O'Donnell O'Farrell O'Finnegan O'Flaherty O'Flynn O'Gara O'Grady O'Hare
-                O'Leary O'Malley O'Mara O'Neill O'Rourke O'Sullivan O'Toole Oberon Octavius Odin
-                Odysseus Oliver Orion Orlando Orson Orville Oscar Osiris Oswald Otto Owen Ozzy
-                Paisley Pan Patrick Percival Percy Perry Perseus Peter Philip Phineas Phoenix
-                Pluto Pollywog Ponce Pontius Porter Poseidon Prescott Preston Prometheus Ptolemy
-                Quasimodo Quentin Quigley Quincy Quixote Ra Randall Randolph Reginald Renfield
-                Roderick Roland Roosevelt Rudolph Rufus Rumpelstiltskin Rupert Rurik Satan
-                Saturn Seamus Sebastian Seymour Sheldon Sherlock Sigmund Sinclair Sisyphus
-                Solomon Stanley Stanton Sterling Stetson Sullivan Sylvester Thackeray Thaddeus
-                Thanatos Theodore Theseus Thomas Thor Throckmorton Thurston Timothy Titus Tobias
-                Toby Todd Tom Tommy Torquil Torrance Trenton Tristan Troy Truman Tucker Turner
-                Tycho Tyler Tyson Ulrich Ulysses Umberto Upton Uriel Victor Vincent Virgil
-                Vladimir Voltaire Vulcan Waldo Wallace Walter Washington Watson Wayne Webster
-                Wenslydale Wesley Wheeler Whittaker Wilburforce Wilfred William Willoughby
-                Wilson Winston Wolfgang Woodrow Wyatt Xander Xavier Xeno Xerxes Xylon Zacharias
-                Zachary Zane Zebedee Zephyr Zeus
+                Cumberbatch Dashiell Davy Delbert Desmond Dexter Dimitri Dionysus Dominic Donald
+                Donovan Dorian Douglas Dracula Drake Dudley Duncan Dwayne Dwight Edgar Edison
+                Edmund Edward Edwin Egbert Einstein Elmer Elon Emerson Emory Enzo Ephraim
+                Erasmus Excalibur Ezekiel Ezra Fabian Fairbanks Felix Ferdinand Fergus Finn
+                Finnegan Fitzgerald Fitzpatrick Fletcher Frankenstein Frankie Franklin Freddy
+                Frederick Fritz Furio Gabriel Genghis Geoffrey Gerald Gideon Gilbert Giles
+                Godfrey Gordon Graham Grant Gregory Grover Guillermo Gus Gustav Hades Hannibal
+                Harold Harrison Harry Harvey Heathcliff Hector Helios Henry Hephaestus Herbert
+                Herman Hermes Homer Horace Horatio Horus Howard Howell Hubert Hudson Hugo
+                Humphrey Huxley Hyde Hyperion Hypnos Ian Icarus Ictor Ignatius Immanuel Irving
+                Isaac Isaiah Isidore Ismael Ivan James Janus Jefferson Jehovah Jekyll Jenkins
+                Jeremiah Jethro Jimbo Jimbob Jimmy Johnny Jonathan Joseph Joshua Judas Julius
+                Jupiter Kennedy Kerberos Lancelot Laszlo Lawrence Leonard Leonidas Leopold Leroy
+                Lincoln Lionel Loki Lorenzo Louis Lucas Lucifer Lucius Luther Lysander Macbragg
+                Macdonald Macdougall Macduff Macfee Macintosh Macintrye Mackenzie Macleod Magoo
+                Marcellus Marcus Mars Martin Maximus Maxwell McAlister McAllister McAlpine
+                McAlpineshire McAlpiney McBragg McBraggart McBraggerty McBraggle McBragglesworth
+                McCarthy McDonald McDougall McDuff McDuffle McDunnough McFarland McFarlane McFee
+                McFergus McFiddler McFizzle McFluff McFluffernutter McFlurry McFly McGillicuddy
+                McGonagall McHaggis McHale McHarg McHarley McHarrington McJordan McKendrick
+                McKenzie McKinnon McKnight McLeod McLoughlin McLuhan McMann McPhee McPherson
+                McPhragglesworth McQuack McQuarrie McQueen McQuillan McQuinn McRae McRaven
+                McReynolds McRib McSweeney McTavish McThag McThistle Melvin Mephisto
+                Mephistopheles Mercury Merlin Merrick Metatron Michael Midas Miles Milton Moby
+                Modred Mohammed Montgomery Mordecai Mordred Moriarty Morpheus Mortimer Moses
+                Muhammad Murphy Murray Mustafa Napoleon Nathan Nathaniel Neptune Neville Newton
+                Nigel Norbert Norman Norris Norton O' O'Brian O'Connor O'Donnell O'Farrell
+                O'Finnegan O'Flaherty O'Flynn O'Gara O'Grady O'Hare O'Leary O'Malley O'Mara
+                O'Neill O'Rourke O'Sullivan O'Toole Oberon Octavius Odin Odysseus Oliver Orion
+                Orlando Orson Orville Oscar Osiris Oswald Otto Owen Ozzy Paisley Pan Patrick
+                Percival Percy Perry Perseus Peter Philip Phineas Phoenix Pluto Pollywog Ponce
+                Pontius Porter Poseidon Prescott Preston Prometheus Ptolemy Quasimodo Quentin
+                Quigley Quincy Quixote Ra Randall Randolph Reginald Renfield Roderick Roland
+                Roosevelt Rudolph Rufus Rumpelstiltskin Rupert Rurik Satan Saturn Seamus
+                Sebastian Seymour Sheldon Sherlock Sigmund Sinclair Sisyphus Solomon Stanley
+                Stanton Sterling Stetson Sullivan Sylvester Thackeray Thaddeus Thanatos Theodore
+                Theseus Thomas Thor Throckmorton Thurston Timothy Titus Tobias Toby Todd Tom
+                Tommy Torquil Torrance Trenton Tristan Troy Truman Tucker Turner Tycho Tyler
+                Tyson Ulrich Ulysses Umberto Upton Uriel Victor Vincent Virgil Vladimir Voltaire
+                Vulcan Waldo Wallace Walter Washington Watson Wayne Webster Wenslydale Wesley
+                Wheeler Whittaker Wilburforce Wilfred William Willoughby Wilson Winston Wolfgang
+                Woodrow Wyatt Xander Xavier Xeno Xerxes Xylon Zacharias Zachary Zane Zebedee
+                Zephyr Zeus
               </Markov>
             </Join>
           </Repeat>
-          <Option probability="0.1">
-            <Words>
-              von
-            </Words>
-          </Option>
         </Join>
         <Join sep=" ">
-          <Option id="title" probability="0.2">
+          <Option id="has-title" probability="0.2">
             <Words>
               Adm. Aunt Baroness Capt. Cmdr. Cmdre. Col. Countess DCI Dame Dr. Gen. Grandma
               HRH HRM Insp. Lt. Mdme. Mrs. Ms. PC Princess Prof. Sen. Sgt. Sra. Srta.
             </Words>
           </Option>
-          <Repeat min="1" max="2">
+          <Repeat id="name-count" min="1" max="2">
             <Markov id="firstname" target_len="5" cutoff_len="12">
               Agatha Agnes Amelia Angelica Annabelle Antonia Aphrodite Arabella Aria Ariadne
               Ariel Artemis Astrid Atalanta Athena Audrey Augusta Barbara Bast Beatrice
@@ -108,17 +122,17 @@
               Wilhelmina Willa Winifred Winona Wren Xena Yvonne Zelda Zora
             </Markov>
           </Repeat>
-          <Option probability="0.1">
-            <Words>
-              van
-            </Words>
-          </Option>
         </Join>
       </Switch>
+      <Option id="has-infix" probability="0.1">
+        <Words>
+          da del der di du el le van von
+        </Words>
+      </Option>
       <Join>
         <Option probability="0.1">
           <Words>
-            Mc
+            Mc O'
           </Words>
         </Option>
         <Markov id="surname" target_len="6" cutoff_len="12">
@@ -143,12 +157,12 @@
           Cheeseburger Chicken Chimpanzee Chinchilla Chipmunk Chupacabra Circus Clockwork
           Clown Clownfish Cockatoo Coconut Coffee Coffeepot Comet Compendium Confetti
           Contraption Corgi Cornflake Cornucopia Crab Crocodile Croissant Cucumber
-          Cuddlebug Cummerbund Cupboard Cupcake Curmudgeon Cutlery Cuttlefish Cyborg
-          Dachshund Dandelion Deuterium Dimension Dimetrodon Dingo Dinosaur Diplodocus
-          Discotheque Dodecahedron Doodad Doodle Doodlebug Doohickey Doughnut Dragonfly
-          Dromedary Dynamite Earthling Eggplant Electron Elephant Elevator Emu Enchilada
-          Encyclopedia Espresso Excavator Eyeball Eyepatch Facepalm Faceplant Falafel
-          Fedora Fermion Ferret Fettuccine Fireplace Fish Fishstick Flamingo
+          Cuddlebug Cumberbatch Cummerbund Cupboard Cupcake Curmudgeon Cutlery Cuttlefish
+          Cyborg Dachshund Dandelion Deuterium Dimension Dimetrodon Dingo Dinosaur
+          Diplodocus Discotheque Dodecahedron Doodad Doodle Doodlebug Doohickey Doughnut
+          Dragonfly Dromedary Dynamite Earthling Eggplant Electron Elephant Elevator Emu
+          Enchilada Encyclopedia Espresso Excavator Eyeball Eyepatch Facepalm Faceplant
+          Falafel Fedora Fermion Ferret Fettuccine Fireplace Fish Fishstick Flamingo
           Flibbertigibbet Flowerpot Fluffypants Foobar Foundation Frankenstein Fridge
           Gadgetry Galaxy Garden Gazelle Gelato Gerbil Giganotosaurus Gimbal Giraffe Gizmo
           Gluon Gnocchi Gobbledygook Goblin Goldfish Golem Gorilla Graviton Gremlin
@@ -194,8 +208,8 @@
         </Markov>
       </Join>
     </Join>
-    <Option id="suffix" probability="0.3">
-      <Switch>
+    <Option id="has-suffix" probability="0.3">
+      <Switch id="suffix-type">
         <Switch>
           <Join>
             <Literal text=", " />
@@ -205,7 +219,7 @@
           </Join>
           <Join>
             <Literal text=" " />
-            <Number id="ordinal" min="1" max="29" style="RomanUpper" />
+            <Number id="ordinal" style="RomanUpper" min="1" max="29" />
           </Join>
         </Switch>
         <Join>
@@ -213,38 +227,38 @@
           <Words id="epithet">
             Adorable Amazing Amusing Angry Anxious Apprehensive Arrogant Awesome Awkward Bad
             Barbarian Beautiful Bewildered Bizarre Blithering Boastful Brash Brave
-            Cantankerous Cheeky Chilly Chubby Chubby Chummy Chunky Churlish Clever Clueless
-            Clumsy Clumsy Colossal Comical Confused Cool Cranky Crazy Cryptic Curmudgeonly
-            Dapper Devious Diligent Discombocbulated Disgruntled Dreadful Drunken Eccentric
-            Elegant Elusive Embarrassed Enigmatic Eternal Evil Exasperated Excellent
-            Exceptional Excited Extraordinary Fabulous Fantastic Fierce Flabbergasted
-            Flammable Fluffy Foolish Fragrant Frightened Funky Funny Furious Fuzzy Glorious
-            Good Great Grim Grizzled Groovy Grouchy Grumpy Handsome Hangry Happy Heavy
-            Helpless Hideous Hilarious Holy Huggable Humble Humorous Hyperbolic Iconic
-            Imaginative Impish Important Impossible Impressive Improbable Incomprehensible
-            Inconceivable Incredible Incredulous Indignant Ingenious Inquisitive Inscrutable
-            Intrepid Ironic Irrational Irrelevant Irreverent Irritable Jealous Jolly Jovial
-            Joyous Jubilant Judicious Jumpy Kooky Lanky Lazy Legendary Lethargic Loopy
-            Loquacious Loud Lovely Ludicrous Lyrical Mad Magical Magnificent Maladroit
-            Malodorous Maniac Marvelous Mischievous Miserable Mistaken Modest Monstrous
-            Monumental Morbid Mysterious Nasty Naughty Nefarious Noble Noisy Nonchalant
-            Nonplussed Nonsensical Normal Nosy Noxious Nutty Obese Obnoxious Occupied
-            Octagonal Odd Offensive Ogre Old Ominous Oneiric Optimistic Ordinary Original
-            Ornery Outrageous Outstanding Panicky Paranoid Pathetic Peculiar Perfect Perky
-            Perplexed Petty Phantasmagorical Philosophical Pompous Preposterous Proud
-            Psychotic Putrid Puzzling Quaint Qualified Quintessential Quixotic Quizzical
-            Rambunctious Rascally Reclusive Regal Relevant Reluctant Remarkable Repulsive
-            Resilient Respectable Restless Robust Rude Ruthless Sad Sarcastic Sassy
-            Secretive Serious Shady Shameless Shifty Shy Silly Sleepy Slippery Slothful
-            Smelly Smug Snarky Soggy Spiffy Spunky Stately Stubborn Sublime Superfluous
-            Suspicious Swaggering Swanky Swift Tactful Talented Tenacious Terrible Thankful
-            Theological Thoughtful Thoughtless Thundering Timid Trickster Troubling
-            Ubiquitous Ugly Unacceptable Unbelievable Uncanny Undead Unflappable
-            Unforgettable Unimpressive Unpronounceable Unruly Unscrupulous Unstoppable
-            Upbeat Upset Upstanding Urgent Useful Vagrant Valiant Valid Valorous Vapid
-            Vegetarian Vehement Versatile Vexing Vibrant Vicious Victorious Vigilant
-            Vindictive Vivacious Vulgar Wacky Wandering Wanted Weird Wise Wistful Wizard
-            Wonderful Wretched Yawning Yummy Zany Zealous Zesty
+            Cantankerous Cheeky Chilly Chubby Chummy Chunky Churlish Clever Clueless Clumsy
+            Colossal Comical Confused Cool Cranky Crazy Cryptic Curmudgeonly Dapper Devious
+            Diligent Discombocbulated Disgruntled Dreadful Drunken Eccentric Elegant Elusive
+            Embarrassed Enigmatic Eternal Evil Exasperated Excellent Exceptional Excited
+            Extraordinary Fabulous Fantastic Fierce Flabbergasted Flammable Fluffy Foolish
+            Fragrant Frightened Funky Funny Furious Fuzzy Glorious Good Great Grim Grizzled
+            Groovy Grouchy Grumpy Handsome Hangry Happy Heavy Helpless Hideous Hilarious
+            Holy Huggable Humble Humorous Hyperbolic Iconic Imaginative Impish Important
+            Impossible Impressive Improbable Incomprehensible Inconceivable Incredible
+            Incredulous Indignant Ingenious Inquisitive Inscrutable Intrepid Ironic
+            Irrational Irrelevant Irreverent Irritable Jealous Jolly Jovial Joyous Jubilant
+            Judicious Jumpy Kooky Lanky Lazy Legendary Lethargic Loopy Loquacious Loud
+            Lovely Ludicrous Lyrical Mad Magical Magnificent Maladroit Malodorous Maniac
+            Marvelous Mischievous Miserable Mistaken Modest Monstrous Monumental Morbid
+            Mysterious Nasty Naughty Nefarious Noble Noisy Nonchalant Nonplussed Nonsensical
+            Normal Nosy Noxious Nutty Obese Obnoxious Occupied Octagonal Odd Offensive Ogre
+            Old Ominous Oneiric Optimistic Ordinary Original Ornery Outrageous Outstanding
+            Panicky Paranoid Pathetic Peculiar Perfect Perky Perplexed Petty
+            Phantasmagorical Philosophical Pompous Preposterous Proud Psychotic Putrid
+            Puzzling Quaint Qualified Quintessential Quixotic Quizzical Rambunctious
+            Rascally Reclusive Regal Relevant Reluctant Remarkable Repulsive Resilient
+            Respectable Restless Robust Rude Ruthless Sad Sarcastic Sassy Secretive Serious
+            Shady Shameless Shifty Shy Silly Sleepy Slippery Slothful Smelly Smug Snarky
+            Soggy Spiffy Spunky Stately Stubborn Sublime Superfluous Suspicious Swaggering
+            Swanky Swift Tactful Talented Tenacious Terrible Thankful Theological Thoughtful
+            Thoughtless Thundering Timid Trickster Troubling Ubiquitous Ugly Unacceptable
+            Unbelievable Uncanny Undead Unflappable Unforgettable Unimpressive
+            Unpronounceable Unruly Unscrupulous Unstoppable Upbeat Upset Upstanding Urgent
+            Useful Vagrant Valiant Valid Valorous Vapid Vegetarian Vehement Versatile Vexing
+            Vibrant Vicious Victorious Vigilant Vindictive Vivacious Vulgar Wacky Wandering
+            Wanted Weird Wise Wistful Wizard Wonderful Wretched Yawning Yummy Zany Zealous
+            Zesty
           </Words>
         </Join>
       </Switch>

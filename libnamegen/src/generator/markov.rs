@@ -37,16 +37,16 @@ pub struct MarkovStats {
 impl Markov {
     pub fn train(
         id: Option<String>,
-        data: &[impl AsRef<str>],
+        data: impl IntoIterator<Item = impl AsRef<str>>,
         target_len: Option<usize>,
         cutoff_len: Option<usize>,
-        reject: Vec<String>,
+        reject: impl IntoIterator<Item = impl ToString>,
         tokenizer: Tokenizer,
         uniform: bool,
     ) -> Self {
         let mut freqs = HashMap::new();
 
-        for word in data.iter() {
+        for word in data {
             let mut tokens = tokenizer.tokenize(word.as_ref()).into_iter();
             let mut token = None;
             loop {
@@ -72,7 +72,7 @@ impl Markov {
             freqs,
             target_len,
             cutoff_len,
-            reject,
+            reject: reject.into_iter().map(|s| s.to_string()).collect(),
             tokenizer: tokenizer,
         }
     }

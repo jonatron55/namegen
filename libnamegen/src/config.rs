@@ -2,7 +2,10 @@ mod into_generator;
 mod parser;
 mod write_xml;
 
-use std::io::{self, Error as IoError, Read};
+use std::{
+    collections::HashMap,
+    io::{self, Error as IoError, Read},
+};
 
 use regex::Regex;
 use thiserror::Error as ThisError;
@@ -29,7 +32,14 @@ pub enum WriteError {
     Xml(#[from] XmlWriteError),
 }
 
+#[derive(Debug, Clone)]
 pub enum GeneratorConfig {
+    Description {
+        display_name: String,
+        description: String,
+        arg_display_names: HashMap<String, String>,
+        subpart: Box<GeneratorConfig>,
+    },
     Capitalizer {
         id: Option<String>,
         subpart: Box<GeneratorConfig>,
@@ -89,23 +99,28 @@ pub enum GeneratorConfig {
 }
 
 impl GeneratorConfig {
-    pub fn read(reader: impl Read, src_type: ConfigSourceType) -> Result<Box<GeneratorConfig>, ParseError> {
+    pub fn read(reader: impl Read, src_type: ConfigSourceType) -> Result<GeneratorConfig, ParseError> {
         match src_type {
             ConfigSourceType::PlainText => {
                 let text = io::read_to_string(reader)?;
                 let mut data: Vec<String> = text.split_whitespace().map(|s| s.to_string()).collect();
                 data.dedup();
 
-                Ok(Box::new(GeneratorConfig::Markov {
-                    id: Some("name".to_string()),
-                    data,
-                    target_len: None,
-                    cutoff_len: None,
-                    reject: vec![],
-                    uniform: false,
-                    reject_training: false,
-                    tokenizer: Tokenizer::default_ssp(),
-                }))
+                Ok(GeneratorConfig::Description {
+                    display_name: "Markov Generator".to_string(),
+                    description: "Created from plain text input".to_string(),
+                    arg_display_names: HashMap::from([("name".to_string(), "Name".to_string())]),
+                    subpart: Box::new(GeneratorConfig::Markov {
+                        id: Some("name".to_string()),
+                        data,
+                        target_len: None,
+                        cutoff_len: None,
+                        reject: vec![],
+                        uniform: false,
+                        reject_training: false,
+                        tokenizer: Tokenizer::default_ssp(),
+                    }),
+                })
             }
             ConfigSourceType::Xml => {
                 let mut xml = XmlParserConfig::new()

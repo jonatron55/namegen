@@ -9,5 +9,5 @@ insert_final_newline = true
 tab_width = 4
 trim_trailing_whitespace = true
 
-[*.{json,md,xml,yml,yaml}]
+[*.{css,html,json,md,sass,scss,xml,yml,yaml}]
 indent_size = 2

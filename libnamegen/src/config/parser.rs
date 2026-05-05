@@ -1,6 +1,7 @@
 use std::{
     collections::{HashMap, HashSet},
     io::{Error as IoError, Read},
+    mem::take,
     result::Result as StdResult,
 };
 
@@ -18,6 +19,8 @@ use crate::{
     generator::{CapitalizerMode, NumberStyle, Tokenizer},
 };
 
+const ELEM_PARAM: &str = "Param";
+const ELEM_DESCRIPTION: &str = "Description";
 const ELEM_CAPITALIZE: &str = "Capitalize";
 const ELEM_CASE: &str = "Case";
 const ELEM_JOIN: &str = "Join";
@@ -87,11 +90,14 @@ pub enum Error {
 
     #[error("Missing attribute: \"{0}\"")]
     MissingAttribute(String),
+
+    #[error("Duplicate parameter description: \"{id}\"")]
+    DuplicateParameter { id: String, position: TextPosition },
 }
 
 pub type Result<T> = StdResult<T, Error>;
 
-pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<GeneratorConfig>> {
+pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig> {
     let event = reader.next()?;
 
     match event {
@@ -107,7 +113,14 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<GeneratorCon
     let event = reader.next()?;
 
     match event {
-        XmlEvent::StartElement { name, .. } if name.local_name == "NameGen" => {}
+        XmlEvent::StartElement { name, attributes, .. } if name.local_name == "NameGen" => {
+            for attr in attributes {
+                return Err(Error::UnexpectedAttribute {
+                    name: attr.name.local_name.clone(),
+                    position: reader.position(),
+                });
+            }
+        }
         other => {
             return Err(Error::UnexpectedEvent {
                 event: other,
@@ -117,13 +130,119 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<Box<GeneratorCon
     }
 
     let event = reader.next()?;
-    let config = inner_from_xml(&event, reader)?;
+
+    let description = if let XmlEvent::StartElement { name, attributes, .. } = &event
+        && name.local_name == ELEM_DESCRIPTION
+    {
+        let mut display_name = "Unnamed Generator".to_string();
+        let mut description = String::new();
+        let mut arg_display_names = HashMap::new();
+
+        for attr in attributes {
+            match attr.name.local_name.as_str() {
+                "display_name" => {
+                    display_name = attr.value.clone();
+                }
+                other => {
+                    return Err(Error::UnexpectedAttribute {
+                        name: other.to_string(),
+                        position: reader.position(),
+                    });
+                }
+            }
+        }
+
+        loop {
+            let event = reader.next()?;
+
+            match event {
+                XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_PARAM => {
+                    let mut id = None;
+                    let mut display_name = String::new();
+
+                    for attr in attributes {
+                        match attr.name.local_name.as_str() {
+                            "id" => {
+                                id = Some(attr.value.clone());
+                            }
+                            "display_name" => {
+                                display_name = attr.value.clone();
+                            }
+                            other => {
+                                return Err(Error::UnexpectedAttribute {
+                                    name: other.to_string(),
+                                    position: reader.position(),
+                                });
+                            }
+                        }
+                    }
+
+                    loop {
+                        let event = reader.next()?;
+
+                        match event {
+                            XmlEvent::EndElement { name } if name.local_name == ELEM_PARAM => {
+                                if let Some(id) = &id {
+                                    if arg_display_names.insert(id.clone(), take(&mut display_name)).is_some() {
+                                        return Err(Error::DuplicateParameter {
+                                            id: id.clone(),
+                                            position: reader.position(),
+                                        });
+                                    }
+                                    break;
+                                } else {
+                                    return Err(Error::MissingAttribute("id".to_string()));
+                                }
+                            }
+                            other => {
+                                return Err(Error::UnexpectedEvent {
+                                    event: other,
+                                    position: reader.position(),
+                                });
+                            }
+                        }
+                    }
+                }
+                XmlEvent::Characters(data) => {
+                    description.push_str(&data);
+                }
+                XmlEvent::Whitespace(_) => {
+                    description.push_str(" ");
+                }
+                XmlEvent::EndElement { name } if name.local_name == ELEM_DESCRIPTION => {
+                    break;
+                }
+                other => {
+                    return Err(Error::UnexpectedEvent {
+                        event: other,
+                        position: reader.position(),
+                    });
+                }
+            }
+        }
+
+        let event = reader.next()?;
+        GeneratorConfig::Description {
+            display_name,
+            description,
+            arg_display_names,
+            subpart: inner_from_xml(&event, reader)?,
+        }
+    } else {
+        GeneratorConfig::Description {
+            display_name: "Unnamed Generator".to_string(),
+            description: String::new(),
+            arg_display_names: HashMap::new(),
+            subpart: inner_from_xml(&event, reader)?,
+        }
+    };
+
     let event = reader.next()?;
 
     match event {
         XmlEvent::EndElement { name } => {
             if name.local_name == "NameGen" {
-                Ok(config)
+                Ok(description)
             } else {
                 Err(Error::UnexpectedEnd {
                     name: name.local_name,
@@ -224,6 +343,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     XmlEvent::EndElement { name } => {
                         if name.local_name == ELEM_MARKOV {
                             let tokenizer = tokenizer.unwrap_or_default();
+                            training_data.sort_unstable();
                             training_data.dedup();
 
                             return Ok(Box::new(GeneratorConfig::Markov {
@@ -503,6 +623,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     }
                     XmlEvent::Whitespace(_) => {}
                     XmlEvent::EndElement { name } if name.local_name == ELEM_WORDS => {
+                        words.sort_unstable();
                         words.dedup();
                         return Ok(Box::new(GeneratorConfig::Words { id, words }));
                     }
@@ -999,7 +1120,8 @@ impl Error {
             | Error::UnexpectedEnd { position, .. }
             | Error::UnexpectedAttribute { position, .. }
             | Error::InvalidValue { position, .. }
-            | Error::InvalidRegex { position, .. } => Some(*position),
+            | Error::InvalidRegex { position, .. }
+            | Error::DuplicateParameter { position, .. } => Some(*position),
         }
     }
 }

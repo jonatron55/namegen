@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
+  <Description display_name="Elven">
+    <Param id="firstname" display_name="First name" />
+    <Param id="gender" display_name="Gender (0: masculine, 1: feminine)" />
+    <Param id="surname" display_name="Surname" />
+    Elven names, inspired by Celtic, Welsh, and various mythological sources.
+  </Description>
   <Join sep=" ">
     <Switch id="gender">
       <Markov id="firstname" target_len="4" cutoff_len="10">

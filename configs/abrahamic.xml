@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Markov target_len="4" cutoff_len="12" reject_training="true">
+  <Description display_name="Abrahamic">
+    <Param id="name" display_name="Name" />
+    Names based on Biblical and Abrahamic mythology. Suitable for generating names
+    of angels, demons, and similar entities.
+  </Description>
+  <Markov id="name" target_len="4" cutoff_len="12" reject_training="true">
     Aaron Abacuc Abatur Abbadon Abdias Abel Abia Abidan Abigail Abimelech Abisai
     Abner Abraham Absalom Achab Achaicus Adam Adathan Adina Adonai Adriel Agabus
     Agar Agares Aggaeus Aggeus Aglibol Aguarès Ahab Ahoth Aim Alloces Alocer

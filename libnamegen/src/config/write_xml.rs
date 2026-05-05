@@ -13,9 +13,34 @@ pub trait WriteXml {
     fn write_xml(self, writer: &mut XmlWriter<&mut Box<dyn Write>>, indent: usize) -> Result<(), WriteError>;
 }
 
-impl WriteXml for Box<GeneratorConfig> {
+impl WriteXml for GeneratorConfig {
     fn write_xml(self, writer: &mut XmlWriter<&mut Box<dyn Write>>, indent: usize) -> Result<(), WriteError> {
-        match *self {
+        match self {
+            GeneratorConfig::Description {
+                display_name,
+                description,
+                arg_display_names,
+                subpart,
+            } => {
+                writer.write(XmlEvent::start_element("Description").attr("display_name", &display_name))?;
+
+                for id in arg_display_names.keys().sorted_unstable() {
+                    let display_name = &arg_display_names[id];
+                    writer.write(
+                        XmlEvent::start_element("Param")
+                            .attr("id", id)
+                            .attr("display_name", display_name),
+                    )?;
+                    writer.write(XmlEvent::end_element())?;
+                }
+
+                let desc_words = description.split_whitespace();
+                write_indented_lines(desc_words, indent + 2, writer)?;
+
+                writer.write(XmlEvent::end_element())?;
+                subpart.write_xml(writer, indent)?;
+            }
+
             GeneratorConfig::Capitalizer { id, subpart, mode } => {
                 if matches!(mode, CapitalizerMode::FirstUpper) {
                     writer.write(XmlEvent::start_element("Capitalize"))?;
@@ -53,8 +78,9 @@ impl WriteXml for Box<GeneratorConfig> {
 
                 if reject.len() > 0 {
                     reject.sort_unstable();
+                    reject.dedup();
                     writer.write(XmlEvent::start_element("Reject"))?;
-                    write_indented_lines(reject, indent + 4, writer)?;
+                    write_indented_lines(&reject, indent + 4, writer)?;
                     writer.write(XmlEvent::end_element())?;
                 }
 
@@ -152,11 +178,11 @@ impl WriteXml for Box<GeneratorConfig> {
 
                 if reject.len() > 0 {
                     writer.write(XmlEvent::start_element("Reject"))?;
-                    write_indented_lines(reject, indent + 4, writer)?;
+                    write_indented_lines(&reject, indent + 4, writer)?;
                     writer.write(XmlEvent::end_element())?;
                 }
 
-                write_indented_lines(data, indent + 2, writer)?;
+                write_indented_lines(&data, indent + 2, writer)?;
 
                 writer.write(XmlEvent::end_element())?;
             }
@@ -254,7 +280,7 @@ impl WriteXml for Box<GeneratorConfig> {
                 }
 
                 writer.write(ev)?;
-                write_indented_lines(words, indent + 2, writer)?;
+                write_indented_lines(&words, indent + 2, writer)?;
                 writer.write(XmlEvent::end_element())?;
             }
         }
@@ -263,7 +289,7 @@ impl WriteXml for Box<GeneratorConfig> {
 }
 
 fn write_indented_lines(
-    mut words: Vec<String>,
+    words: impl IntoIterator<Item = impl AsRef<str>>,
     indent: usize,
     writer: &mut XmlWriter<&mut Box<dyn Write>>,
 ) -> Result<(), WriteError> {
@@ -271,10 +297,10 @@ fn write_indented_lines(
     writer.write(XmlEvent::characters("\n"))?;
     writer.write(XmlEvent::characters(&indent_str))?;
 
-    words.sort_unstable();
     let mut line = String::with_capacity(WRAP_WIDTH);
 
-    for word in words.iter() {
+    for word in words {
+        let word = word.as_ref();
         if line.len() > 0 && line.len() + word.len() + 1 > WRAP_WIDTH {
             writer.write(XmlEvent::characters(&line))?;
             writer.write(XmlEvent::characters("\n"))?;
@@ -287,7 +313,7 @@ fn write_indented_lines(
             line.push(' ');
         }
 
-        line.push_str(&word);
+        line.push_str(word);
     }
 
     if !line.is_empty() {

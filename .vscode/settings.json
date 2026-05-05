@@ -1,5 +1,5 @@
 {
-  "[json][markdown][xml][yaml]": {
+  "[css][html][json][markdown][scss][xml][yaml]": {
     "editor.indentSize": 2
   },
   "[markdown][rust]": {

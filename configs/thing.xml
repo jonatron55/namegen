@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
+  <Description display_name="Thing">
+    <Param id="adj" display_name="Adjective" />
+    <Param id="agent" display_name="Agent noun" />
+    <Param id="has-prefix" display_name="Include a prefix" />
+    <Param id="noun" display_name="Noun" />
+    Generates amusing names for objects or concepts. Perfect for naming components
+    of your turboencabulator.
+  </Description>
   <Join sep=" ">
-    <Markov target_len="8" cutoff_len="15">
+    <Markov id="adj" target_len="8" cutoff_len="15">
       Abandoned Aberrant Abhorrent Abominable Absolute Abstract Absurd Academic
       Acceptable Accessible Accidental Acclaimed Accommodating Accomplished Accurate
-      Accusatory Acerbic Achromatic Acidic Acoustic Acoustic Acquiescent Acrimonious
-      Acrobatic Acrobatic Active Additional Adept Adhesive Adorable Adroit Adventurous
-      Affectionate Agitated Agreeable Alienated Altruistic Ambitious Ambivalent
-      Amiable Amorphous Amusing Ancient Annoying Anomalous Antagonistic Antiquated
-      Apprehensive Appropriate Arbitrary Arcane Architectural Aristocratic Arrogant
-      Artful Artificial Ascetic Aspiring Assertive Assiduous Astonishing Astounding
-      Astute Athletic Atomic Atrocious Audacious Automatic Autumnal Avian Awesome
-      Awkward Axiomatic Baffling Balanced Baleful Ballistic Banished Baroque Bashful
-      Bellicose Belligerent Benevolent Benign Bionic Bizarre Boggling Bohemian
-      Bombastic Bonafide Bonkers Bouncy Brawny Brilliant Bumbling Bungling Camouflaged
+      Accusatory Acerbic Achromatic Acidic Acoustic Acquiescent Acrimonious Acrobatic
+      Active Additional Adept Adhesive Adorable Adroit Adventurous Affectionate
+      Agitated Agreeable Alienated Altruistic Ambitious Ambivalent Amiable Amorphous
+      Amusing Ancient Annoying Anomalous Antagonistic Antiquated Apprehensive
+      Appropriate Arbitrary Arcane Architectural Aristocratic Arrogant Artful
+      Artificial Ascetic Aspiring Assertive Assiduous Astonishing Astounding Astute
+      Athletic Atomic Atrocious Audacious Automatic Autumnal Avian Awesome Awkward
+      Axiomatic Baffling Balanced Baleful Ballistic Banished Baroque Bashful Bellicose
+      Belligerent Benevolent Benign Bionic Bizarre Boggling Bohemian Bombastic
+      Bonafide Bonkers Bouncy Brawny Brilliant Bumbling Bungling Camouflaged
       Cantankerous Capable Capricious Carefree Careful Careless Categorical Cautious
       Celebrated Celestial Cerebral Ceremonial Certified Cerulean Charming Cheerful
       Cheesy Chemical Chic Chilly Chivalrous Chromatic Chronic Cinematic Circuitous
@@ -24,196 +32,153 @@
       Cuddly Cunning Cybernetic Cyberpunk Cyborg Dapper Daring Dashing Dazzling
       Deceitful Derivative Devious Dexterous Dieselpunk Diligent Dire Discerning
       Discombobulated Discreet Disgruntled Disingenuous Disobedient Disorganized
-      Disorientated Disproportionate Disreputable Disreputable Disruptive Disruptive
-      Distempered Distinguished Distinguishing Distorted Distributional Divergent
-      Dizzying Dogmatic Dreadful Dreary Dubious Durable Dynamic Dynamical
-      Dysfunctional Dystrophic Eccentric Eclectic Ecumenical Elaborate Elated Electric
-      Elegant Elongated Eloquent Elusive Embarrassing Emphatic Enervating Enigmatic
-      Enormous Enthralling Enticing Envious Equivocal Erudite Esoteric Ethereal
-      Evocative Exasperated Excellent Exceptional Excitable Excited Exhilarating
-      Exhilarating Existential Exquisite Extraneous Extraordinary Extraplanetary
-      Extraterrestrial Extraterritorial Extravagant Exuberant Exuberant Exultant
+      Disorientated Disproportionate Disreputable Disruptive Distempered Distinguished
+      Distinguishing Distorted Distributional Divergent Dizzying Dogmatic Dreadful
+      Dreary Dubious Durable Dynamic Dynamical Dysfunctional Dystrophic Eccentric
+      Eclectic Ecumenical Elaborate Elated Electric Elegant Elongated Eloquent Elusive
+      Embarrassing Emphatic Enervating Enigmatic Enormous Enthralling Enticing Envious
+      Equivocal Erudite Esoteric Ethereal Evocative Exasperated Excellent Exceptional
+      Excitable Excited Exhilarating Existential Exquisite Extraneous Extraordinary
+      Extraplanetary Extraterrestrial Extraterritorial Extravagant Exuberant Exultant
       Fabulously Fascinating Flamboyant Fractious Frisky Frivolous Full-resolution
-      Galactic Gallivanting Gargantuan Gargantuan Gelatinous Generous Generous Genial
-      Geriatric Ghastly Gibbering Gigantic Gigantic Giggle-inducing Giggly Gilded
-      Glamorous Gleaming Glorious Glowing Gluttonous Goblincore Gobsmacked Goofy
-      Gorgeous Gormless Gracious Gracious Grandiose Grandiose Gregarious Gregarious
-      Grotesque Gruesome Gullible Gyroscopic Haphazard Haphazard Harrowing Haughty
-      Hedonistic Heinous Helpless Herculean Heroic High-definition Hilarious Hilarious
-      Histrionic Histrionic Hobgoblin Hodgepodge Holistic Homogeneous Horrendous
-      Humble Hydrocoptic Hyperbolic Hypertensive Hypnotic Hypothetical Hysterical
-      Hysterical Iconoclastic Iconoclastic Idiosyncratic Idiosyncratic Illogical
-      Illogical Immaculate Immaculate Immortal Impenetrable Imperfect Impermeable
-      Imperturbable Impetuous Impish Implacable Implicit Importune Impractical
-      Impudent Impulsive Incalculable Incandescent Incisive Inclement Incomprehensible
-      Inconceivable Incongruous Inconsiderate Inconsistent Inconsistent Inconvenient
-      Incorrect Incredible Indecisive Indefatigable Indefatigable Indefensible
-      Indelible Indelible Indescribable Indestructible Indisputable Indistinguishable
+      Galactic Gallivanting Gargantuan Gelatinous Generous Genial Geriatric Ghastly
+      Gibbering Gigantic Giggle-inducing Giggly Gilded Glamorous Gleaming Glorious
+      Glowing Gluttonous Goblincore Gobsmacked Goofy Gorgeous Gormless Gracious
+      Grandiose Gregarious Grotesque Gruesome Gullible Gyroscopic Haphazard Harrowing
+      Haughty Hedonistic Heinous Helpless Herculean Heroic High-definition Hilarious
+      Histrionic Hobgoblin Hodgepodge Holistic Homogeneous Horrendous Humble
+      Hydrocoptic Hyperbolic Hypertensive Hypnotic Hypothetical Hysterical
+      Iconoclastic Idiosyncratic Illogical Immaculate Immortal Impenetrable Imperfect
+      Impermeable Imperturbable Impetuous Impish Implacable Implicit Importune
+      Impractical Impudent Impulsive Incalculable Incandescent Incisive Inclement
+      Incomprehensible Inconceivable Incongruous Inconsiderate Inconsistent
+      Inconvenient Incorrect Incredible Indecisive Indefatigable Indefensible
+      Indelible Indescribable Indestructible Indisputable Indistinguishable
       Individualistic Indubitable Industrious Ineffable Ineffectual Inefficient
       Inevitable Inexorable Inexplicable Infamous Infernal Infinite Infinitesimal
-      Infinitesimal Infuriating Infuriating Ingenious Ingenious Inimitable Inimitable
-      Innumerable Innumerable Inquisitive Inscrutable Inscrutable Insidious Insolent
-      Instinctive Insufferable Intangible Integral Intellectual Intelligent
-      Interdimensional Interdimensional Intergalactic Intergalactic Interplanetary
-      Interplanetary Interstellar Interstellar Intrepid Intriguing Introverted
-      Intuitive Inventive Invincible Invulnerable Iridescent Irrelevant Irrelevant
-      Irresistible Irresistible Irresolute Irresponsible Irresponsible Irretrievable
-      Irretrievable Irreverent Irreverent Jocular Jocular Jovian Labyrinthine
-      Labyrinthine Laser-powered Laser-powered Laudable Laudable Logarithmic
-      Logarithmic Luminous Luminous Lunar Lunar Luxurious Luxurious Magnanimous
-      Magnanimous Magnificent Magnificent Magniloquent Magniloquent Malicious
-      Malicious Malleable Managerial Managerial Maniacal Maniacal Manifold Manifold
-      Martian Martian Martian Maximalist Maximalist Mechanical Mechanical Mercurian
-      Metric Metric Minimalist Minimalist Multifaceted Multifaceted Multitudinous
-      Multitudinous Multitudinous Multiversal Multiversal Mysterious Mysterious
-      Mystifying Mystifying Mythical Mythical Nefarious Nefarious Neptunian Nerdy
-      Nerdy Obscure Obscure Obsolete Obsolete Obstinate Obstinate Obtuse Obtuse Odious
-      Odious Odyssean Odyssean Offbeat Offbeat Offensive Offensive Official Official
-      Ominous Ominous Omniscient Omniscient Onerous Onerous Opaque Opaque Operatic
-      Operatic Operative Operative Optimistic Optimistic Opulent Opulent Otherworldly
-      Otherworldly Paisley Paisley Paradoxical Paradoxical Peculiar Peculiar Pendulous
-      Pendulous Pensive Pensive Penultimate Penultimate Perceptive Perceptive
-      Perfamulated Perfidious Perfidious Perilous Perilous Perplexing Perplexing
-      Photonic Photonic Plasmatic Plasmatic Plutocratic Plutonian Plutonic Pneumatic
-      Pneumatic Polygonal Polygonal Polymorphic Polymorphic Polyvalent Polyvalent
-      Postmodernist Postmodernist Precarious Precarious Precocious Precocious
-      Predatory Predatory Predictable Predictable Preposterous Preposterous
-      Prestigious Prestigious Prodigious Prodigious Profound Profound Prolific
-      Prolific Prosaic Prosaic Pseudonymous Pseudonymous Pugnacious Pugnacious
-      Qualified Qualified Quantum Quantum Quarrelsome Quarrelsome Queasy Queasy
-      Querulous Querulous Quick Quick Quintessential Quintessential Quirky Quirky
-      Quixotic Quixotic Quizzical Quizzical Quotidian Quotidian Rambunctious
-      Rambunctious Raucous Raucous Reciprocal Reciprocal Reclusive Reclusive
-      Reconfigurable Reconfigurable Reconfigurable Reconfigurable Reconstituted
-      Reconstituted Reconstituted Reconstituted Reconstitutional Reconstitutional
-      Reconstructive Reconstructive Rectangular Rectangular Recyclable Recyclable
-      Recyclable Recyclable Redundant Redundant Redundant Reflective Reflective
-      Regenerative Regenerative Remarkable Remarkable Remedial Remedial Replenerative
-      Resilient Resilient Resolute Resourceful Resourceful Reversible Reversible
-      Rhapsodic Rhapsodic Rhythmic Rhythmic Robotic Robotic Robust Robust Rugged
-      Rugged Sagacious Sagacious Salacious Salacious Salubrious Salubrious Sanguine
-      Sanguine Sardonic Sardonic Saturnian Saturnine Saturnine Scientific Scientific
-      Scintillating Scintillating Scrupulous Scrupulous Scurrilous Scurrilous
-      Sempervirent Sempervirent Sentimental Sentimental Serendipitous Serendipitous
-      Serene Serene Serious Serious Serpentine Serpentine Shimmering Shimmering
-      Sincere Sincere Sleek Sleek Slippery Slippery Smiling Smiling Smirking Smirking
-      Snappy Snappy Snarky Snarky Snazzy Snazzy Sneaky Sneaky Snobbish Snobbish Snugly
-      Snugly Soaring Soaring Solar Solar Sonorous Sonorous Sophisticated Sophisticated
-      Spacey Spacey Spicy Spicy Spiffy Spiffy Spooky Spooky Spunky Spunky Spurious
-      Spurious Squiggly Squiggly Squircular Squircular Squirrely Squirrely Squishy
-      Squishy Stealthy Stealthy Steampunk Steampunk Strategic Strategic Studious
-      Studious Stupendous Stupendous Subversive Subversive Supercharged Supercharged
-      Superficial Superficial Suspicious Suspicious Swanky Swanky Swashbuckling
-      Swashbuckling Sweltering Sweltering Symbiotic Symbiotic Sympathetic Sympathetic
-      Syncopated Syncopated Synergistic Synergistic Synthetic Synthetic Synthwave
-      Synthwave Systematic Systematic Tacky Tacky Tactical Tactical Tenacious
-      Tenacious Tenebrous Tenebrous Tenuous Tenuous Time-travelling Time-travelling
-      Treacherous Treacherous Tremendous Tremendous Tumultuous Tumultuous Turbocharged
-      Turbocharged Turbulent Turbulent Twinkling Twinkling Twisted Twisted Tyrannical
-      Tyrannical Ubiquitous Ubiquitous Ultimate Ultimate Ultrasonic Ultrasonic
-      Ultraviolet Ultraviolet Umbral Umbral Unbelievable Unbelievable Unbounded
-      Unbounded Uncanny Uncanny Uncategorizable Uncategorizable Unconventional
-      Unconventional Uncooperative Uncooperative Uncountable Uncountable Undercover
-      Undercover Underhanded Underhanded Understated Understated Underwater Underwater
-      Undisputed Undisputed Unearthly Unearthly Unfathomable Unfathomable Unflappable
-      Unflappable Unflinching Unflinching Unforgettable Unforgettable Uniform Uniform
-      Unimaginable Unimaginable Universal Universal Unknowable Unknowable Unmeasurable
-      Unmeasurable Unorthodox Unorthodox Unparalleled Unparalleled Unprecedented
-      Unprecedented Unpredictable Unpredictable Unquantifiable Unquantifiable
-      Unreasonable Unreasonable Unstoppable Unstoppable Unthinkable Unthinkable
-      Unusual Unusual Unwieldy Unwieldy Utopian Utopian Venerable Venerable Venusian
-      Versatile Versatile Vexillological Vibrant Vibrant Villainous Villainous
-      Vivacious Vivacious Volcanic Volcanic Voracious Voracious Warped Warped Weary
-      Weary Webbed Webbed Weird Weird Wiggly Wiggly Wimpy Wimpy Wobbly Wobbly Woeful
-      Woeful Wondrous Wondrous Zany Zany Zealous Zealous Zenlike Zenlike Zigzag Zigzag
+      Infuriating Ingenious Inimitable Innumerable Inquisitive Inscrutable Insidious
+      Insolent Instinctive Insufferable Intangible Integral Intellectual Intelligent
+      Interdimensional Intergalactic Interplanetary Interstellar Intrepid Intriguing
+      Introverted Intuitive Inventive Invincible Invulnerable Iridescent Irrelevant
+      Irresistible Irresolute Irresponsible Irretrievable Irreverent Jocular Jovian
+      Labyrinthine Laser-powered Laudable Logarithmic Luminous Lunar Luxurious
+      Magnanimous Magnificent Magniloquent Malicious Malleable Managerial Maniacal
+      Manifold Martian Maximalist Mechanical Mercurian Metric Minimalist Multifaceted
+      Multitudinous Multiversal Mysterious Mystifying Mythical Nefarious Neptunian
+      Nerdy Obscure Obsolete Obstinate Obtuse Odious Odyssean Offbeat Offensive
+      Official Ominous Omniscient Onerous Opaque Operatic Operative Optimistic Opulent
+      Otherworldly Paisley Paradoxical Peculiar Pendulous Pensive Penultimate
+      Perceptive Perfamulated Perfidious Perilous Perplexing Photonic Plasmatic
+      Plutocratic Plutonian Plutonic Pneumatic Polygonal Polymorphic Polyvalent
+      Postmodernist Precarious Precocious Predatory Predictable Preposterous
+      Prestigious Prodigious Profound Prolific Prosaic Pseudonymous Pugnacious
+      Qualified Quantum Quarrelsome Queasy Querulous Quick Quintessential Quirky
+      Quixotic Quizzical Quotidian Rambunctious Raucous Reciprocal Reclusive
+      Reconfigurable Reconstituted Reconstitutional Reconstructive Rectangular
+      Recyclable Redundant Reflective Regenerative Remarkable Remedial Replenerative
+      Resilient Resolute Resourceful Reversible Rhapsodic Rhythmic Robotic Robust
+      Rugged Sagacious Salacious Salubrious Sanguine Sardonic Saturnian Saturnine
+      Scientific Scintillating Scrupulous Scurrilous Sempervirent Sentimental
+      Serendipitous Serene Serious Serpentine Shimmering Sincere Sleek Slippery
+      Smiling Smirking Snappy Snarky Snazzy Sneaky Snobbish Snugly Soaring Solar
+      Sonorous Sophisticated Spacey Spicy Spiffy Spooky Spunky Spurious Squiggly
+      Squircular Squirrely Squishy Stealthy Steampunk Strategic Studious Stupendous
+      Subversive Supercharged Superficial Suspicious Swanky Swashbuckling Sweltering
+      Symbiotic Sympathetic Syncopated Synergistic Synthetic Synthwave Systematic
+      Tacky Tactical Tenacious Tenebrous Tenuous Time-travelling Treacherous
+      Tremendous Tumultuous Turbocharged Turbulent Twinkling Twisted Tyrannical
+      Ubiquitous Ultimate Ultrasonic Ultraviolet Umbral Unbelievable Unbounded Uncanny
+      Uncategorizable Unconventional Uncooperative Uncountable Undercover Underhanded
+      Understated Underwater Undisputed Unearthly Unfathomable Unflappable Unflinching
+      Unforgettable Uniform Unimaginable Universal Unknowable Unmeasurable Unorthodox
+      Unparalleled Unprecedented Unpredictable Unquantifiable Unreasonable Unstoppable
+      Unthinkable Unusual Unwieldy Utopian Venerable Venusian Versatile Vexillological
+      Vibrant Villainous Vivacious Volcanic Voracious Warped Weary Webbed Weird Wiggly
+      Wimpy Wobbly Woeful Wondrous Zany Zealous Zenlike Zigzag
     </Markov>
     <Capitalize>
       <Join sep="-">
-        <Option probability="0.2">
-          <Words>
-            Aero Astro Auto Bio Chrono Cyber Electro Geo Giga Hemi Hexa Hydro Hyper Hypno
-            Hypo Infra Kilo Laser Macro Mega Meta Micro Milli Mini Multi Nano Neo Octo Omni
-            Penta Radio Retro Semi Space Sub Super Techno Tera Turbo Ultra
+        <Option id="has-prefix" probability="0.2">
+          <Words id="prefix">
+            Aero Astro Atto Auto Bio Chrono Cyber Cyclo Electro Femto Geo Giga Hemi Hexa
+            Hydro Hyper Hypno Hypo Infra Kilo Laser Macro Mega Meta Micro Milli Mini Multi
+            Nano Neo Octo Omni Penta Pico Power Quantum Radio Retro Semi Space Sub Super
+            Techno Tera Tri Turbo Ultra Uni Yocto Zepto
           </Words>
         </Option>
-        <Markov target_len="8" cutoff_len="14">
+        <Markov id="noun" target_len="8" cutoff_len="14">
           Aardvark Abacus Abbey Aberration Abracadabra Absurdity Accolade Addendum
           Adjective Aerodrome Albatross Albertosaurus Alchemist Alligator Allosaurus
-          Aluminum Amargasaurus Amoeba Anaconda Anemone Anemone Ankylosaurus Anomaly
-          Antelope Antenna Antlion Anvil Apatosaurus Ape Apocalypse Apparatus Aquarium
-          Aqueduct Arboretum Argentinosaurus Armadillo Armageddon Armory Armpit Arpeggio
-          Arquebus Artichoke Artifact Artificer Ascot Asparagus Asparagus Asteroid
-          Asteroid Astronaut Astronaut Asylum Auditorium Automaton Automobile Aviator
-          Avocado Avocado Baboon Backgammon Bacon Badger Bagel Balaclava Ballistic Bamboo
-          Banana Banana Bandana Banjo Barbecue Barometer Barracuda Barricade Baryon
-          Baryonyx Basilisk Bastion Bathtub Bazinga Beachball Beagle Beanstalk Bear Beaver
-          Beehive Beetle Beret Berry Bigfoot Billygoat Biologist Biscotti Blackhole Blimp
-          Bling Blorp Blubber Blunderbuss Bobsled Bonobo Boondoggle Bork Borscht Boson
-          Botanist Bowtie Brachiosaurus Brain Broccoli Brogues Brontosaurus Brontosaurus
-          Broomstick Brownie Bubblewrap Buffalo Buffyverse Bugle Bulldozer Bullfrog
-          Bumblebee Bumblebee Bungalow Bunsen Buoy Bureau Burner Burrito Cabbage Cactus
-          Cactus Cactus Candelabra Candy Cannoli Cannon Cantaloupe Cappuccino Caramel
-          Carbon Caribou Caribou Carnival Carnotaurus Carrot Cartographer Cartoon
-          Cartwheel Cashew Cashew Cassowary Catastrophe Caterpillar Catfish Caviar
-          Cellophane Centaur Ceratosaurus Chameleon Chandelier Chariot Charlatan
-          Chasmosaurus Cheese Cheeseburger Chemist Chemist Chicken Chicken Chimpanzee
-          Chimpanzee Chinchilla Chinchilla Chipmunk Chipmunk Chupacabra Chupacabra Circus
-          Circus Clockwork Clown Clownfish Cockatoo Coconut Coffeepot Comedian Comet
-          Compendium Confetti Contraption Corgi Cornflake Cornucopia Crab Crocodile
-          Croissant Cucumber Cuddlebug Cummerbund Cupcake Curlycue Curmudgeon Cutlery
-          Cuttlefish Dachshund Dandelion Daspletosaurus Deuterium Dimension Dimetrodon
-          Dingo Diplodocus Discotheque Dodad Dodecahedron Doodle Doodlebug Doohickey
-          Doughnut Dragonfly Dromedary Dynamite Earthling Einsteinium Electron Elephant
-          Emu Enchilada Encyclopedia Entomologist Espresso Etymologist Excavator Eyeball
-          Eyepatch Facepalm Faceplant Falafel Fedora Fermion Ferret Fettuccine Fish
-          Fishstick Flamingo Flibbertigibbet Flowerpot Foobar Foundation Frankenstein
-          Gadgetry Galaxy Gazelle Gelato Gerbil Giganotosaurus Gimbal Giraffe Gizmo Gluon
-          Gnocchi Gobbledygook Goblin Golem Gorilla Graviton Gremlin Grendel Gymnasium
-          Habanero Haberdasher Hadron Haggis Hamburger Hedgehog Helicopter Heliotrope
-          Helium Herpetologist Herrerasaurus Hippogriff Hippopotamus Hobgoblin Horizon
-          Horologist Horticulturist Hotdog Houseplant Hummus Hydogen Hyperboloid Hypercube
+          Aluminum Amargasaurus Amoeba Anaconda Anemone Ankylosaurus Anomaly Antelope
+          Antenna Antlion Anvil Apatosaurus Ape Apocalypse Apparatus Aquarium Aqueduct
+          Arboretum Argentinosaurus Armadillo Armageddon Armory Armpit Arpeggio Arquebus
+          Artichoke Artifact Artificer Ascot Asparagus Asteroid Astronaut Asylum
+          Auditorium Automaton Automobile Aviator Avocado Baboon Backgammon Bacon Badger
+          Bagel Balaclava Ballistic Bamboo Banana Bandana Banjo Barbecue Barometer
+          Barracuda Barricade Baryon Baryonyx Basilisk Bastion Bathtub Bazinga Beachball
+          Beagle Beanstalk Bear Beaver Beehive Beetle Beret Berry Bigfoot Billygoat
+          Biologist Biscotti Blackhole Blimp Bling Blorp Blubber Blunderbuss Bobsled
+          Bonobo Boondoggle Bork Borscht Boson Botanist Bowtie Brachiosaurus Brain
+          Broccoli Brogues Brontosaurus Broomstick Brownie Bubblewrap Buffalo Buffyverse
+          Bugle Bulldozer Bullfrog Bumblebee Bungalow Bunsen Buoy Bureau Burner Burrito
+          Cabbage Cactus Candelabra Candy Cannoli Cannon Cantaloupe Cappuccino Caramel
+          Carbon Caribou Carnival Carnotaurus Carrot Cartographer Cartoon Cartwheel Cashew
+          Cassowary Catastrophe Caterpillar Catfish Caviar Cellophane Centaur Ceratosaurus
+          Chameleon Chandelier Chariot Charlatan Chasmosaurus Cheese Cheeseburger Chemist
+          Chicken Chimpanzee Chinchilla Chipmunk Chupacabra Circus Clockwork Clown
+          Clownfish Cockatoo Coconut Coffeepot Comedian Comet Compendium Confetti
+          Contraption Corgi Cornflake Cornucopia Crab Crocodile Croissant Cucumber
+          Cuddlebug Cummerbund Cupcake Curlycue Curmudgeon Cutlery Cuttlefish Dachshund
+          Dandelion Daspletosaurus Deuterium Dimension Dimetrodon Dingo Diplodocus
+          Discotheque Dodad Dodecahedron Doodle Doodlebug Doohickey Doughnut Dragonfly
+          Dromedary Dynamite Earthling Einsteinium Electron Elephant Emu Enchilada
+          Encyclopedia Entomologist Espresso Etymologist Excavator Eyeball Eyepatch
+          Facepalm Faceplant Falafel Fedora Fermion Ferret Fettuccine Fish Fishstick
+          Flamingo Flibbertigibbet Flowerpot Foobar Foundation Frankenstein Gadgetry
+          Galaxy Gazelle Gelato Gerbil Giganotosaurus Gimbal Giraffe Gizmo Gluon Gnocchi
+          Gobbledygook Goblin Golem Gorilla Graviton Gremlin Grendel Gymnasium Habanero
+          Haberdasher Hadron Haggis Hamburger Hedgehog Helicopter Heliotrope Helium
+          Herpetologist Herrerasaurus Hippogriff Hippopotamus Hobgoblin Horizon Horologist
+          Horticulturist Hotdog Houseplant Hummus Hydogen Hyperboloid Hypercube
           Hypersphere Ibex Ibis Ichthyologist Igloo Ignoramus Iguana Impala Infographic
-          Infomercial Insect Insomniac Jackalope Jalapeno Jellyfish Jellyfish Jetpack
-          Kaiju Kangaroo Knitwear Koala Kraken Krampus Kumquat Labradoodle Labyrinth
-          Lambeosaurus Lasagna Latte Lemming Lemur Lepton Linguine Llama Lobster
-          Locomotive Lollipop Lollygag Loudspeaker Luffa Lugnut Lumberjack Lycanthrope
-          Macaron Macaroni Macaw Macchiato Magician Maiasaura Malarkey Mallard Mammoth
-          Manatee Mapusaurus Marshmallow Martian Marzelvane Mastodon Mathematician
-          Meatball Megaphone Melon Menagerie Merlot Metaverse Meteor Meteoroid Mongoose
-          Monocle Moon Moonbeam Moorhen Moped Motorcycle Muffin Muffler Multiverse
-          Mushroom Nautilus Nebula Nebula Necktie Nectarine Nematode Neptunium Neutron
-          Ninja Nitrogen Noodle Nunchuck Octopus Octopus Ogre Orangutan Ornithologist
-          Ostrich Owlbear Oxygen Oyster Paleontologist Pancake Pangolin Panini Panorama
-          Parabola Paradox Parasaurolophus Parasol Parrot Peacock Pelican Pentaceratops
-          Pharmacologist Philosopher Phosphorus Photon Physicist Pillbug Pillow Pirate
-          Pixie Planet Planetarium Platypus Plesiosaur Plutocracy Plutocrat Plutonium
+          Infomercial Insect Insomniac Jackalope Jalapeno Jellyfish Jetpack Kaiju Kangaroo
+          Knitwear Koala Kraken Krampus Kumquat Labradoodle Labyrinth Lambeosaurus Lasagna
+          Latte Lemming Lemur Lepton Linguine Llama Lobster Locomotive Lollipop Lollygag
+          Loudspeaker Luffa Lugnut Lumberjack Lycanthrope Macaron Macaroni Macaw Macchiato
+          Magician Maiasaura Malarkey Mallard Mammoth Manatee Mapusaurus Marshmallow
+          Martian Marzelvane Mastodon Mathematician Meatball Megaphone Melon Menagerie
+          Merlot Metaverse Meteor Meteoroid Mongoose Monocle Moon Moonbeam Moorhen Moped
+          Motorcycle Muffin Muffler Multiverse Mushroom Nautilus Nebula Necktie Nectarine
+          Nematode Neptunium Neutron Ninja Nitrogen Noodle Nunchuck Octopus Ogre Orangutan
+          Ornithologist Ostrich Owlbear Oxygen Oyster Paleontologist Pancake Pangolin
+          Panini Panorama Parabola Paradox Parasaurolophus Parasol Parrot Peacock Pelican
+          Pentaceratops Pharmacologist Philosopher Phosphorus Photon Physicist Pillbug
+          Pillow Pirate Pixie Planet Planetarium Platypus Plesiosaur Plutocracy Plutocrat
           Plutonium Pogo Polyglot Polyhedron Polymath Polymorph Pomegranate Pomeranian
           Poodle Popcorn Popsicle Porcupine Porkpie Porpoise Potato Potterverse Poutine
           Pretzel Propellor Protoceratops Proton Psittacosaurus Psychologist Pterodactyl
-          Pumpkin Pumpkin Pyjamas Python Quark Quasar Qubit Quesadilla Quetzalcoatl
-          Quetzalcoatlus Quiche Quinoa Rabbit Raccoon Racecar Racehorse Radish Ramen
-          Raptor Raspberry Rattlesnake Ravioli Raygun Reality Reindeer Rhinoceros Rhubarb
-          Robot Rockfish Roflcopter Rutabaga Salamander Samosa Sandwich Sasquatch
-          Satellite Scientist Sculpture Seagull Seahorse Seahorse Selenium Shawarma Shrimp
-          Silicon Simulation Singularity Skeleton Slop Snorkel Sociologist Spacecraft
-          Spaghetti Spam Spatula Sphinx Spinosaurus Spork Sprinkles Spud Spumoni Spurtle
-          Squabble Squash Squeegee Squelch Squid Squid Squirrel Star Starfish Starfish
-          Stegosaurus Stegosaurus Strawberry Styracosaurus Submarine Succotash Suchomimus
-          Sulfur Sushi Suspenders Swordfish Synergy Tandoori Tapir Teapot Teddybear
-          Tempura Tentacle Tesseract Theologian Therizinosaurus Thingamabob Thingamajig
-          Tiramisu Toadstool Toaster Tofu Tomato Toothbrush Toothpaste Toothpick
-          Torosaurus Tortoise Toucan Triceratops Triceratops Tritium Troodon Trousers
-          Trumpet Tuba Tugboat Turnip Turtle Tuxedo Tyrannosaurus Tyrannosaurus Ukulele
+          Pumpkin Pyjamas Python Quark Quasar Qubit Quesadilla Quetzalcoatl Quetzalcoatlus
+          Quiche Quinoa Rabbit Raccoon Racecar Racehorse Radish Ramen Raptor Raspberry
+          Rattlesnake Ravioli Raygun Reality Reindeer Rhinoceros Rhubarb Robot Rockfish
+          Roflcopter Rutabaga Salamander Samosa Sandwich Sasquatch Satellite Scientist
+          Sculpture Seagull Seahorse Selenium Shawarma Shrimp Silicon Simulation
+          Singularity Skeleton Slop Snorkel Sociologist Spacecraft Spaghetti Spam Spatula
+          Sphinx Spinosaurus Spork Sprinkles Spud Spumoni Spurtle Squabble Squash Squeegee
+          Squelch Squid Squirrel Star Starfish Stegosaurus Strawberry Styracosaurus
+          Submarine Succotash Suchomimus Sulfur Sushi Suspenders Swordfish Synergy
+          Tandoori Tapir Teapot Teddybear Tempura Tentacle Tesseract Theologian
+          Therizinosaurus Thingamabob Thingamajig Tiramisu Toadstool Toaster Tofu Tomato
+          Toothbrush Toothpaste Toothpick Torosaurus Tortoise Toucan Triceratops Tritium
+          Troodon Trousers Trumpet Tuba Tugboat Turnip Turtle Tuxedo Tyrannosaurus Ukulele
           Umbrella Unicorn Unicycle Universe Uranium Urchin Utahraptor Vampire
-          Velociraptor Velociraptor Velociraptor Vindaloo Volcano Volcano Vulcan
-          Vulcanodon Vulture Waffle Walrus Warthog Waterfowl Watermelon Weasel
-          Whatchamacallit Whodunit Wildebeest Wingnut Wizard Wombat Wookie Wormhole
-          Xylophone Yak Yodeler Yoyo Ytterbium Yurt Zebra Zephyr Zeppelin Zither Zither
-          Zombie Zoologist Zucchini
+          Velociraptor Vindaloo Volcano Vulcan Vulcanodon Vulture Waffle Walrus Warthog
+          Waterfowl Watermelon Weasel Whatchamacallit Whodunit Wildebeest Wingnut Wizard
+          Wombat Wookie Wormhole Xylophone Yak Yodeler Yoyo Ytterbium Yurt Zebra Zephyr
+          Zeppelin Zither Zombie Zoologist Zucchini
         </Markov>
       </Join>
     </Capitalize>
-    <Markov target_len="8" cutoff_len="14">
+    <Markov id="agent" target_len="8" cutoff_len="14">
       Abbreviator Accelerator Accumulator Adapter Adhesivator Adjudicator Aerator
       Affector Aggregator Agitator Aligner Alleviator Allocator Ameliorator Amortizer
       Amplifier Analog Analyzer Anesthetizer Annihilator Annotator Antagonizer Antenna
@@ -222,65 +187,63 @@
       Augmenter Automatizer Autonomizer Avenger Balancer Bamboozler Banisher Barometer
       Barricader Bedazzler Befuddler Beguiler Benefactor Berserker Bestower Bewilderer
       Blaster Blender Booster Bootstrapper Brainstormer Briber Broker Builder Bungler
-      Bureaucrat Burglar Buster Calamitizor Calculator Calculator Calibrator
-      Calibrator Camouflager Camouflager Campaigner Campaigner Canister Canister
-      Capacitator Capacitor Captivator Captivator Caricaturist Carrier Cartographer
-      Cataloguer Catalyzer Categorizer Celebrator Centralizer Certifier Characterizer
-      Chauffeur Choreographer Chronometer Circuit Circumnavigator Collator Collective
-      Combobulator Compressor Computer Concatinator Conductor Confabulator Consoler
-      Constructor Converter Coordinator Coprocessor Counter Deactivator Debugger
-      Decelerator Decider Decompressor Deconstructor Decorator Dedicator Deducer
-      Deduplicator Defender Defibrillator Deflator Deflector Deprecator Destabilizer
-      Destructor Desynchronizer Detachinator Detector Deuteriumizer Developer
-      Disambiguator Disassembler Discombobulator Disconnector Disentangler
-      Disintegrator Disorientor Disruptor Disseminator Dissertation Distiller Diverter
-      Duplicator Effector Ejector Emibigulator Emitter Emptier Emulator Encabulator
-      Encapsulator Encoder Energizer Enhancer Enthusiast Enumerator Envisioner
-      Evaluator Excavator Executor Explainer Exterminator Extinguisher Extractor
-      Extrapolator Fabricator Facilitator Fascinator Fastener Feasibilizer Feeder
-      Fermenter Filter Finagler Fixer Flabbergaster Flipper Flummoxer Flusterer Fluxer
-      Flywheel Forecaster Foreteller Forgiver Formulator Fortifier Fractalizer
-      Fragmentizer Frobnicator Frustrator Fulminator Fumigator Functionalizer
-      Galvanizer Generator Gravitator Grinder Grockulator Gyrator Harmonizer Harvester
-      Humungifier Hydrogenator Hyperbolizer Hypnotizer Illuminator Imaginator
-      Implementer Impresser Improver Improviser Incinerator Infiltrator Informator
-      Inhibitor Injector Innovator Insectoid Installer Instigator Integrator
-      Intensifier Interceptor Interdictor Interdigitator Interfacer Interpolator
-      Interrogator Interrupter Intriguinator Inventor Investigator Invigorator Ionizer
-      Irradiator Irritator Isolator Jammer Joiner Juggler Juicer Jumbler Justifier
-      Kineticizer Laminator Launderer Legislator Leveller Liberator Lobotomizer
-      Locomotivator Manipulator Maximizer Memorizer Minimizer Mobilizer Modulator
-      Multiplicator Multiplier Mutilator Mysterizer Navigator Nefarizer Negator
-      Neglecter Negotiator Nemesis Networker Neuralizer Neutralizer Normalizer
-      Notifier Nullifier Obfuscator Obliterator Obscurator Observer Obviator
-      Occultator Officiator Ominator Optimizer Orchestrator Oscillator Outputter
-      Outrigger Outsourcer Overachiever Overcharger Overclocker Overloader Overtaker
-      Oxygenator Pacifier Palletizer Parallelizer Paralyzer Parametrizer Parenthesizer
-      Participator Partitioner Percolator Perforator Perpetrator Perplexifier
-      Persuader Perturbator Petrolizer Philosophizer Photocopier Pillager
-      Plutocratizer Plutonizer Polyester Polymer Qualifier Quantifier Quantizer
-      Quantumizer Quarantiner Quencher Quotientizer Rationalizer Reactor Reanimator
-      Reaper Reassembler Recalibrator Recalibrator Reciprocator Reciprocator
-      Recognizer Recognizer Reconceptualizer Reconfigurator Reconfigurator
-      Reconstitutor Reconstitutor Reconstructivator Reconstructor Reconstructor
-      Recycler Reflector Refrigerator Regenerator Regenerator Rehabilitator
-      Rehabilitator Rejuvenator Rejuvenator Relativizer Remedializer Remunerator
-      Renovator Reorganizer Replenisher Replicator Repressor Reprogrammer Reptilizer
-      Reticulator Reunifier Revelator Revolutionizer Rhapsodizer Rigorizer Ruminator
-      Sabotager Saturator Scallop Scavenger Scrutinizer Scurryfunger Scurryfunger
-      Sequesterizer Simplifier Simulator Siphonator Slotter Smuggler Sniper Socializer
-      Solicitor Speculator Spiffifier Spiralizer Splicer Stabilizer Stapler Stunner
-      Styrofoam Subjugator Substantiator Subverter Summarizer Suppressor Surfacizer
-      Surrealizer Syllablizer Sympathizer Synchronizer Synthesizer Systematizer
-      Tabulator Tactician Terminator Testifier Theorizer Thermostatizer Thesaurizer
-      Throttler Thunderizer Transformator Transformer Transmogrifier Transmutator
-      Transpiler Transportator Transporter Trapper Trivializer Troublemaker Unifier
-      Universalizer Unjumbler Unjustifier Unleasher Unlimiter Unloader Unravelizer
-      Unscrambler Unspecifier Unspiffifier Unspiralizer Unstabilizer Unstucker
-      Unsubjugator Unsubstantiator Unverifier Upgrader Utilizer Vacillator Validator
-      Vandalizer Vanquisher Vaporizer Vectorizer Verifier Versifier Verticizer
-      Vocalizer Volatilizer Vortexizer Vulcanizer Waffleizer Waterer Weakener
-      Weaponizer Wonderizer Worker Wrangler Wrongdoer Wrongifier
+      Bureaucrat Burglar Buster Calamitizor Calculator Calibrator Camouflager
+      Campaigner Canister Capacitator Capacitor Captivator Caricaturist Carrier
+      Cartographer Cataloguer Catalyzer Categorizer Celebrator Centralizer Certifier
+      Characterizer Chauffeur Choreographer Chronometer Circuit Circumnavigator
+      Collator Collective Combobulator Compressor Computer Concatinator Conductor
+      Confabulator Consoler Constructor Converter Coordinator Coprocessor Counter
+      Deactivator Debugger Decelerator Decider Decompressor Deconstructor Decorator
+      Dedicator Deducer Deduplicator Defender Defibrillator Deflator Deflector
+      Deprecator Destabilizer Destructor Desynchronizer Detachinator Detector
+      Deuteriumizer Developer Disambiguator Disassembler Discombobulator Disconnector
+      Disentangler Disintegrator Disorientor Disruptor Disseminator Dissertation
+      Distiller Diverter Duplicator Effector Ejector Emibigulator Emitter Emptier
+      Emulator Encabulator Encapsulator Encoder Energizer Enhancer Enthusiast
+      Enumerator Envisioner Evaluator Excavator Executor Explainer Exterminator
+      Extinguisher Extractor Extrapolator Fabricator Facilitator Fascinator Fastener
+      Feasibilizer Feeder Fermenter Filter Finagler Fixer Flabbergaster Flipper
+      Flummoxer Flusterer Fluxer Flywheel Forecaster Foreteller Forgiver Formulator
+      Fortifier Fractalizer Fragmentizer Frobnicator Frustrator Fulminator Fumigator
+      Functionalizer Galvanizer Generator Gravitator Grinder Grockulator Gyrator
+      Harmonizer Harvester Humungifier Hydrogenator Hyperbolizer Hypnotizer
+      Illuminator Imaginator Implementer Impresser Improver Improviser Incinerator
+      Infiltrator Informator Inhibitor Injector Innovator Insectoid Installer
+      Instigator Integrator Intensifier Interceptor Interdictor Interdigitator
+      Interfacer Interpolator Interrogator Interrupter Intriguinator Inventor
+      Investigator Invigorator Ionizer Irradiator Irritator Isolator Jammer Joiner
+      Juggler Juicer Jumbler Justifier Kineticizer Laminator Launderer Legislator
+      Leveller Liberator Lobotomizer Locomotivator Manipulator Maximizer Memorizer
+      Minimizer Mobilizer Modulator Multiplicator Multiplier Mutilator Mysterizer
+      Navigator Nefarizer Negator Neglecter Negotiator Nemesis Networker Neuralizer
+      Neutralizer Normalizer Notifier Nullifier Obfuscator Obliterator Obscurator
+      Observer Obviator Occultator Officiator Ominator Optimizer Orchestrator
+      Oscillator Outputter Outrigger Outsourcer Overachiever Overcharger Overclocker
+      Overloader Overtaker Oxygenator Pacifier Palletizer Parallelizer Paralyzer
+      Parametrizer Parenthesizer Participator Partitioner Percolator Perforator
+      Perpetrator Perplexifier Persuader Perturbator Petrolizer Philosophizer
+      Photocopier Pillager Plutocratizer Plutonizer Polyester Polymer Qualifier
+      Quantifier Quantizer Quantumizer Quarantiner Quencher Quotientizer Rationalizer
+      Reactor Reanimator Reaper Reassembler Recalibrator Reciprocator Recognizer
+      Reconceptualizer Reconfigurator Reconstitutor Reconstructivator Reconstructor
+      Recycler Reflector Refrigerator Regenerator Rehabilitator Rejuvenator
+      Relativizer Remedializer Remunerator Renovator Reorganizer Replenisher
+      Replicator Repressor Reprogrammer Reptilizer Reticulator Reunifier Revelator
+      Revolutionizer Rhapsodizer Rigorizer Ruminator Sabotager Saturator Scallop
+      Scavenger Scrutinizer Scurryfunger Sequesterizer Simplifier Simulator Siphonator
+      Slotter Smuggler Sniper Socializer Solicitor Speculator Spiffifier Spiralizer
+      Splicer Stabilizer Stapler Stunner Styrofoam Subjugator Substantiator Subverter
+      Summarizer Suppressor Surfacizer Surrealizer Syllablizer Sympathizer
+      Synchronizer Synthesizer Systematizer Tabulator Tactician Terminator Testifier
+      Theorizer Thermostatizer Thesaurizer Throttler Thunderizer Transformator
+      Transformer Transmogrifier Transmutator Transpiler Transportator Transporter
+      Trapper Trivializer Troublemaker Unifier Universalizer Unjumbler Unjustifier
+      Unleasher Unlimiter Unloader Unravelizer Unscrambler Unspecifier Unspiffifier
+      Unspiralizer Unstabilizer Unstucker Unsubjugator Unsubstantiator Unverifier
+      Upgrader Utilizer Vacillator Validator Vandalizer Vanquisher Vaporizer
+      Vectorizer Verifier Versifier Verticizer Vocalizer Volatilizer Vortexizer
+      Vulcanizer Waffleizer Waterer Weakener Weaponizer Wonderizer Worker Wrangler
+      Wrongdoer Wrongifier
     </Markov>
   </Join>
 </NameGen>

@@ -9,9 +9,10 @@ pub trait IntoGenerator {
     fn into_generator(self) -> Box<dyn Generator>;
 }
 
-impl IntoGenerator for Box<GeneratorConfig> {
+impl IntoGenerator for GeneratorConfig {
     fn into_generator(self) -> Box<dyn Generator> {
-        match *self {
+        match self {
+            GeneratorConfig::Description { subpart, .. } => subpart.into_generator(),
             GeneratorConfig::Capitalizer { id, subpart, mode } => {
                 (Box::new(Capitalizer::new(id, subpart.into_generator(), mode))) as Box<dyn Generator>
             }
@@ -22,7 +23,7 @@ impl IntoGenerator for Box<GeneratorConfig> {
                 reject,
             } => Box::new(Joiner::new(
                 id,
-                subparts.into_iter().map(Self::into_generator).collect(),
+                subparts.into_iter().map(IntoGenerator::into_generator).collect(),
                 sep,
                 reject,
             )) as Box<dyn Generator>,
@@ -43,7 +44,7 @@ impl IntoGenerator for Box<GeneratorConfig> {
                 }
 
                 Box::new(Markov::train(
-                    id, &data, target_len, cutoff_len, reject, tokenizer, uniform,
+                    id, data, target_len, cutoff_len, reject, tokenizer, uniform,
                 )) as Box<dyn Generator>
             }
             GeneratorConfig::Matcher {
@@ -58,7 +59,7 @@ impl IntoGenerator for Box<GeneratorConfig> {
                     .into_iter()
                     .map(|(regex, config)| (regex, config.into_generator()))
                     .collect(),
-                default.map(Self::into_generator),
+                default.map(IntoGenerator::into_generator),
             )) as Box<dyn Generator>,
             GeneratorConfig::Numberer { id, min, max, style } => {
                 Box::new(Numberer::new(id, min, max, style)) as Box<dyn Generator>
@@ -76,9 +77,15 @@ impl IntoGenerator for Box<GeneratorConfig> {
             } => Box::new(Repeater::new(id, generator.into_generator(), min, max)) as Box<dyn Generator>,
             GeneratorConfig::Switcher { id, subparts } => Box::new(Switcher::new(
                 id,
-                subparts.into_iter().map(Self::into_generator).collect(),
+                subparts.into_iter().map(IntoGenerator::into_generator).collect(),
             )) as Box<dyn Generator>,
             GeneratorConfig::Words { id, words } => Box::new(Words::new(id, words)) as Box<dyn Generator>,
         }
+    }
+}
+
+impl IntoGenerator for Box<GeneratorConfig> {
+    fn into_generator(self) -> Box<dyn Generator> {
+        (*self).into_generator()
     }
 }

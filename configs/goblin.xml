@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
+  <Description display_name="Elven">
+    <Param id="firstname" display_name="First name" />
+    <Param id="surname" display_name="Surname" />
+    Goblin names
+  </Description>
   <Join sep=" ">
-    <Markov cutoff_len="11">
+    <Markov id="firstname" cutoff_len="11">
       Aggro Arg Argleblargle Argwog Arklesnarck Arzlewig Barklesnurg Blarkblark Blurm
       Bnarzleback Bnitzlebong Bnurklesnang Bogsnoggle Booglin Braggle Brizzle Buckyuck
       Bugbug Buggle Buggleyuck Buglin Burglebung Buzzlebong Buzzlegunk Choggle Chuggle
@@ -28,7 +33,7 @@
     <Capitalize>
       <Join>
         <Repeat min="2" max="2">
-          <Words>
+          <Words id="surname">
             anger bad bite biter blade blood bone breaker bug cackle cave claw club crazed
             crooked cruel dark dirt doom dread dumb eater evil eye face fear filth fist foot
             foul glare gloom glum green grey grim grime grin grip grit hand hide horror

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["libnamegen", "namegen-cli"]
+members = ["libnamegen", "namegen-cli", "namegen-webui"]
 
 [workspace.package]
 authors = ["Jonathon Cobb"]
@@ -16,3 +16,4 @@ rand = "0.10.0"
 regex = "1.12.3"
 thiserror = "2.0.18"
 xml = "1.0.0"
+yew = { version = "0.23", features = ["csr"] }

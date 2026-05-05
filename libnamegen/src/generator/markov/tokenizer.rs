@@ -16,7 +16,7 @@ pub const RANK_STOP: u8 = 1;
 ///
 /// The tokenizer is used to split training data into units for the Markov
 /// chain.
-#[derive(PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Tokenizer {
     /// Split on any of the specified chars.
     ///

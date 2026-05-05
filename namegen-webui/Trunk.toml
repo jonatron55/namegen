@@ -1,0 +1,9 @@
+[serve]
+addresses = ["127.0.0.1"]
+port = 8000
+
+[build]
+release = false
+dist = "dist"
+public_url = "/"
+minify = "on_release"

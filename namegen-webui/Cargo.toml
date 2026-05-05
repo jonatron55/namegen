@@ -1,0 +1,16 @@
+[package]
+name = "namegen-webui"
+description = "Random name generator web UI"
+edition = "2024"
+authors.workspace = true
+version.workspace = true
+
+[dependencies]
+getrandom = { version = "0.4.2", features = ["wasm_js"] }
+libnamegen = { path = "../libnamegen" }
+rand.workspace = true
+web-sys = { version = "0.3.97", features = [
+    "HtmlInputElement",
+    "HtmlSelectElement",
+] }
+yew = { workspace = true, features = ["csr"] }

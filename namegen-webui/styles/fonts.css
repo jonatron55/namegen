@@ -1,0 +1,27 @@
+@font-face {
+  font-family: SerifBodyFont;
+  font-style: normal;
+  src: url("IosevkaArcane-Regular.ttf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: SerifBodyFont;
+  font-style: normal;
+  src: url("IosevkaArcane-Bold.ttf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: SerifBodyFont;
+  font-style: italic;
+  src: url("IosevkaArcane-Italic.ttf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: SerifBodyFont;
+  font-style: italic;
+  src: url("IosevkaArcane-BoldItalic.ttf");
+  font-weight: bold;
+}
