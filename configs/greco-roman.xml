@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NameGen>
+  <Description display_name="Greco-Roman">
+    <Param id="name" display_name="Name" />
+    Names based on Greco-Roman mythology. Suitable for generating names of gods,
+    heroes, and similar entities.
+  </Description>
+  <Markov id="name" target_len="4" cutoff_len="10" reject_training="true">
+    Abas Abderus Abundantia Acaste Acastus Acca Aceso Achelous Acheron Achilles
+    Achlys Acis Acrisius Actaeus Adikia Admete Admetus Adonis Adrasteia Adrastus
+    Aeacus Aegea Aegeus Aegimius Aegis Aegisthus Aegyptus Aella Aeneas Aeon Aequitas
+    Aerecura Aesculapius Aeson Aeternitas Aether Aethra Aetna Aetolus Aeëtes
+    Agamemnon Agasthenes Agathos Agdistis Agenor Agenoria Aglaea Agon Aidos Aion
+    Aius Ajax Alala Alastor Alcestis Alcibie Alcinous Alcmaeon Alecto Alernus
+    Aletheia Aleus Algea Alke Alpheus Amalthea Amechania Ammon Amphiaraus Amphictyon
+    Amphilochus Amphilogiai Amphion Amphirho Amphitrite Amphitryon Amycus Amymone
+    Anagyros Anaideia Ananke Anaxagoras Anchises Andreus Androktasiai Andromache
+    Andromeda Anemoi Angelia Angelos Angerona Angitia Anius Anna Annona Antaeus
+    Antandre Anteros Antevorta Antigone Antilochus Antiope Anytos Apate Apemosyne
+    Aphaia Apheleia Aphrodite Apollo Ara Arachne Arcesius Ares Arete Areto Argeus
+    Argia Argus Argyron Ariadne Arimanius Aristaeus Arke Artemis Asbolus Asclepius
+    Asia Asopus Assaracus Asteria Asterion Asterodia Asterope Astraea Astraeus
+    Astrape Atabyrius Atalanta Ate Athamas Athena Atlas Atreus Augeas Augusta
+    Augustus Aura Aurora Autesion Auxesia Auxo Averruncus Aëthlius Bacchus Bakis
+    Bellerophon Bellona Beroe Bia Bias Bona Bonus Bouzyges Branchus Bremusa Briseis
+    Britomartis Brizo Bronte Bubona Busiris Cabeiri Caca Cacus Cadmus Caelestis
+    Caelus Caeneus Caerus Calchas Calliope Callirhoe Calypso Camarina Camenae
+    Capheira Car Cardea Carmenta Carmentes Carmentis Carna Carnus Carpo Carya
+    Cassandra Cassiopeia Castor Catreus Cecrops Ceisus Celaeno Celeus Cephalus
+    Cepheus Cerceis Ceres Ceto Chalcon Chaos Charnabon Charon Chronos Chryseis
+    Chrysippus Chryson Cinyras Circe Clementia Clio Clitemneste Cloacina Clymene
+    Clytemnestra Clytie Codrus Coeus Comus Concordia Consus Corinthus Corus Coryphe
+    Cranaus Creon Cres Cresphontes Cretheus Criasus Crius Cronus Cupid Cura Cybele
+    Cylarabes Cynortas Cyzicus Daedalus Daeira Daimon Damia Damnameneus Damon Danaus
+    Danaë Daphne Dardanus Decima Deianeira Deimos Deiphontes Demeter Demonax
+    Demophon Despoina Devera Deverra Dexione Dexithea Diana Dike Diomedes Dione
+    Dionysus Dioscuri Disciplina Discordia Dispater Dius Dodone Doris Dryad Duellona
+    Dysnomia Echemus Echetus Eetion Egeria Eidyia Eileithyia Eirene Electra
+    Electryon Eleos Elephenor Elernus Eleusis Eleutheria Elpis Empanda Ennomus
+    Enodia Enyalius Enyo Eos Eosphorus Epaphus Ephyra Epimetheus Epione Epona
+    Epopeus Erato Erebus Erechtheus Erginus Erichthonius Erinyes Eris Eros Ersa
+    Eteocles Euagoreis Eubuleus Eucleia Eudora Eulabeia Eunomia Eunostus Euphrosyne
+    Eupraxia Europa Eurotas Euryale Eurybia Eurydice Eurynome Eurypyle Eurystheus
+    Eusebeia Euterpe Euxantius Falacer Fama Fascinus Fauna Faunus Faustitas Febris
+    Februus Fecunditas Felicitas Ferentina Feronia Fides Fidius Flora Fons Fontus
+    Fornax Fortuna Fufluns Fulgora Furrina Gaia Galaxaura Ganymede Gelanor Gelos
+    Genita Genius Geras Glaucus Gorgon Hades Haemus Halia Halitherses Harmonia Harpy
+    Hebe Hecate Hector Hecuba Hedone Heimarmene Helen Helenus Helernus Helios Hemera
+    Hephaestus Hera Heracles Hercules Hermaphroditus Hermes Hermione Hesione Hestia
+    Hestyaea Himeros Hippo Hippolyta Hippothoe Hippothoön Homados Homer Homonoia
+    Honos Hora Horae Horkos Horme Hormenius Hyacinth Hybris Hygieia Hymen Hyperion
+    Hypnos Hyrieus Hysminai Iacchus Iache Iamus Ianeira Ianthe Iapetus Iaso Icarus
+    Ida Idmon Idyia Ilus Inachus Indiges Intercidona Inuus Invictus Invidia Ioke
+    Iolaus Iovi Iphigenia Iphito Iris Ismene Ixion Janus Jason Jocasta Juno Jupiter
+    Justitia Juturna Juventas Kakia Kerberos Keres Korybantes Kouretes Kratos
+    Kydoimos Lampedo Laomedon Larentia Lares Larunda Latona Laverna Laërtes
+    Lelantos Lemures Lethe Leto Letum Leucippe Leucothea Levana Liber Libera
+    Liberalitas Libertas Libitina Libye Limos Litae Locutius Lua Lucina Luna
+    Lupercus Lycaon Lycurgus Lycus Lympha Lyris Lysagora Lysithoe Lyssa Macelo
+    Machai Maenads Magna Makedon Makelo Mana Manes Mania Maniae Manto Mantus
+    Marpesia Mars Mater Matuta Medea Medusa Megaira Megalesius Megareus Melampus
+    Melanippe Melanthus Meleager Melia Meliboea Melite Melobosis Melpomene Memnon
+    Menelaus Menestheus Menestho Menippe Menoetius Mentis Mercurius Mercury Merope
+    Methe Metis Midas Mimon Minerva Minos Minotaur Mithras Mnemosyne Moirai Molae
+    Molpadia Momus Moneta Mopsopia Mopsus Moros Morpheus Mors Morta Murcia Murtia
+    Muses Mutunus Mylas Myles Myrina Naenia Nascio Neaera Necessitas Neikea Nemesis
+    Nemorensis Neptune Neptunus Nereids Nereus Nerio Nestor Neverita Nicon Nike
+    Nilus Niobe Nixi Nomos Nona Nortia Novensides Nox Nycteus Nymph Nyx Oceanus
+    Ocyrhoe Odysseus Oebalus Oedipus Oeneus Oenomaus Oenopion Ogygus Oicles Oileus
+    Oizys Oneiroi Opis Opora Ops Orcus Orestes Orion Orithyia Ormenos Orpheus
+    Orthanes Otrera Oxyntes Paean Palaemon Palaestra Palatua Pales Palioxis Pallas
+    Pan Panacea Panda Pandia Pandion Pandora Pantariste Parcae Paregoros Pasikrate
+    Pasiphae Pasithoe Pater Pax Pegasus Peitharchia Peitho Peleus Pelias Pelops
+    Penates Penelope Peneus Penia Penthesilea Pentheus Penthus Periboea Periphas
+    Perse Perseis Persephone Perses Perseus Petraea Phaedra Phaeno Phaethon Phanes
+    Pheme Philotes Philyra Phineus Phlegyas Phobetor Phobos Phoebe Phoenix Phonoi
+    Phorcys Phoroneus Phthonus Phyleus Picumnus Picus Pietas Pilumnus Pirithoös
+    Pittheus Pleione Plexaura Plouto Plouton Pluto Plutus Poine Polemos Polybus
+    Polydeuces Polydora Polyeidos Polyhymnia Polynices Polyphe Polyxena Polyxo
+    Pomona Ponos Pontus Porrima Portunus Porus Poseidon Postverta Postvorta Pota
+    Pothos Praxidike Priam Priapus Proetus Proioxis Prometheus Promylaia Prophasis
+    Proserpina Proteus Providentia Prymno Pudicitia Pylades Pythia Querquetulanae
+    Quirinus Quiritis Remus Rhadamanthys Rhapso Rhea Rhesus Rhode Rhodea, Rhodeia
+    Rhodia Rhodope Rhodos Robigo Robigus Roma Romulus Rumina Sabazios Salacia Salus
+    Sancus Sarpedon Saturn Satyr Scamander Scotus Scylla Securitas Selene Semele
+    Senectus Serapis Sileni Silenus Silvanus Siren Sisyphus Sithon Skelmis Sol
+    Somnus Sophrosyne Soranus Sors Sosipolis Soteria Spes Sphinx Stata Sterculius
+    Stercutus Sterquilinus Stilbe Stilbo Straculius Struculius Styx Suadela Sulis
+    Summanus Syceus Talasius Talaus Talthybius Tartarus Tegyrios Telamon Telemus
+    Telephus Telesphorus Telesto Telete Tellumo Tellurus Tellus Temenus Tempestas
+    Terminus Terpsichore Terra Tethys Teucer Teutamides Teuthras Thalassa Thalestris
+    Thalia Thallo Thanatos Thaumas Theia Themis Theoclymenus Thersander Theseus
+    Thetis Thoe Thrace Thraike Thyestes Thyone Tiberinus Tibertus Tiresias Tisamenus
+    Tisiphone Tranquillitas Triptolemus Triteia Triton Trivia Tutunus Tyche Tychon
+    Tyndareus Typhon Urania Uranus Vacuna Vagitanus Vediovis Vediovus Veiovis
+    Venelia Venilia Venti Venus Veritas Verminus Vertimnus Vertumnus Vesta Vica
+    Victoria Viduus Virbius Virtus Volturnus Voluptas Vortumnus Vulcan Vulcanus
+    Xanthe Zagreus Zelus Zephyrus Zethus Zeus Zeuxo
+  </Markov>
+</NameGen>

@@ -1,13 +1,18 @@
 use std::{collections::HashMap, io::BufReader};
 
+use gloo_timers::callback::Interval;
 use libnamegen::config::{ConfigSourceType, GeneratorConfig, IntoGenerator};
 use rand::RngExt;
 use web_sys::HtmlSelectElement;
 use yew::prelude::*;
 
-use crate::constraints::{ConstraintView, Constraints};
+use crate::{
+    constraints::{ConstraintView, Constraints},
+    typo::Typo,
+};
 
 mod constraints;
+mod typo;
 
 const DEFAULT_CONFIG: &[u8] = include_bytes!("../../configs/default.xml");
 const THING_CONFIG: &[u8] = include_bytes!("../../configs/thing.xml");
@@ -15,7 +20,9 @@ const ELF_CONFIG: &[u8] = include_bytes!("../../configs/elf.xml");
 const DWARF_CONFIG: &[u8] = include_bytes!("../../configs/dwarf.xml");
 const GOBLIN_CONFIG: &[u8] = include_bytes!("../../configs/goblin.xml");
 const ABRAHAMIC_CONFIG: &[u8] = include_bytes!("../../configs/abrahamic.xml");
+const GRECO_ROMAN_CONFIG: &[u8] = include_bytes!("../../configs/greco-roman.xml");
 const MAX_NAMES: usize = 20;
+const GENERATION_RATE_MS: u32 = 1000;
 
 #[derive(Debug, Default)]
 pub struct App {
@@ -23,8 +30,8 @@ pub struct App {
     constraints: HashMap<String, String>,
     names: Vec<Result<(AttrValue, usize), AttrValue>>,
     name_index: usize,
-    continuous_generation: bool,
     last_color_index: usize,
+    interval: Option<Interval>,
 }
 
 pub enum AppMessage {
@@ -47,13 +54,13 @@ impl Component for App {
             current_config: Some(config),
             names: vec![Ok((AttrValue::from("\u{00A0}"), 0)); MAX_NAMES],
             name_index: 0,
-            continuous_generation: false,
             last_color_index: 0,
             constraints: HashMap::new(),
+            interval: None,
         }
     }
 
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             AppMessage::GenerateImmediate(count) => {
                 if let Some(config) = &self.current_config {
@@ -82,11 +89,15 @@ impl Component for App {
                 true
             }
             AppMessage::StartContinuousGeneration => {
-                self.continuous_generation = true;
+                let link = ctx.link().clone();
+                let interval = Interval::new(GENERATION_RATE_MS, move || {
+                    link.send_message(AppMessage::GenerateImmediate(1));
+                });
+                self.interval = Some(interval);
                 true
             }
             AppMessage::StopContinuousGeneration => {
-                self.continuous_generation = false;
+                self.interval = None;
                 true
             }
             AppMessage::LoadPreset(data) => {
@@ -146,19 +157,21 @@ impl Component for App {
                             <select id="-builtin-configs" onchange={ctx.link().callback(|e: Event|
                                 match  e.target_unchecked_into::<HtmlSelectElement>().value().as_str() {
                                     "default" => AppMessage::LoadPreset(DEFAULT_CONFIG),
-                                    "things" => AppMessage::LoadPreset(THING_CONFIG),
+                                    "abrahamic" => AppMessage::LoadPreset(ABRAHAMIC_CONFIG),
                                     "dwarf" => AppMessage::LoadPreset(DWARF_CONFIG),
                                     "elves" => AppMessage::LoadPreset(ELF_CONFIG),
                                     "goblins" => AppMessage::LoadPreset(GOBLIN_CONFIG),
-                                    "abrahamic" => AppMessage::LoadPreset(ABRAHAMIC_CONFIG),
+                                    "greco-roman" => AppMessage::LoadPreset(GRECO_ROMAN_CONFIG),
+                                    "things" => AppMessage::LoadPreset(THING_CONFIG),
                                     _ => AppMessage::LoadPreset(DEFAULT_CONFIG),
                                 })}>
                                 <option value="default" selected={true}>{ "Default" }</option>
-                                <option value="things">{ "Things" }</option>
+                                <option value="abrahamic">{ "Abrahamic" }</option>
                                 <option value="dwarf">{ "Dwarven" }</option>
                                 <option value="elves">{ "Elven" }</option>
                                 <option value="goblins">{ "Goblinoid" }</option>
-                                <option value="abrahamic">{ "Abrahamic" }</option>
+                                <option value="greco-roman">{ "Greco-Roman" }</option>
+                                <option value="things">{ "Things" }</option>
                             </select>
                             <button>{ "Load from file" }</button>
                         </div>
@@ -186,10 +199,10 @@ impl Component for App {
                         <div class="buttons">
                             <button class="secondary-button" onclick={on_gen_one_click}>{ "Generate one" }</button>
                             <button class="secondary-button" onclick={on_gen_20_click}>{ "Generate 20" }</button>
-                            if !self.continuous_generation {
+                            if self.interval.is_none() {
                                 <button class="ok-button" onclick={on_start_continuous_click}>{ "Continuous generation" }</button>
                             }
-                            if self.continuous_generation {
+                            if self.interval.is_some() {
                                 <button class="danger-button" onclick={on_stop_continuous_click}>{ "Stop generation" }</button>
                             }
                         </div>
@@ -199,10 +212,10 @@ impl Component for App {
                             match name {
                                 Ok((value, color)) => html! {
                                     <div id={value.clone()} class={classes!(format!("accent-{}", color), if self.name_index == (index + 1) % MAX_NAMES { "gen-name" } else { "" })}>
-                                        { value.clone() }
+                                        <Typo text={value.clone()} />
                                     </div>
                                 },
-                                Err(err) => html! {<div class={"error"}>{ err.clone() }</div> },
+                                Err(err) => html! {<div class={"danger"}>{ err.clone() }</div> },
                             })
                         }
                     </div>

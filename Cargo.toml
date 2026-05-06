@@ -9,11 +9,15 @@ version = "0.1.0"
 [workspace.dependencies]
 anstream = "1.0.0"
 anstyle = "1.0.14"
-clap = { version = "4.5.16", features = ["derive"] }
+clap = "4.5.16"
+getrandom = "0.4.2"
+gloo-timers = "0.4.0"
 itertools = "0.14.0"
 lazy_static = "1.5.0"
 rand = "0.10.0"
 regex = "1.12.3"
 thiserror = "2.0.18"
+web-sys = "0.3.97"
 xml = "1.0.0"
-yew = { version = "0.23", features = ["csr"] }
+yew = "0.23"
+yew-hooks = "0.6.4"
