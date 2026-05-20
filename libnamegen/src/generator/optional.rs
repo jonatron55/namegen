@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use rand::{Rng, RngExt};
 
-use crate::generator::{Error, Generator, Result};
+use crate::generator::{Constraints, Error, Generator, Result};
 
 pub struct Optional {
     id: Option<String>,
@@ -21,7 +19,7 @@ impl Optional {
 }
 
 impl Generator for Optional {
-    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         let roll = if let Some(id) = self.id.as_deref()
             && let Some(constraint) = constraints.get(id)
         {

@@ -1,9 +1,7 @@
-use std::collections::HashMap;
-
 use rand::Rng;
 use regex::Regex;
 
-use crate::generator::{Error, Generator, Result};
+use crate::generator::{Error, Generator, Result,Constraints};
 
 pub struct Matcher {
     id: Option<String>,
@@ -29,7 +27,7 @@ impl Matcher {
 }
 
 impl Generator for Matcher {
-    fn generate(&self, rng: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rng: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         let mut base_outputs = self.base.generate(rng, constraints)?;
 
         if let Some(id) = self.id.as_deref()

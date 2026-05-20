@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use rand::{Rng, RngExt};
 
 pub struct Numberer {
@@ -9,7 +7,7 @@ pub struct Numberer {
     style: NumberStyle,
 }
 
-use crate::generator::{Error, Generator, Result};
+use crate::generator::{Constraints, Error, Generator, Result};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NumberStyle {
@@ -29,7 +27,7 @@ impl Numberer {
 }
 
 impl Generator for Numberer {
-    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         let num = if let Some(id) = self.id.as_deref()
             && let Some(constraint) = constraints.get(id)
         {

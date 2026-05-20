@@ -1,0 +1,3 @@
+[submodule "namegen-webui/jonui"]
+path = namegen-webui/jonui
+url = https://github.com/jonatron55/jonui.git

@@ -1,9 +1,7 @@
-use std::collections::HashMap;
-
 use rand::Rng;
 use rand::seq::IndexedRandom;
 
-use crate::generator::{Error, Generator, Result};
+use crate::generator::{Constraints, Error, Generator, Result};
 
 pub struct Switcher {
     id: Option<String>,
@@ -17,7 +15,7 @@ impl Switcher {
 }
 
 impl Generator for Switcher {
-    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
             && let Some(constraint) = constraints.get(id)
         {

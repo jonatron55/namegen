@@ -8,7 +8,7 @@ use std::{
 
 use rand::{Rng, RngExt};
 
-use crate::generator::{Error, Generator, MAX_REJECTIONS, Result};
+use crate::generator::{Constraints, Error, Generator, MAX_REJECTIONS, Result};
 
 pub use tokenizer::Tokenizer;
 
@@ -37,7 +37,7 @@ pub struct MarkovStats {
 impl Markov {
     pub fn train(
         id: Option<String>,
-        data: impl IntoIterator<Item = impl AsRef<str>>,
+        data: &[impl AsRef<str>],
         target_len: Option<usize>,
         cutoff_len: Option<usize>,
         reject: impl IntoIterator<Item = impl ToString>,
@@ -122,7 +122,7 @@ impl Markov {
 }
 
 impl Generator for Markov {
-    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         let mut name = String::new();
         let mut token: Option<String> = None;
         let mut attempt = 0;

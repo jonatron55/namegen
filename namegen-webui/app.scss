@@ -1,0 +1,101 @@
+@use "jonui/scss/main.scss";
+@use "jonui/scss/themes/arcane-night.scss";
+@use "jonui/scss/themes/arcane-dawn.scss";
+@use "jonui/scss/themes/high-contrast-dark.scss";
+@use "jonui/scss/themes/high-contrast-light.scss";
+
+:root {
+  font-family: SerifFont, serif;
+  -webkit-user-select: none;
+  user-select: none;
+
+  @include arcane-night.theme;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @include arcane-dawn.theme;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    @include high-contrast-dark.theme;
+  }
+}
+
+@media (prefers-color-scheme: light) and (prefers-contrast: more) {
+  :root {
+    @include high-contrast-light.theme;
+  }
+}
+
+body {
+  padding: var(--vertical-gap) 0;
+  margin: 0;
+  width: 100%;
+}
+
+.app {
+  margin: auto;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  row-gap: var(--vertical-gap);
+  max-width: 60rem;
+}
+
+
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: var(--horizontal-gap);
+  align-items: center;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--vertical-gap);
+}
+
+.constraint {
+  width: 100%;
+  max-width: 30rem;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  align-items: center;
+  gap: var(--horizontal-gap);
+}
+
+.constraint div {
+  height: 2.5rem;
+  padding: auto;
+  align-items: center;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.buttons {
+  display: flex;
+  gap: var(--horizontal-gap);
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.output {
+  text-align: center;
+
+  .content {
+    div {
+      display: block;
+      min-height: 1.5rem;
+    }
+  }
+}
+
+.name {
+  -webkit-user-select: text;
+  user-select: text;
+}

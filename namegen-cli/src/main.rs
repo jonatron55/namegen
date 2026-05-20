@@ -15,8 +15,8 @@ use libnamegen::{
     acsii_map,
     config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml},
 };
-use rand::{Rng, SeedableRng, rngs::StdRng};
-use xml::{EmitterConfig as XmlEmitterConfig, writer::XmlEvent};
+use rand::{rngs::StdRng, Rng, SeedableRng};
+use xml::{writer::XmlEvent, EmitterConfig as XmlEmitterConfig};
 
 use crate::styles::{ERROR, PATH, WARN};
 

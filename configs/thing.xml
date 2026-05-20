@@ -9,7 +9,7 @@
     of your turboencabulator.
   </Description>
   <Join sep=" ">
-    <Markov id="adj" target_len="8" cutoff_len="15">
+    <Markov id="adj" target_len="4" cutoff_len="12">
       Abandoned Aberrant Abhorrent Abominable Absolute Abstract Absurd Academic
       Acceptable Accessible Accidental Acclaimed Accommodating Accomplished Accurate
       Accusatory Acerbic Achromatic Acidic Acoustic Acquiescent Acrimonious Acrobatic
@@ -100,13 +100,13 @@
       <Join sep="-">
         <Option id="has-prefix" probability="0.2">
           <Words id="prefix">
-            Aero Astro Atto Auto Bio Chrono Cyber Cyclo Electro Femto Geo Giga Hemi Hexa
-            Hydro Hyper Hypno Hypo Infra Kilo Laser Macro Mega Meta Micro Milli Mini Multi
-            Nano Neo Octo Omni Penta Pico Power Quantum Radio Retro Semi Space Sub Super
-            Techno Tera Tri Turbo Ultra Uni Yocto Zepto
+            Aero Astro Atto Auto Bi Bio Chrono Co Cyber Cyclo Demi Electro Femto Geo Giga
+            Hemi Hexa Hydro Hyper Hypno Hypo Infra Kilo Laser Macro Mega Meta Micro Milli
+            Mini Multi Nano Neo Octo Omni Penta Pico Power Pseudo Quantum Quasi Radio Retro
+            Semi Space Sub Super Techno Tera Tri Turbo Ultra Uni Xeno Yocto Zepto
           </Words>
         </Option>
-        <Markov id="noun" target_len="8" cutoff_len="14">
+        <Markov id="noun" target_len="5" cutoff_len="12">
           Aardvark Abacus Abbey Aberration Abracadabra Absurdity Accolade Addendum
           Adjective Aerodrome Albatross Albertosaurus Alchemist Alligator Allosaurus
           Aluminum Amargasaurus Amoeba Anaconda Anemone Ankylosaurus Anomaly Antelope
@@ -178,7 +178,7 @@
         </Markov>
       </Join>
     </Capitalize>
-    <Markov id="agent" target_len="8" cutoff_len="14">
+    <Markov id="agent" target_len="6" cutoff_len="12">
       Abbreviator Accelerator Accumulator Adapter Adhesivator Adjudicator Aerator
       Affector Aggregator Agitator Aligner Alleviator Allocator Ameliorator Amortizer
       Amplifier Analog Analyzer Anesthetizer Annihilator Annotator Antagonizer Antenna

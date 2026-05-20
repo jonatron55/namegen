@@ -1,58 +1,43 @@
-use yew::prelude::*;
-use yew_hooks::use_interval;
+use std::time::Duration;
 
-#[derive(PartialEq, Clone, Properties)]
-pub struct TypoProps {
-    pub text: AttrValue,
+use leptos::prelude::*;
+
+use crate::accent_colors::ColoredString;
+
+const TYPING_INTERVAL_MS: u64 = 45;
+
+#[derive(Debug)]
+pub struct State {
+    displayed: String,
+    target: Vec<char>,
+    index: usize,
 }
 
-#[derive(PartialEq, Clone, Properties)]
-struct TypoState {
-    displayed: AttrValue,
-    target: AttrValue,
-}
+#[component]
+pub fn Typo(string: ColoredString) -> impl IntoView {
+    let ColoredString { text, color } = string;
 
-#[function_component]
-pub fn Typo(props: &TypoProps) -> Html {
-    let state = use_state(|| TypoState {
-        displayed: String::new().into(),
-        target: props.text.clone(),
+    let state = RwSignal::new_local(State {
+        displayed: String::new(),
+        target: text.chars().collect(),
+        index: 0,
     });
 
-    let _ = use_interval(
-        {
-            let props = props.clone();
-            let state = state.clone();
-            move || {
-                if state.target != props.text {
-                    state.set(TypoState {
-                        displayed: String::new().into(),
-                        target: props.text.clone(),
-                    });
-                    return;
+    set_interval(
+        move || {
+            state.update(|state| {
+                if state.index < state.target.len() {
+                    state.displayed.push(state.target[state.index]);
+                    state.index += 1;
                 }
-
-                let target = &state.target;
-                let displayed = &state.displayed;
-
-                if displayed != target {
-                    let mut new_displayed = displayed.chars().collect::<Vec<_>>();
-                    if new_displayed.len() < target.chars().count() {
-                        new_displayed.push(target.chars().nth(new_displayed.len()).unwrap());
-                    } else {
-                        new_displayed.pop();
-                    }
-                    state.set(TypoState {
-                        displayed: AttrValue::from(new_displayed.into_iter().collect::<String>()),
-                        target: target.clone(),
-                    });
-                }
-            }
+            });
         },
-        32,
+        Duration::from_millis(TYPING_INTERVAL_MS),
     );
 
-    html! {
-        <span>{ if state.displayed.len() == 0 { "\u{00A0}" } else { &state.displayed } }</span>
+    view! {
+        <span class=format!(
+            "name color-{color}",
+        )>{move || state.with(|state| state.displayed.clone())}</span>
     }
 }

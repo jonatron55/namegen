@@ -44,7 +44,7 @@ impl IntoGenerator for GeneratorConfig {
                 }
 
                 Box::new(Markov::train(
-                    id, data, target_len, cutoff_len, reject, tokenizer, uniform,
+                    id, &data, target_len, cutoff_len, reject, tokenizer, uniform,
                 )) as Box<dyn Generator>
             }
             GeneratorConfig::Matcher {

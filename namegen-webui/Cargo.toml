@@ -8,11 +8,13 @@ version.workspace = true
 [dependencies]
 getrandom = { workspace = true, features = ["wasm_js"] }
 gloo-timers.workspace = true
+itertools.workspace = true
+lazy_static.workspace = true
+leptos = { workspace = true, features = ["csr"] }
 libnamegen = { path = "../libnamegen" }
 rand.workspace = true
+wasm-bindgen.workspace = true
 web-sys = { workspace = true, features = [
     "HtmlInputElement",
     "HtmlSelectElement",
 ] }
-yew = { workspace = true, features = ["csr"] }
-yew-hooks.workspace = true

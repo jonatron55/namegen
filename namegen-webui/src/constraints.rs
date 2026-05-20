@@ -1,8 +1,6 @@
 use std::collections::HashSet;
 
 use libnamegen::config::GeneratorConfig;
-use web_sys::{HtmlInputElement, HtmlSelectElement};
-use yew::prelude::*;
 
 pub trait Constraints {
     fn constraints(&self) -> Vec<Constraint>;
@@ -10,9 +8,9 @@ pub trait Constraints {
 
 #[derive(PartialEq, Clone)]
 pub enum Constraint {
-    Number { id: AttrValue, min: usize, max: usize },
-    Text { id: AttrValue },
-    Boolean { id: AttrValue },
+    Number { id: String, min: usize, max: usize },
+    Text { id: String },
+    Boolean { id: String },
 }
 
 impl Constraints for GeneratorConfig {
@@ -26,9 +24,7 @@ impl Constraints for GeneratorConfig {
                 views.retain(|v| seen.insert(v.id().clone()));
                 views
             }
-            GeneratorConfig::Markov { id: Some(id), .. } => vec![Constraint::Text {
-                id: AttrValue::from(id.clone()),
-            }],
+            GeneratorConfig::Markov { id: Some(id), .. } => vec![Constraint::Text { id: id.clone() }],
             GeneratorConfig::Matcher {
                 base, cases, default, ..
             } => {
@@ -49,16 +45,14 @@ impl Constraints for GeneratorConfig {
             GeneratorConfig::Numberer {
                 id: Some(id), min, max, ..
             } => vec![Constraint::Number {
-                id: AttrValue::from(id.clone()),
+                id: id.clone(),
                 min: *min,
                 max: *max,
             }],
             GeneratorConfig::Optional { id, generator, .. } => {
                 let mut views = generator.constraints();
                 if let Some(id) = id {
-                    views.push(Constraint::Boolean {
-                        id: AttrValue::from(id.clone()),
-                    });
+                    views.push(Constraint::Boolean { id: id.clone() });
                 }
                 let mut seen = HashSet::new();
                 views.retain(|v| seen.insert(v.id().clone()));
@@ -73,7 +67,7 @@ impl Constraints for GeneratorConfig {
                 let mut views = generator.constraints();
                 if let Some(id) = id {
                     views.push(Constraint::Number {
-                        id: AttrValue::from(id.clone()),
+                        id: id.clone(),
                         min: *min,
                         max: *max,
                     });
@@ -87,7 +81,7 @@ impl Constraints for GeneratorConfig {
                 let mut seen = HashSet::new();
                 if let Some(id) = id {
                     views.push(Constraint::Number {
-                        id: AttrValue::from(id.clone()),
+                        id: id.clone(),
                         min: 0,
                         max: subparts.len() - 1,
                     });
@@ -95,89 +89,18 @@ impl Constraints for GeneratorConfig {
                 views.retain(|v| seen.insert(v.id().clone()));
                 views
             }
-            GeneratorConfig::Words { id: Some(id), .. } => vec![Constraint::Text {
-                id: AttrValue::from(id.clone()),
-            }],
+            GeneratorConfig::Words { id: Some(id), .. } => vec![Constraint::Text { id: id.clone() }],
             _ => vec![],
         }
     }
 }
 
 impl Constraint {
-    pub fn id(&self) -> &AttrValue {
+    pub fn id(&self) -> &String {
         match self {
             Constraint::Number { id, .. } => id,
             Constraint::Text { id, .. } => id,
             Constraint::Boolean { id, .. } => id,
         }
-    }
-}
-
-#[derive(PartialEq, Clone, Properties)]
-pub struct ConstraintViewProps {
-    pub constraint: Constraint,
-    pub display_name: AttrValue,
-    pub value: Option<AttrValue>,
-    pub on_change: Callback<(AttrValue, Option<String>)>,
-}
-
-#[component]
-pub fn ConstraintView(props: &ConstraintViewProps) -> Html {
-    let constraint = &props.constraint;
-    match constraint {
-        Constraint::Number { id, min, max } => html! {
-            <div class="constraint">
-                <label for={id}>{ &props.display_name }</label>
-                <select id={id} onchange={props.on_change.reform({
-                    let id = id.clone();
-                    move |e: Event| {
-                        let input: HtmlSelectElement = e.target_unchecked_into();
-                        let value = input.value();
-                        let value = if value == "none" { None } else { Some(value) };
-                        (id.clone(), value)
-                    }
-                })}>
-                    <option value="none" selected={props.value.is_none()}>{ "Random" }</option>
-                    { for (*min..=*max).map(|n| html! {
-                        <option value={n.to_string()} selected={props.value.clone().map_or(false, |v| v == n.to_string())}>{ n }</option>
-                    }) }
-                </select>
-            </div>
-        },
-        Constraint::Text { id } => html! {
-            <div class="constraint">
-                <label for={id}>{ &props.display_name }</label>
-                <input id={id} type="text" value={props.value.clone().unwrap_or_default()} placeholder="Prefix..." onchange={props.on_change.reform({
-                    let id = id.clone();
-                    move |e: Event| {
-                        let input: HtmlInputElement = e.target_unchecked_into();
-                        let value = input.value();
-                        let value = if value.is_empty() { None } else { Some(value) };
-                        (id.clone(), value)
-                    }
-                })} />
-            </div>
-        },
-        Constraint::Boolean { id } => html! {
-            <div class="constraint">
-                <label for={id}>{ &props.display_name }</label>
-                <select id={id} onchange={props.on_change.reform({
-                    let id = id.clone();
-                    move |e: Event| {
-                    let input: HtmlSelectElement = e.target_unchecked_into();
-                    let value = input.value();
-                    (id.clone(), match value.as_str() {
-                        "none" => None,
-                        "true" => Some("true".to_string()),
-                        "false" => Some("false".to_string()),
-                        _ => None,
-                    })
-                }})}>
-                    <option value="none" selected={props.value.is_none()}>{ "Random" }</option>
-                    <option value="true" selected={props.value.clone().map_or(false, |v| v == "true")}>{ "Present" }</option>
-                    <option value="false" selected={props.value.clone().map_or(false, |v| v == "false")}>{ "Absent" }</option>
-                </select>
-            </div>
-        },
     }
 }

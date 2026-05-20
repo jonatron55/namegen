@@ -1,9 +1,7 @@
-use std::collections::HashMap;
-
 use itertools::Itertools;
 use rand::Rng;
 
-use crate::generator::{Error, Generator, MAX_REJECTIONS, Result};
+use crate::generator::{Constraints, Error, Generator, MAX_REJECTIONS, Result};
 
 pub struct Joiner {
     id: Option<String>,
@@ -25,7 +23,7 @@ impl Joiner {
 
 impl Generator for Joiner {
     #[allow(unstable_name_collisions)] // `intersperse` may at some point be incorporated into the standard library, but for now we need to use the one from itertools
-    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
             && let Some(constraint) = constraints.get(id)
         {

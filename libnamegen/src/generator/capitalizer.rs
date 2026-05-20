@@ -1,6 +1,4 @@
-use std::collections::HashMap;
-
-use crate::generator::{Error, Generator, Result};
+use crate::generator::{Constraints, Error, Generator, Result};
 
 pub struct Capitalizer {
     id: Option<String>,
@@ -41,7 +39,7 @@ impl Capitalizer {
 }
 
 impl Generator for Capitalizer {
-    fn generate(&self, rand: &mut dyn rand::Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn rand::Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
             && let Some(constraint) = constraints.get(id)
         {

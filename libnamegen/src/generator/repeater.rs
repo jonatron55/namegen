@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use rand::{Rng, RngExt};
 
-use crate::generator::{Error, Generator, Result};
+use crate::generator::{Constraints, Error, Generator, Result};
 
 pub struct Repeater {
     id: Option<String>,
@@ -23,7 +21,7 @@ impl Repeater {
 }
 
 impl Generator for Repeater {
-    fn generate(&self, rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, rand: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         let count = if let Some(id) = self.id.as_deref()
             && let Some(constraint) = constraints.get(id)
         {

@@ -1,4 +1,5 @@
 mod capitalizer;
+mod constraints;
 mod joiner;
 mod literal;
 mod markov;
@@ -9,12 +10,13 @@ mod repeater;
 mod switcher;
 mod words;
 
-use std::{collections::HashMap, result::Result as StdResult};
+use std::result::Result as StdResult;
 
 use rand::Rng;
 use thiserror::Error as ThisError;
 
 pub use capitalizer::{Capitalizer, CapitalizerMode};
+pub use constraints::Constraints;
 pub use joiner::Joiner;
 pub use literal::Literal;
 pub use markov::{Markov, Tokenizer};
@@ -27,7 +29,7 @@ pub use words::Words;
 
 pub const MAX_REJECTIONS: usize = 100;
 
-#[derive(ThisError, Debug)]
+#[derive(ThisError, Debug, Clone)]
 pub enum Error {
     #[error("Exceeded 100 rejections during generation.")]
     MaxRejectionsExceeded,
@@ -42,7 +44,7 @@ pub enum Error {
 pub type Result<T> = StdResult<T, Error>;
 
 pub trait Generator {
-    fn generate(&self, rng: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>>;
+    fn generate(&self, rng: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>>;
     fn id(&self) -> Option<&str> {
         None
     }

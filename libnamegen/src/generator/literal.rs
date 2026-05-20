@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use rand::Rng;
 
-use crate::generator::{Error, Generator, Result};
+use crate::generator::{Constraints, Error, Generator, Result};
 
 pub struct Literal {
     id: Option<String>,
@@ -16,7 +14,7 @@ impl Literal {
 }
 
 impl Generator for Literal {
-    fn generate(&self, _rand: &mut dyn Rng, constraints: &HashMap<&str, &str>) -> Result<Vec<String>> {
+    fn generate(&self, _rand: &mut dyn Rng, constraints: &dyn Constraints) -> Result<Vec<String>> {
         if let Some(id) = self.id.as_deref()
             && let Some(constraint) = constraints.get(id)
         {
