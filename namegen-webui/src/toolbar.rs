@@ -8,8 +8,8 @@ use libnamegen::config::{ConfigSourceType, GeneratorConfig};
 lazy_static! {
     static ref builtins: HashMap<String, &'static [u8]> = {
         let mut map: HashMap<String, &'static [u8]> = HashMap::new();
-        map.insert("default".to_string(), include_bytes!("../../configs/default.xml"));
-        map.insert("thing".to_string(), include_bytes!("../../configs/thing.xml"));
+        map.insert("silly".to_string(), include_bytes!("../../configs/silly.xml"));
+        map.insert("gadgetry".to_string(), include_bytes!("../../configs/gadgetry.xml"));
         map.insert("elf".to_string(), include_bytes!("../../configs/elf.xml"));
         map.insert("dwarf".to_string(), include_bytes!("../../configs/dwarf.xml"));
         map.insert("goblin".to_string(), include_bytes!("../../configs/goblin.xml"));
@@ -25,13 +25,13 @@ lazy_static! {
 lazy_static! {
     static ref builtin_display_names: HashMap<String, &'static str> = {
         let mut map: HashMap<String, &'static str> = HashMap::new();
-        map.insert("default".to_string(), "Default");
-        map.insert("thing".to_string(), "Thing");
-        map.insert("elf".to_string(), "Elf");
-        map.insert("dwarf".to_string(), "Dwarf");
-        map.insert("goblin".to_string(), "Goblin");
-        map.insert("abrahamic".to_string(), "Abrahamic");
-        map.insert("greco-roman".to_string(), "Greco-Roman");
+        map.insert("silly".to_string(), "Silly Names");
+        map.insert("gadgetry".to_string(), "Gadgetry");
+        map.insert("elf".to_string(), "Elven Names");
+        map.insert("dwarf".to_string(), "Dwarven Names");
+        map.insert("goblin".to_string(), "Goblin Names");
+        map.insert("abrahamic".to_string(), "Abrahamic Mythology");
+        map.insert("greco-roman".to_string(), "Greco-Roman Mythology");
         map
     };
 }
@@ -74,7 +74,7 @@ pub fn Toolbar(
                                 .unwrap();
                             on_config_loaded(config)
                         }
-                        prop:value="default"
+                        prop:value="silly"
                     >
                         {builtins
                             .keys()

@@ -1,6 +1,6 @@
 @use "jonui/scss/main.scss";
 @use "jonui/scss/globals.scss";
-@use "jonui/scss/themes/arcane-night.scss";
+@use "jonui/scss/themes/arcane-dusk.scss";
 @use "jonui/scss/themes/arcane-dawn.scss";
 @use "jonui/scss/themes/high-contrast-dark.scss";
 @use "jonui/scss/themes/high-contrast-light.scss";
@@ -11,7 +11,8 @@
   -webkit-user-select: none;
   user-select: none;
 
-  @include arcane-night.theme;
+  @include arcane-dusk.theme;
+  overflow: clip;
 }
 
 @media (prefers-color-scheme: light) and (prefers-contrast: no-preference) and (forced-colors: none) {
@@ -52,14 +53,12 @@ body {
   row-gap: var(--vertical-gap);
   column-gap: var(--horizontal-gap);
   width: 100%;
-  height: 100%;
-  overflow: clip;
+  height: calc(100% - 3 * var(--vertical-gap));
 }
 
 @media (min-width: globals.$wide-breakpoint) {
   .app {
     max-width: 80%;
-    overflow: auto;
   }
 }
 
@@ -75,9 +74,12 @@ body {
   overflow-y: auto;
 
   .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vertical-gap);
+
     div {
-      display: block;
-      min-height: 1.5rem;
+      min-height: 1.19rem;
     }
   }
 }
@@ -92,16 +94,13 @@ body {
     width: 100%;
     padding: calc(2*var(--vertical-gap)) var(--horizontal-gap);
   }
-
-  .content {
-    div {
-      display: block;
-      min-height: 1.5rem;
-    }
-  }
 }
 
 @media (max-width: globals.$narrow-breakpoint) {
+  :root {
+    overflow: auto;
+  }
+
   .app {
     grid-template-rows: auto auto auto;
     grid-template-columns: 1fr;
@@ -138,10 +137,12 @@ body {
 
 .constraint {
   width: 100%;
-  max-width: 30rem;
+  max-width: 40rem;
+  padding: var(--vertical-gap) var(--horizontal-gap);
+
   margin: auto;
   display: grid;
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: var(--horizontal-gap);
 }

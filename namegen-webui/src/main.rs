@@ -20,7 +20,7 @@ mod output_panel;
 mod toolbar;
 mod typo;
 
-const DEFAULT_CONFIG: &[u8] = include_bytes!("../../configs/default.xml");
+const DEFAULT_CONFIG: &[u8] = include_bytes!("../../configs/silly.xml");
 const MAX_NAMES: usize = 20;
 const GENERATION_RATE_MS: u64 = 2500;
 const NBSP: &str = "\u{00A0}";

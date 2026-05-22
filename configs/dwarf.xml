@@ -4,8 +4,8 @@
     <Param id="firstname" display_name="First name" />
     <Param id="gender" display_name="Gender (0: masculine, 1: feminine)" />
     <Param id="surname" display_name="Surname" />
-    Dwarven names, based mainly on Old Norse, Anglo-Saxon, and Germanic names, with
-    a few from other sources.
+    Produces dwarven names, based mainly on Old Norse, Anglo-Saxon, and Germanic
+    names, with a few from other sources.
   </Description>
   <Join sep=" ">
     <Switch id="gender">

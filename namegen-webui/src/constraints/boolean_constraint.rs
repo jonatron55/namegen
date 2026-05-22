@@ -26,8 +26,8 @@ pub fn BooleanConstraint(
                 }
             >
                 <option value="none">"Random"</option>
-                <option value="true">"Present"</option>
-                <option value="false">"Absent"</option>
+                <option value="true">"Yes"</option>
+                <option value="false">"No"</option>
             </select>
         </div>
     }

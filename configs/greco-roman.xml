@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Description display_name="Greco-Roman">
+  <Description display_name="Greco-Roman Mythology">
     <Param id="name" display_name="Name" />
     Names based on Greco-Roman mythology. Suitable for generating names of gods,
     heroes, and similar entities.

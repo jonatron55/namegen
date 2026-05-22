@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Description display_name="Elven">
+  <Description display_name="Goblinoid Names">
     <Param id="firstname" display_name="First name" />
     <Param id="surname" display_name="Surname" />
-    Goblin names
+    Creates names for goblins, gremlins, and bugaboos.
   </Description>
   <Join sep=" ">
     <Markov id="firstname" cutoff_len="11">

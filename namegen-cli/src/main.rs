@@ -20,8 +20,8 @@ use xml::{writer::XmlEvent, EmitterConfig as XmlEmitterConfig};
 
 use crate::styles::{ERROR, PATH, WARN};
 
-const DEFAULT_CONFIG: &[u8] = include_bytes!("../../configs/default.xml");
-const THING_CONFIG: &[u8] = include_bytes!("../../configs/thing.xml");
+const SILLY_CONFIG: &[u8] = include_bytes!("../../configs/silly.xml");
+const GADGETRY_CONFIG: &[u8] = include_bytes!("../../configs/gadgetry.xml");
 
 /// Generates random names from a given configuration.
 #[derive(Parser)]
@@ -41,11 +41,11 @@ struct Args {
     /// Built-in configurations are also available. The following names can be
     /// used to reference them:
     ///
-    /// - `default`: A configuration that generates amusing person names.
-    /// - `thing`: A configuration that generates amusing names for objects or
-    ///   concepts.
+    /// - `silly`: A configuration that generates amusing person names.
+    /// - `gadgetry`: A configuration that generates amusing names for objects
+    ///   or concepts.
     ///
-    /// If a path is not provided, the `default` built-in configuration will be
+    /// If a path is not provided, the `silly` built-in configuration will be
     /// used. To use a configuration file that has the same name as a built-in,
     /// prefix it with `./` or another path component.
     #[arg(value_name = "FILE")]
@@ -96,8 +96,8 @@ struct Args {
 
 fn main() -> ExitCode {
     let builtins = HashMap::from([
-        (PathBuf::from("default"), DEFAULT_CONFIG),
-        (PathBuf::from("thing"), THING_CONFIG),
+        (PathBuf::from("silly"), SILLY_CONFIG),
+        (PathBuf::from("gadgetry"), GADGETRY_CONFIG),
     ]);
 
     let args = Args::parse();
@@ -107,7 +107,7 @@ fn main() -> ExitCode {
             eprintln!("{ERROR}Error:{ERROR:#} --export requires a path argument");
             return ExitCode::FAILURE;
         };
-        if let Err(err) = fs::write(&path, DEFAULT_CONFIG) {
+        if let Err(err) = fs::write(&path, SILLY_CONFIG) {
             eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
             return ExitCode::FAILURE;
         }

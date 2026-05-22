@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Description display_name="Thing">
+  <Description display_name="Gadgetry">
     <Param id="adj" display_name="Adjective" />
     <Param id="agent" display_name="Agent noun" />
     <Param id="has-prefix" display_name="Include a prefix" />
     <Param id="noun" display_name="Noun" />
-    Generates amusing names for objects or concepts. Perfect for naming components
-    of your turboencabulator.
+    <Param id="prefix" display_name="Prefix" />
+    Produces names for gadgets, devices, and similar inventions - The types of
+    component one might need to discombobulate their turboencabulator, or to make a
+    good cup of coffee.
   </Description>
   <Join sep=" ">
     <Markov id="adj" target_len="4" cutoff_len="12">

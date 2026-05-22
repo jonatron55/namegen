@@ -13,6 +13,7 @@ pub fn TextConstraint(
             <input
                 type="text"
                 placeholder="Prefix..."
+                autocomplete="off"
                 id=id.clone()
                 on:input:target=move |ev| {
                     let value = ev.target().value().clone();
