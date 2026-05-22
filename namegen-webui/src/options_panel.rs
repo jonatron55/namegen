@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use leptos::prelude::*;
 use libnamegen::config::GeneratorConfig;
 
-use crate::constraints::{Constraint, Constraints};
+use crate::constraints::{BooleanConstraint, Constraint, Constraints, NumberConstraint, TextConstraint};
 
 #[component]
 pub fn OptionsPanel(
@@ -14,118 +14,88 @@ pub fn OptionsPanel(
     let constraints = Signal::derive_local(move || config.get().constraints());
     let get_display_name = move |id: &str| display_names.get().get(id).cloned().unwrap_or_else(|| id.to_string());
 
+    let update_value = Callback::<(String, String)>::new(move |(id, value)| {
+        constraint_values.update(move |values| {
+            values.insert(id, value);
+        })
+    });
+
+    let clear_value = Callback::<String>::new(move |id| {
+        constraint_values.update(move |values| {
+            values.remove(&id);
+        })
+    });
+
     view! {
         <div class="controls panel">
             <div class="caption">
                 <h1>"Options"</h1>
             </div>
-            {move || {
-                constraints
-                    .get()
-                    .into_iter()
-                    .map(|constraint| {
-                        match constraint {
-                            Constraint::Number { id, min, max } => {
-                                view! {
-                                    <div class="constraint">
-                                        <label for=id.clone()>{get_display_name(&id)}</label>
-                                        <select
+            <div class="content">
+                {move || {
+                    constraints
+                        .get()
+                        .into_iter()
+                        .map(|constraint| {
+                            match constraint {
+                                Constraint::Number { id, min, max } => {
+                                    view! {
+                                        <NumberConstraint
                                             id=id.clone()
-                                            on:input:target=move |ev| {
-                                                let value = ev.target().value();
-                                                match value.as_str() {
-                                                    "none" => {
-                                                        constraint_values
-                                                            .update(|values| {
-                                                                values.remove(&id);
-                                                            });
-                                                    }
-                                                    _ => {
-                                                        if let Ok(n) = value.parse::<i32>() {
-                                                            constraint_values
-                                                                .update(|values| {
-                                                                    values.insert(id.clone(), n.to_string());
-                                                                });
-                                                        }
-                                                    }
-                                                }
+                                            display_name=get_display_name(&id)
+                                            min
+                                            max
+                                            on_change={
+                                                let id = id.clone();
+                                                move |value| { update_value.run((id.clone(), value)) }
                                             }
-                                        >
-                                            <option value="none">"Random"</option>
-                                            {(min..=max)
-                                                .map(|n| {
-                                                    view! { <option value=n>{n}</option> }
-                                                })
-                                                .collect_view()}
-                                        </select>
-                                    </div>
-                                }
-                                    .into_any()
-                            }
-                            Constraint::Text { id } => {
-                                view! {
-                                    <div class="constraint">
-                                        <label for=id.clone()>{get_display_name(&id)}</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Prefix..."
-                                            id=id.clone()
-                                            on:input:target=move |ev| {
-                                                let value = ev.target().value().clone();
-                                                if !value.is_empty() {
-                                                    constraint_values
-                                                        .update(|values| {
-                                                            values.insert(id.clone(), value.clone());
-                                                        });
-                                                } else {
-                                                    constraint_values
-                                                        .update(|values| {
-                                                            values.remove(&id.clone());
-                                                        });
-                                                }
+                                            on_clear={
+                                                let id = id.clone();
+                                                move || clear_value.run(id.clone())
                                             }
                                         />
-                                    </div>
+                                    }
+                                        .into_any()
                                 }
-                                    .into_any()
-                            }
-                            Constraint::Boolean { id } => {
-                                view! {
-                                    <div class="constraint">
-                                        <label for=id.clone()>{get_display_name(&id)}</label>
-                                        <select
+                                Constraint::Text { id } => {
+                                    view! {
+                                        <TextConstraint
                                             id=id.clone()
-                                            on:input:target=move |ev| {
-                                                let value = ev.target().value();
-                                                match value.as_str() {
-                                                    "none" => {
-                                                        constraint_values
-                                                            .update(|values| {
-                                                                values.remove(&id);
-                                                            });
-                                                    }
-                                                    "true" | "false" => {
-                                                        constraint_values
-                                                            .update(|values| {
-                                                                values.insert(id.clone(), value.to_string());
-                                                            });
-                                                    }
-                                                    _ => {}
-                                                }
+                                            display_name=get_display_name(&id)
+                                            on_change={
+                                                let id = id.clone();
+                                                move |value| { update_value.run((id.clone(), value)) }
                                             }
-                                        >
-                                            <option value="none">"Random"</option>
-                                            <option value="true">"Present"</option>
-                                            <option value="false">"Absent"</option>
-                                        </select>
-                                    </div>
+                                            on_clear={
+                                                let id = id.clone();
+                                                move || clear_value.run(id.clone())
+                                            }
+                                        />
+                                    }
+                                        .into_any()
                                 }
-                                    .into_any()
+                                Constraint::Boolean { id } => {
+                                    view! {
+                                        <BooleanConstraint
+                                            id=id.clone()
+                                            display_name=get_display_name(&id)
+                                            on_change={
+                                                let id = id.clone();
+                                                move |value| { update_value.run((id.clone(), value)) }
+                                            }
+                                            on_clear={
+                                                let id = id.clone();
+                                                move || clear_value.run(id.clone())
+                                            }
+                                        />
+                                    }
+                                        .into_any()
+                                }
                             }
-                        }
-                    })
-                    .collect_view()
-            }}
+                        })
+                        .collect_view()
+                }}
+            </div>
         </div>
     }
 }

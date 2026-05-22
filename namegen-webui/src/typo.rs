@@ -15,11 +15,9 @@ pub struct State {
 
 #[component]
 pub fn Typo(string: ColoredString) -> impl IntoView {
-    let ColoredString { text, color } = string;
-
     let state = RwSignal::new_local(State {
         displayed: String::new(),
-        target: text.chars().collect(),
+        target: string.text.chars().collect(),
         index: 0,
     });
 
@@ -37,7 +35,8 @@ pub fn Typo(string: ColoredString) -> impl IntoView {
 
     view! {
         <span class=format!(
-            "name color-{color}",
+            "name {}",
+            string.class(),
         )>{move || state.with(|state| state.displayed.clone())}</span>
     }
 }

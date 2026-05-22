@@ -1,6 +1,14 @@
+mod boolean_constraint;
+mod number_constraint;
+mod text_constraint;
+
 use std::collections::HashSet;
 
 use libnamegen::config::GeneratorConfig;
+
+pub use boolean_constraint::BooleanConstraint;
+pub use number_constraint::NumberConstraint;
+pub use text_constraint::TextConstraint;
 
 pub trait Constraints {
     fn constraints(&self) -> Vec<Constraint>;

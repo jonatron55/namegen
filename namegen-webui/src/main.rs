@@ -22,7 +22,7 @@ mod typo;
 
 const DEFAULT_CONFIG: &[u8] = include_bytes!("../../configs/default.xml");
 const MAX_NAMES: usize = 20;
-const GENERATION_RATE_MS: u32 = 2500;
+const GENERATION_RATE_MS: u64 = 2500;
 const NBSP: &str = "\u{00A0}";
 
 pub type GenerationResult = Result<ColoredString, GenerationError>;
@@ -30,14 +30,17 @@ pub type GenerationResult = Result<ColoredString, GenerationError>;
 #[component]
 fn App() -> impl IntoView {
     let rng = StoredValue::new_local(rand::rng());
+
     let default_config = GeneratorConfig::read(DEFAULT_CONFIG, ConfigSourceType::Xml).unwrap();
     let default_generator = default_config.build_generator();
+
     let (config, set_config) = signal_local(default_config);
+
     let arg_display_names = Signal::derive_local(move || match config.get() {
         GeneratorConfig::Description { arg_display_names, .. } => arg_display_names.clone(),
         _ => HashMap::new(),
     });
-    let accent_colors = StoredValue::new_local(RefCell::new(AccentColors::new(rand::rng())));
+
     let generator = StoredValue::new_local(default_generator);
     _ = Effect::new({
         let config = config.clone();
@@ -47,8 +50,11 @@ fn App() -> impl IntoView {
         }
     });
 
-    let (continuous, set_continuous) = signal_local(false);
-    let names: StoredValue<Vec<RwSignal<GenerationResult, LocalStorage>>, LocalStorage> = StoredValue::new_local(
+    let accent_colors = StoredValue::new_local(RefCell::new(AccentColors::new(rand::rng())));
+
+    let interval_handle = RwSignal::new_local(None::<IntervalHandle>);
+
+    let names = StoredValue::new_local(
         (0..MAX_NAMES)
             .map(|_| {
                 let color = accent_colors.with_value(|value| value.borrow_mut().next());
@@ -56,81 +62,63 @@ fn App() -> impl IntoView {
             })
             .collect::<Vec<_>>(),
     );
-    let name_index = RwSignal::new_local(0);
-    let constraint_values: RwSignal<HashMap<String, String>, LocalStorage> = RwSignal::new_local(HashMap::new());
 
-    set_interval(
-        move || {
-            if continuous.get() {
-                rng.update_value(|mut rng| {
-                    generator.with_value(|generator| {
-                        let color = accent_colors.with_value(|value| value.borrow_mut().next());
-                        let name = generator
-                            .generate(&mut rng, &constraint_values.get())
-                            .map(|parts| parts.join(""));
-                        names.get_value()[name_index.get()].set(name.map(|n| n.with_accent_color(color)));
+    let name_index = RwSignal::new_local(0);
+
+    let constraint_values = RwSignal::new_local(HashMap::<String, String>::new());
+
+    let generate = Callback::new(move |count: usize| {
+        generator.with_value(move |generator| {
+            rng.update_value(move |mut rng| {
+                for _ in 0..count {
+                    let color = accent_colors.with_value(|value| value.borrow_mut().next());
+
+                    let name = generator
+                        .generate(&mut rng, &constraint_values.get())
+                        .map(|parts| parts.join(""));
+
+                    name_index.update(move |i| {
+                        names.with_value(|names| names[*i].set(name.map(|n| n.with_accent_color(color))));
+                        *i = (*i + 1) % MAX_NAMES;
                     });
-                    name_index.set((name_index.get() + 1) % MAX_NAMES);
-                })
+                }
+            });
+        });
+    });
+
+    let start_continuous = Callback::new(move |_: ()| {
+        interval_handle.update(move |handle| {
+            if handle.is_none() {
+                generate.run(1);
+                *handle =
+                    set_interval_with_handle(move || generate.run(1), Duration::from_millis(GENERATION_RATE_MS)).ok();
             }
-        },
-        Duration::from_millis(GENERATION_RATE_MS as u64),
-    );
+        });
+    });
+
+    let stop_continuous = Callback::new(move |_: ()| {
+        interval_handle.update(move |handle| {
+            if let Some(handle) = handle.take() {
+                handle.clear();
+            }
+        });
+    });
 
     view! {
         <div class="app">
             <Toolbar config on_config_loaded=move |config| set_config.set(config) />
+            <OutputPanel
+                started=move || interval_handle.with(|h| h.is_some())
+                names=names.clone()
+                on_generate_single=move || generate.run(1)
+                on_generate_all=move || generate.run(MAX_NAMES)
+                on_start=move || start_continuous.run(())
+                on_stop=move || stop_continuous.run(())
+            />
             <OptionsPanel
                 config
                 display_names=arg_display_names
                 constraint_values=constraint_values
-            />
-            <OutputPanel
-                started=continuous
-                names=names.clone()
-                on_generate_single=move || {
-                    rng.update_value(|mut rng| {
-                        let color = accent_colors.with_value(|value| value.borrow_mut().next());
-                        generator
-                            .with_value(|generator| {
-                                let name = generator
-                                    .generate(&mut rng, &constraint_values.get())
-                                    .map(|parts| parts.join(""));
-                                names
-                                    .get_value()[name_index.get()]
-                                    .set(name.map(|n| n.with_accent_color(color)));
-                                name_index.set((name_index.get() + 1) % MAX_NAMES);
-                            });
-                    })
-                }
-                on_generate_all={
-                    let names = names.clone();
-                    let name_index = name_index.clone();
-                    move || {
-                        rng.update_value(|mut rng| {
-                            generator
-                                .with_value(|generator| {
-                                    for i in 0..MAX_NAMES {
-                                        let color = accent_colors
-                                            .with_value(|value| value.borrow_mut().next());
-                                        let name = generator
-                                            .generate(&mut rng, &constraint_values.get())
-                                            .map(|parts| parts.join(""));
-                                        names
-                                            .get_value()[i]
-                                            .set(name.map(|n| n.with_accent_color(color)));
-                                    }
-                                });
-                            name_index.set(0);
-                        })
-                    }
-                }
-                on_start=move || {
-                    set_continuous.set(true);
-                }
-                on_stop=move || {
-                    set_continuous.set(false);
-                }
             />
         </div>
     }

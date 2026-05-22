@@ -15,26 +15,18 @@ pub fn OutputPanel(
         <div class="output panel">
             <div class="caption">
                 <div class="buttons">
-                    <button
-                        class="secondary"
-                        on:click=move |_| on_generate_single()
-                        disabled=move || started.get()
-                    >
+                    <button on:click=move |_| on_generate_single() disabled=move || started.get()>
                         "Generate one"
                     </button>
-                    <button
-                        class="secondary"
-                        on:click=move |_| on_generate_all()
-                        disabled=move || started.get()
-                    >
+                    <button on:click=move |_| on_generate_all() disabled=move || started.get()>
                         "Generate 20"
                     </button>
                     <button
-                        class=move || { if started.get() { "danger" } else { "" } }
+                        class=move || { if started.get() { "danger" } else { "secondary" } }
                         on:click=move |_| if started.get() { on_stop() } else { on_start() }
                     >
                         {move || {
-                            if started.get() { "Stop generation" } else { "Continuous generation" }
+                            if started.get() { "Stop generation" } else { "Generate continuously" }
                         }}
                     </button>
                 </div>

@@ -10,7 +10,7 @@ pub struct AccentColors<R: Rng> {
 impl<R: Rng> AccentColors<R> {
     pub fn new(rng: R) -> Self {
         Self {
-            current: 0,
+            current: 1,
             last: 0,
             rng,
         }
@@ -18,7 +18,7 @@ impl<R: Rng> AccentColors<R> {
 
     pub fn next(&mut self) -> usize {
         loop {
-            let next = self.rng.random_range(0..6);
+            let next = self.rng.random_range(1..6);
             if next != self.current {
                 self.last = self.current;
                 self.current = next;
@@ -32,6 +32,12 @@ impl<R: Rng> AccentColors<R> {
 pub struct ColoredString {
     pub text: String,
     pub color: usize,
+}
+
+impl ColoredString {
+    pub fn class(&self) -> String {
+        format!("color-{}", self.color)
+    }
 }
 
 pub trait WithAccentColor {

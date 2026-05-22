@@ -61,9 +61,9 @@ pub fn Toolbar(
     });
 
     view! {
-        <div class="panel">
+        <div class="toolbar panel">
             <div class="caption">
-                <div class="toolbar">
+                <div class="toolbar-controls">
                     <label for="-builtin-configs">"Configuration:"</label>
                     <select
                         id="-builtin-configs"
