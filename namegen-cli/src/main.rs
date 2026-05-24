@@ -2,7 +2,6 @@ mod styles;
 
 use std::{
     collections::HashMap,
-    env::temp_dir,
     fs::{self, File, OpenOptions},
     io::{BufRead, BufReader, Error as IoError, Read, Write},
     path::PathBuf,
@@ -190,7 +189,7 @@ fn main() -> ExitCode {
     };
 
     if args.beautify {
-        let tmp = temp_dir().join(path.file_name().unwrap_or_else(|| "namegen_beautify.xml".as_ref()));
+        let tmp = path.with_extension("tmp");
 
         let output = match OpenOptions::new().write(true).create(true).open(&tmp) {
             Ok(file) => file,

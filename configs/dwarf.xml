@@ -28,25 +28,25 @@
           Eindriði Eirick Eirikr Erlend Erlendr Erlingr Eysteinn Eyvindr Fastulf Fastulfr
           Felagi Finnr Flaeming Flæmingr Folki Friðþjofr Froði Froþi Gauti Gautstafr
           Geir Geirmundr Geirr Gisli Gjord Gjurd Godric Gulbrandr Gunni Gunnvaldr
-          Guðbrandr Guðfrøðr Guðini Guðleifr Guðmundr Guðormr Guðrøðr
-          Guðþormr Hakon Halfdan Hallbjorn Halli Hallr Hallsteinn Hallvarðr Hallþorr
-          Hamundr Haraldr Harðaknutr Haukr Havarðr Helgi Hemingr Hereward Herleifr
-          Hildræd Hjalmarr Holmgeirr Hoskuldr Hrafn Hreiðarr Hroaldor Hroaldr Hroar
-          Hroarr Hrolfr Hroðgar Hroðgeirr Hroðulf Hroðulfr Hroðvaldr Hroðwulf
-          Hroþgar Hrœrekr Hrǿrikr Hugleikr Hæth Ingi Ingimarr Ingolfr Ivarr Joarr
-          Josteinn Kalfr Kari Ketill Knutr Kolr Kori Leifr Mundi Njall Odalric Oddbjorn
-          Oddgeirr Oddr Oddvarr Olvir Orsic Osgar Ottarr Ragnarr Ragnvaldr Randulfr
-          Raðulfr Runi Sigeberht Sigeweard Sigfrøðr Sigsteinn Sigurðr Snorri Solvi
-          Somerled Stali Steinarr Steingrimr Steinn Stigandr Stigr Stiþwulf Sture Sturla
-          Styrmir Sumarliði Sundri Suni Sveinn Sveinungr Sverrir Swiðhun Tofi Toki
-          Tryggvi Ulfr Ulrich Uni Urist Vagn Valdimarr Valþjofr Vebjorn Vegarðr Vemundr
-          Vetrliði Vigi Vikingr Vragi Widogast Wighard Woden Wulfgang Wulfgeirr Wulfgrim
-          Wulfhard Wulfhram Yngvarr Yrian Ælfgar Ælfræd Æsc Æthelberht Æðelbeald
-          Æðelfrið Æðelmær Æðelric Æðelræd Æðelstan Æðelwine Æðelwulf
-          Æþelbald Æþelbeorht Æþelnoð Æþelræd Æþelweald Æþelweard Æþelwulf
-          Þorarinn Þorbjorn Þorfastr Þorfinnr Þorfreðr Þorgeirr Þorgisl Þorgnyr
-          Þorgrimr Þorir Þorketill Þorleifr Þorleikr Þormoðr Þorsteinn Þorvaldr
-          Þorðr Þrondr Þunor
+          Guðbrandr Guðfroðr Guðini Guðleifr Guðmundr Guðormr Guðroðr Guðþormr
+          Hakon Halfdan Hallbjorn Halli Hallr Hallsteinn Hallvarðr Hallþorr Hamundr
+          Haraldr Harðaknutr Haukr Havarðr Helgi Hemingr Hereward Herleifr Hildræd
+          Hjalmarr Holmgeirr Hoskuldr Hrafn Hreiðarr Hroaldor Hroaldr Hroar Hroarr Hrolfr
+          Hrorikr Hroðgar Hroðgeirr Hroðulf Hroðulfr Hroðvaldr Hroðwulf Hroþgar
+          Hrœrekr Hugleikr Hæth Ingi Ingimarr Ingolfr Ivarr Joarr Josteinn Kalfr Kari
+          Ketill Knutr Kolr Kori Leifr Mundi Njall Odalric Oddbjorn Oddgeirr Oddr Oddvarr
+          Olvir Orsic Osgar Ottarr Ragnarr Ragnvaldr Randulfr Raðulfr Runi Sigeberht
+          Sigeweard Sigfroðr Sigsteinn Sigurðr Snorri Solvi Somerled Stali Steinarr
+          Steingrimr Steinn Stigandr Stigr Stiþwulf Sture Sturla Styrmir Sumarliði
+          Sundri Suni Sveinn Sveinungr Sverrir Swiðhun Tofi Toki Tryggvi Ulfr Ulrich Uni
+          Urist Vagn Valdimarr Valþjofr Vebjorn Vegarðr Vemundr Vetrliði Vigi Vikingr
+          Vragi Widogast Wighard Woden Wulfgang Wulfgeirr Wulfgrim Wulfhard Wulfhram
+          Yngvarr Yrian Ælfgar Ælfræd Æsc Æthelberht Æðelbeald Æðelfrið
+          Æðelmær Æðelric Æðelræd Æðelstan Æðelwine Æðelwulf Æþelbald
+          Æþelbeorht Æþelnoð Æþelræd Æþelweald Æþelweard Æþelwulf Þorarinn
+          Þorbjorn Þorfastr Þorfinnr Þorfreðr Þorgeirr Þorgisl Þorgnyr Þorgrimr
+          Þorir Þorketill Þorleifr Þorleikr Þormoðr Þorsteinn Þorvaldr Þorðr
+          Þrondr Þunor
         </Markov>
         <Option probability="0.25">
           <Literal text="son" />

@@ -42,21 +42,26 @@
         Yvonne Zaleria
       </Markov>
     </Switch>
-    <Capitalize>
-      <Join>
-        <Repeat min="2" max="2">
-          <Words id="surname">
-            ash autumn bark birch bird bloom blossom blue bow bracken bramble branch brave
-            breeze briar bright brook bush caller caster cliff cloud dance dancer dawn day
-            dream dreamer drifter dusk dweller ember ever fair fenn fern fey fire flame
-            frost gale green grey hail heart hunter leaf light merry mist moon moss nettle
-            night oak oaken ocean pale pine quick rain river sapling sea seed seeker seer
-            shade shadow shore shrub silver singer sky song soul spell staff star stave
-            storm strider summer sun swift thorn treader tree twig twiggy twigs vine walker
-            wander wanderer whisper wild willow wind wing winter wise wood wren yew
-          </Words>
-        </Repeat>
-      </Join>
-    </Capitalize>
+    <Join>
+      <Words id="surname">
+        Ash Ashen Autumn Bark Birch Bird Blossom Blue Bracken Bramble Brave Breeze
+        Bright Brook Bush Cloud Cold Cool Crow Dark Dawn Day Dream Drift Dusk Ember Ever
+        Fair Falcon Far Feather Fenn Fern Fey Fire Flame Forest Frost Green Grey Hail
+        Hawk High Hunt Leaf Light Merry Mist Moon Nettle Night Oak Oaken Ocean Owl Pale
+        Pine Quick Rain Raven River Rose Sapling Seeker Shade Shadow Shore Shrub Silver
+        Sky Sparrow Spell Staff Star Storm Summer Sun Swift Thorn Tree Twig Vine Wander
+        Whisper Wild Willow Wind Winter Wood Wooden Wren Yew
+      </Words>
+      <Words>
+        bark birch bird bloom blossom bow bracken bramble branch breeze briar brook bush
+        caller caster cliff cloud crow dance dancer dawn dreamer drifter dusk dweller
+        fair falcon feather fenn fern fey fire flame forest frost gale hail hawk heart
+        hunter keen leaf light merry mist moon moss nettle night oak pine rain raven
+        river rose sapling sea seed seeker seer shade shadow shore shrub silver singer
+        sky song soul sparrow spell staff star stave strider summer sun sure swift thorn
+        treader tree twig twiggy twigs vine walker wander wanderer whisper wild willow
+        wind wing winter wise wood woods
+      </Words>
+    </Join>
   </Join>
 </NameGen>
