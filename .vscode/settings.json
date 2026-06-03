@@ -1,33 +1,33 @@
 {
-  "[css][html][json][markdown][scss][xml][yaml]": {
-    "editor.indentSize": 2
-  },
-  "[markdown][rust]": {
-    "editor.rulers": [
-      80,
-      120
-    ]
-  },
-  "[xml]": {
-    "editor.formatOnSave": false
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.sort.json": "explicit"
-  },
-  "editor.formatOnSave": true,
-  "editor.indentSize": 4,
-  "editor.insertSpaces": true,
-  "editor.tabSize": 4,
-  "files.encoding": "utf8",
-  "files.eol": "\n",
-  "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true,
-  "files.trimTrailingWhitespace": true,
-  "rust-analyzer.cargo.features": "all",
-  "rust-analyzer.rustfmt.overrideCommand": [
-    "leptosfmt",
-    "--stdin",
-    "--rustfmt"
-  ]
+    "[css][html][json][markdown][scss][xml][yaml]": {
+        "editor.indentSize": 2
+    },
+    "[markdown][rust]": {
+        "editor.rulers": [
+            80,
+            120
+        ]
+    },
+    "[xml]": {
+        "editor.formatOnSave": false
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.sort.json": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "editor.indentSize": 4,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "rust-analyzer.cargo.features": "all"
+    // "rust-analyzer.rustfmt.overrideCommand": [
+    //   "leptosfmt",
+    //   "--stdin",
+    //   "--rustfmt"
+    // ]
 }

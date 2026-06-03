@@ -166,3 +166,32 @@ body {
   -webkit-user-select: text;
   user-select: text;
 }
+
+@font-face {
+  font-family: Tengwar;
+  font-style: normal;
+  src: url("AlcarinTengwar-Regular.woff2");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Tengwar;
+  font-style: normal;
+  src: url("AlcarinTengwar-Bold.woff2");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Futhark;
+  font-style: normal;
+  src: url("BabelStoneRunicElderFuthark.woff2");
+  font-weight: normal;
+}
+
+.tengwar {
+  font-family: Tengwar, serif;
+}
+
+.futhark {
+  font-family: Futhark, serif;
+}

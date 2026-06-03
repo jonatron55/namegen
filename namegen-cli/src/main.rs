@@ -10,12 +10,9 @@ use std::{
 
 use anstream::eprintln;
 use clap::Parser;
-use libnamegen::{
-    acsii_map,
-    config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml},
-};
-use rand::{rngs::StdRng, Rng, SeedableRng};
-use xml::{writer::XmlEvent, EmitterConfig as XmlEmitterConfig};
+use libnamegen::config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml};
+use rand::{Rng, SeedableRng, rngs::StdRng};
+use xml::{EmitterConfig as XmlEmitterConfig, writer::XmlEvent};
 
 use crate::styles::{ERROR, PATH, WARN};
 
@@ -66,12 +63,21 @@ struct Args {
     /// Converts non-ASCII characters in the generated names to their closest
     /// ASCII equivalent.
     ///
-    /// TThis flag maps accented characters to their unaccented counterparts, and
+    /// This flag maps accented characters to their unaccented counterparts, and
     /// replaces other non-ASCII characters with their closest approximations
     /// (for example, "ð" becomes "th", and "ß" becomes "ss"). Characters that
     /// do not have a clear ASCII equivalent will be removed.
     #[arg(long, short)]
     ascii: bool,
+
+    /// Transliterates characters in the generated names to their closest
+    /// Futhark equivalent.
+    ///
+    /// This flag maps characters to their corresponding runes in the Anglo-
+    /// Saxon Futhark. Characters that do not have a clear Futhark equivalent
+    /// remain unchanged.
+    #[arg(long, short, conflicts_with = "ascii")]
+    futhark: bool,
 
     /// Exports an example configuration file to the specified path instead of
     /// generating names.
@@ -267,8 +273,11 @@ fn main() -> ExitCode {
             Ok(names) => {
                 for name in names {
                     if args.ascii {
-                        let ascii_name = acsii_map::to_ascii(&name);
+                        let ascii_name = translit::to_ascii(&name);
                         print!("{ascii_name}");
+                    } else if args.futhark {
+                        let futhark_name = translit::to_futhark(&name);
+                        print!("{futhark_name}");
                     } else {
                         print!("{name}");
                     }

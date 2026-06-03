@@ -1,0 +1,14 @@
+[package]
+name = "translit"
+authors.workspace = true
+version.workspace = true
+edition = "2024"
+
+[lib]
+name = "translit"
+path = "src/lib.rs"
+
+[dependencies]
+xml.workspace = true
+lazy_static.workspace = true
+unicode-normalization.workspace = true

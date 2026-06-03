@@ -14,4 +14,5 @@ anstyle.workspace = true
 clap = { workspace = true, features = ["derive"] }
 rand.workspace = true
 libnamegen = { path = "../libnamegen" }
+translit = { path = "../translit" }
 xml.workspace = true
