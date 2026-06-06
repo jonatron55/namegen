@@ -7,7 +7,7 @@
 @use "jonstyle/scss/themes/system.scss";
 
 :root {
-  font-family: IosevkaArcane, monospace;
+  font-family: Arcane, monospace;
   -webkit-user-select: none;
   user-select: none;
 
@@ -15,9 +15,24 @@
   overflow: clip;
 }
 
+
+body {
+  padding: var(--vertical-gap) var(--horizontal-gap);
+  margin: 0;
+  width: 100%;
+
+  background-image: url("background-dark.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 @media (prefers-color-scheme: light) and (prefers-contrast: no-preference) and (forced-colors: none) {
   :root {
     @include arcane-dawn.theme;
+  }
+
+  body {
+    background-image: url("background-light.jpg");
   }
 }
 
@@ -25,11 +40,19 @@
   :root {
     @include high-contrast-dark.theme;
   }
+
+  body {
+    background-image: none;
+  }
 }
 
 @media (prefers-color-scheme: light) and (prefers-contrast: more) and (forced-colors: none) {
   :root {
     @include high-contrast-light.theme;
+  }
+
+  body {
+    background-image: none;
   }
 }
 
@@ -37,12 +60,10 @@
   :root {
     @include high-contrast-dark.theme;
   }
-}
 
-body {
-  padding: var(--vertical-gap) var(--horizontal-gap);
-  margin: 0;
-  width: 100%;
+  body {
+    background-image: none;
+  }
 }
 
 .app {
@@ -72,6 +93,8 @@ body {
   grid-row: 2;
   grid-column: 1;
   overflow-y: auto;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 
   .content {
     display: flex;
@@ -81,6 +104,14 @@ body {
     div {
       min-height: 1.19rem;
     }
+  }
+
+  .footer {
+    display: flex;
+    gap: var(--horizontal-gap);
+    margin: 0 auto;
+    width: fit-content;
+    align-items: center;
   }
 }
 
@@ -181,17 +212,10 @@ body {
   font-weight: bold;
 }
 
-@font-face {
-  font-family: Futhark;
-  font-style: normal;
-  src: url("BabelStoneRunicElderFuthark.woff2");
-  font-weight: normal;
-}
-
 .tengwar {
   font-family: Tengwar, serif;
+  font-size: 1.25rem;
 }
 
-.futhark {
-  font-family: Futhark, serif;
+.futhorc {
 }

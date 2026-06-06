@@ -8,7 +8,16 @@ edition = "2024"
 name = "translit"
 path = "src/lib.rs"
 
+[[bin]]
+name = "futhorc"
+path = "src/futhorc.rs"
+
+[[bin]]
+name = "tengwar"
+path = "src/tengwar.rs"
+
 [dependencies]
-xml.workspace = true
+itertools.workspace = true
 lazy_static.workspace = true
 unicode-normalization.workspace = true
+xml.workspace = true

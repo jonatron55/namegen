@@ -1,5 +1,7 @@
 mod ascii;
-mod futhark;
+mod futhorc;
+mod tengwar;
 
 pub use ascii::to_ascii;
-pub use futhark::to_futhark;
+pub use futhorc::to_futhorc;
+pub use tengwar::to_tengwar;

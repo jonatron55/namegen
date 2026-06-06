@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{borrow::Cow, time::Duration};
 
 use leptos::prelude::*;
 
@@ -13,11 +13,38 @@ pub struct State {
     index: usize,
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Alphabet {
+    Unchanged,
+    Ascii,
+    Futhorc,
+    Tengwar,
+}
+
+impl Alphabet {
+    pub fn apply<'a>(&self, string: &'a str) -> Cow<'a, str> {
+        match self {
+            Self::Unchanged => Cow::Borrowed(string),
+            Self::Ascii => Cow::Owned(translit::to_ascii(string)),
+            Self::Futhorc => Cow::Owned(translit::to_futhorc(string)),
+            Self::Tengwar => Cow::Owned(translit::to_tengwar(string)),
+        }
+    }
+
+    pub fn class(&self) -> Option<&'static str> {
+        match self {
+            Self::Unchanged | Self::Ascii => None,
+            Self::Futhorc => Some("futhorc"),
+            Self::Tengwar => Some("tengwar"),
+        }
+    }
+}
+
 #[component]
-pub fn Typo(string: ColoredString) -> impl IntoView {
+pub fn Typo(string: ColoredString, alphabet: Alphabet) -> impl IntoView {
     let state = RwSignal::new_local(State {
         displayed: String::new(),
-        target: string.text.chars().collect(),
+        target: alphabet.apply(&string.text).chars().collect(),
         index: 0,
     });
 
@@ -33,10 +60,10 @@ pub fn Typo(string: ColoredString) -> impl IntoView {
         Duration::from_millis(TYPING_INTERVAL_MS),
     );
 
-    view! {
-        <span class=format!(
-            "name {}",
-            string.class(),
-        )>{move || state.with(|state| state.displayed.clone())}</span>
-    }
+    let span_class = match alphabet.class() {
+        Some(class) => format!("name {} {}", string.class(), class),
+        None => format!("name {}", string.class()),
+    };
+
+    view! { <span class=span_class>{move || state.with(|state| state.displayed.clone())}</span> }
 }

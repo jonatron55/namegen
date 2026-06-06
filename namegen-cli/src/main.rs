@@ -66,18 +66,18 @@ struct Args {
     /// This flag maps accented characters to their unaccented counterparts, and
     /// replaces other non-ASCII characters with their closest approximations
     /// (for example, "ð" becomes "th", and "ß" becomes "ss"). Characters that
-    /// do not have a clear ASCII equivalent will be removed.
+    /// do not have a clear ASCII equivalent will be replaced by '?'.
     #[arg(long, short)]
     ascii: bool,
 
     /// Transliterates characters in the generated names to their closest
-    /// Futhark equivalent.
+    /// runic equivalent.
     ///
     /// This flag maps characters to their corresponding runes in the Anglo-
-    /// Saxon Futhark. Characters that do not have a clear Futhark equivalent
+    /// Saxon Futhorc. Characters that do not have a clear Futhorc equivalent
     /// remain unchanged.
-    #[arg(long, short, conflicts_with = "ascii")]
-    futhark: bool,
+    #[arg(long, short, alias = "futhark", alias = "runes", conflicts_with = "ascii")]
+    futhorc: bool,
 
     /// Exports an example configuration file to the specified path instead of
     /// generating names.
@@ -275,8 +275,8 @@ fn main() -> ExitCode {
                     if args.ascii {
                         let ascii_name = translit::to_ascii(&name);
                         print!("{ascii_name}");
-                    } else if args.futhark {
-                        let futhark_name = translit::to_futhark(&name);
+                    } else if args.futhorc {
+                        let futhark_name = translit::to_futhorc(&name);
                         print!("{futhark_name}");
                     } else {
                         print!("{name}");

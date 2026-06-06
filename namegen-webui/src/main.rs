@@ -42,13 +42,6 @@ fn App() -> impl IntoView {
     });
 
     let generator = StoredValue::new_local(default_generator);
-    _ = Effect::new({
-        let config = config.clone();
-        let generator = generator.clone();
-        move || {
-            generator.set_value(config.get().build_generator());
-        }
-    });
 
     let accent_colors = StoredValue::new_local(RefCell::new(AccentColors::new(rand::rng())));
 
@@ -66,6 +59,16 @@ fn App() -> impl IntoView {
     let name_index = RwSignal::new_local(0);
 
     let constraint_values = RwSignal::new_local(HashMap::<String, String>::new());
+
+    _ = Effect::new({
+        let config = config.clone();
+        let generator = generator.clone();
+        let constraint_values = constraint_values.clone();
+        move || {
+            generator.set_value(config.get().build_generator());
+            constraint_values.set(HashMap::new());
+        }
+    });
 
     let generate = Callback::new(move |count: usize| {
         generator.with_value(move |generator| {

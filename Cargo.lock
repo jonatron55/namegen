@@ -1097,6 +1097,7 @@ dependencies = [
  "leptos",
  "libnamegen",
  "rand",
+ "translit",
  "wasm-bindgen",
  "web-sys",
 ]
@@ -1796,6 +1797,7 @@ dependencies = [
 name = "translit"
 version = "0.1.0"
 dependencies = [
+ "itertools",
  "lazy_static",
  "unicode-normalization",
  "xml",

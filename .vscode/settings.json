@@ -24,10 +24,10 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
-    "rust-analyzer.cargo.features": "all"
-    // "rust-analyzer.rustfmt.overrideCommand": [
-    //   "leptosfmt",
-    //   "--stdin",
-    //   "--rustfmt"
-    // ]
+    "rust-analyzer.cargo.features": "all",
+    "rust-analyzer.rustfmt.overrideCommand": [
+        "leptosfmt",
+        "--stdin",
+        "--rustfmt"
+    ]
 }

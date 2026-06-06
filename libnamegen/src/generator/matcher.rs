@@ -1,7 +1,7 @@
 use rand::Rng;
 use regex::Regex;
 
-use crate::generator::{Error, Generator, Result,Constraints};
+use crate::generator::{Constraints, Error, Generator, Result};
 
 pub struct Matcher {
     id: Option<String>,
