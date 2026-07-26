@@ -396,6 +396,13 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                 let event = reader.next()?;
                 match event {
                     XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
+                        if base.is_some() {
+                            return Err(Error::UnexpectedElement {
+                                name: name.local_name.clone(),
+                                position: reader.position(),
+                            });
+                        }
+
                         base = Some(inner_from_xml(&event, reader)?);
                     }
                     XmlEvent::StartElement {
@@ -428,6 +435,18 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         } else {
                             return Err(Error::MissingAttribute("expr".to_string()));
                         }
+
+                        let event = reader.next()?;
+
+                        match event {
+                            XmlEvent::EndElement { name } if name.local_name == ELEM_CASE => {}
+                            other => {
+                                return Err(Error::UnexpectedEvent {
+                                    event: other,
+                                    position: reader.position(),
+                                });
+                            }
+                        }
                     }
                     XmlEvent::StartElement {
                         ref name, attributes, ..
@@ -448,6 +467,18 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
                         let event = reader.next()?;
                         default = Some(inner_from_xml(&event, reader)?);
+
+                        let event = reader.next()?;
+
+                        match event {
+                            XmlEvent::EndElement { name } if name.local_name == ELEM_DEFAULT => {}
+                            other => {
+                                return Err(Error::UnexpectedEvent {
+                                    event: other,
+                                    position: reader.position(),
+                                });
+                            }
+                        }
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_MATCH => {
                         if let Some(base) = base {
