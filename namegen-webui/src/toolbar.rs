@@ -18,6 +18,7 @@ lazy_static! {
             "greco-roman".to_string(),
             include_bytes!("../../configs/greco-roman.xml"),
         );
+        map.insert("epick".to_string(), include_bytes!("../../configs/epick.xml"));
         map
     };
 }
@@ -32,6 +33,7 @@ lazy_static! {
         map.insert("goblin".to_string(), "Goblin Names");
         map.insert("abrahamic".to_string(), "Abrahamic Mythology");
         map.insert("greco-roman".to_string(), "Greco-Roman Mythology");
+        map.insert("epick".to_string(), "Epick Phantasie");
         map
     };
 }
@@ -43,16 +45,7 @@ pub fn Toolbar(
 ) -> impl IntoView {
     let display_name = Signal::derive_local(move || match config.get() {
         GeneratorConfig::Description { display_name, .. } => display_name.clone(),
-        GeneratorConfig::Capitalizer { .. } => "Capitalizer".to_string(),
-        GeneratorConfig::Joiner { .. } => "Joiner".to_string(),
-        GeneratorConfig::Literal { .. } => "Literal".to_string(),
-        GeneratorConfig::Markov { .. } => "Markov".to_string(),
-        GeneratorConfig::Matcher { .. } => "Matcher".to_string(),
-        GeneratorConfig::Numberer { .. } => "Numberer".to_string(),
-        GeneratorConfig::Optional { .. } => "Optional".to_string(),
-        GeneratorConfig::Repeater { .. } => "Repeater".to_string(),
-        GeneratorConfig::Switcher { .. } => "Switcher".to_string(),
-        GeneratorConfig::Words { .. } => "Words".to_string(),
+        _ => String::new(),
     });
 
     let description = Signal::derive_local(move || match config.get() {

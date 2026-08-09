@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NameGen>
-  <Description display_name="Default">
+  <Description display_name="Dwarven Names">
     <Param id="firstname" display_name="First name" />
     <Param id="gender" display_name="Gender (0: masculine, 1: feminine)" />
     <Param id="surname" display_name="Surname" />

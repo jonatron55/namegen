@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NameGen>
+  <Description display_name="Epick Phantasie">
+    Produces the most epick of phantasie names taken from the grimoires of ark
+    ancient magicks for the edgiest of edgelordes
+  </Description>
+  <Join sep=" ">
+    <Switch>
+      <Markov id="firstname" target_len="4" cutoff_len="10">
+        Abaddon Abraxas Aerial Aiden Alioth Amber Aquarius Areal Arthur Ash Asmodeus
+        Asreal Astaroth Astrid Atlas Augustus Aurelius Baldur Bane Baphomet Beelzebub
+        Behemoth Belial Belinda Bellatrix Belphegor Beowulf Berrant Bjarne Bjorn
+        Blaphomet Blaze Bramble Brand Brandon Brimstone Cadfeal Calliope Calypso Castor
+        Celestia Cerberus Chaos Charon Chastity Circe Cleopatra Colossus Condor Conor
+        Cronus Cygnus Damion Damocles Dariel Delilah Demeter Desdemona Despina Diabolus
+        Dionysus Django Draco Draconis Draven Drusilla Dylan Dædalus Eden Elysium
+        Erebus Eternity Eurydice Evangeline Eve Faust Fenrir Fionn Freya Gabriel
+        Galadriel Galatea Gale Ganymede Goliath Gorgon Grendel Hades Hazel Hecate Hector
+        Hela Helena Helga Helios Helix Hestia Hexxus Hilda Horus Hrothgar Hyperion
+        Icarus Ignatius Imperia Imperius Isolde Jareth Jasmine Jericho Jester Julius
+        Juno Jupiter Kali Kassandra Kronos Lance Lancelot Lazarus Leander Leonidas
+        Leviathan Lilith Loki Lucifer Lucius Luna Lysander Magellan Magnus Magus Mammon
+        Matilda Maverick Maxima Maximus Medusa Melchior Mercury Mercy Mesmer Minerva
+        Mordred Morgan Morpheus Murmur Mystery Narcissus Nemesis Nephthys Neptune Nereus
+        Nyx Oberon Octavia Odysseus Orion Orpheus Osiris Pan Pandora Paradoxia
+        Paradoxius Pegasus Penndragon Persephone Perseus Phoebe Phoenix Phonix Pluto
+        Poseidon Prometheus Psyche Quasimodo Ragnar Rhea Rhiva Romulus Sabriel Samael
+        Saphiel Sapphira Saturn Seeker Selene Seraph Seraphina Sirius Solitaire Solstice
+        Stiletto Tarot Thalassa Thanatos Themis Theseus Titania Tobias Triton Ulysses
+        Ursa Ursula Valentina Valentine Venus Vercingetorix Vesper Vespera Vesuvius Vex
+        Veyra Veyron Veyronia Veyronius Veyronyxia Victor Victoria Vladimir Vorion
+        Vulcan Xanthe Xavier Xena Xerxes Xylander Yggdrasil Ymir Ysolde Yvaine Zacharias
+        Zachariel Zephron Zephyr Zephyrine Zephyrus Zethus Zoltan Zora Zorina Zorion
+        Zorya Zyra Zythia
+      </Markov>
+    </Switch>
+    <Switch>
+      <Words>
+        Abjuror Abyssal Aeromancer Albion Alchemist Angel Arcana Arcane Arcanum
+        Archangel Archon Artificer Assassin Augur Avatar Basilisk Berserker Blizzard
+        Cacodæmon Celestial Chimera Chronomancer Claymore Conjuror Crimson Cryomancer
+        Crystal Cyclops Damned Destroyer Divine Diviner Draco Dracula Drake Dreadnought
+        Dæmon Dæmonifuge Dæmonslayer Eagle-eye Eldritch Electromancer Ember Enchanter
+        Enchantress Enigma Enigmatic Enraptured Enslaver Ensorcelled Enticer Entwined
+        Eternal Evermore Falconer Fireball Forsaken Færie Geomancer Gladiator Gorgon
+        Grimoire Hammersmite Harpy Hawkeye Heretic Hydromancer Illusionist Incubus
+        Infernal Jackal Jaeger Juggernaut Kraken Legend Leviathan Lightning Lycanthrope
+        Magus Maledictor Mancubus Manticore Marauder Metatron Midnight Minotaur Mystic
+        Necromancer Nightengale Nightmare Oblivion Omen Orcus Paladin Pandæmonium
+        Paracosm Paradox Phantasie Phantasm Phantom Phobia Photon Prism Profane
+        Pyromancer Quake Ragnarok Rainbow Ravager Reaper Revenant Scarlet Seer Seeress
+        Seraphim Shadow Smiter Soothsayer Sorcerer Sorceress Spectre Squander Strider
+        Succubus Thaumaturge Twilight Typhoon Undertaker Vampire Venom Venomsoul Vulture
+        Warlock Warlord Wendigo Werewolf Wizard Wraith Zephyr
+      </Words>
+      <Join>
+        <Words>
+          Arch Ashen Battle Beast Black Blood Blue Bone Brave Bronze Brown Crimson Crystal
+          Dark Dawn Death Deep Doom Dragon Dread Dream Dusk Dæmon Earth Elden Ember Ever
+          Fate Fey Fiend Fire Ghost Ghoul Giant Gloom God Gorgon Grave Great Grief Grim
+          Gryphon Hammer Hate Hawk Hell Hero Hex High Iron Kill Kraken Lion Lizard Lych
+          Mad Mammoth Mist Monster Mourn Night Oaken Phantom Poison Raven Rune Serpent
+          Shadow Sin Skull Sorrow Soul Spell Star Steel Storm Thunder Titan Troll Venom
+          Void Wander War Wight Wild Wind Winter Witch Wolf Wraith Wyrm Wyvern Ælder
+        </Words>
+        <Words>
+          axe blade blessed blood born breaker bringer caller caster chant cinder claw
+          cloak cloud conjure cursed dagger dark dread dreamer eye fallen fang fate fire
+          flayer folk forged frozen ghost grim guard hand heart hexxor holy hunt hunter
+          killer kin kind king knight light lord lost magick master meister might mind
+          mourner murder night phantom priest python queen raven reaper rogue sabre sbane
+          scythe seeker shadow shaker singer sinner skull slayer smite song sorrow soul
+          spectre spell spire stalker stealer stomp storm strider summoner sure sword
+          talon thief thorn true walker wing winter wise witch wolf wraith wrath wyrm
+        </Words>
+      </Join>
+    </Switch>
+  </Join>
+</NameGen>
