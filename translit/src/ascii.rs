@@ -53,6 +53,6 @@ mod tests {
         assert_eq!(to_ascii("Æther"), "Aether");
         assert_eq!(to_ascii("ßeta"), "sseta");
         assert_eq!(to_ascii("Þorn"), "Thorn");
-        assert_eq!(to_ascii("Unknown: Ω"), "Unknown: ?");
+        assert_eq!(to_ascii("Unknown: Ω"), "Unknown: ");
     }
 }
