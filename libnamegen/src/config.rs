@@ -11,12 +11,12 @@ use std::{
 
 use regex::Regex;
 use thiserror::Error as ThisError;
-use xml::{writer::Error as XmlWriteError, ParserConfig as XmlParserConfig};
+use xml::{ParserConfig as XmlParserConfig, writer::Error as XmlWriteError};
 
 pub use build_generator::BuildGenerator;
 pub use into_generator::IntoGenerator;
-use parser::from_xml;
 pub use parser::Error as ParseError;
+use parser::from_xml;
 pub use write_xml::WriteXml;
 
 use crate::generator::{CapitalizerMode, NumberStyle, Tokenizer};

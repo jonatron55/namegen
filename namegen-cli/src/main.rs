@@ -11,7 +11,7 @@ use std::{
 use anstream::eprintln;
 use clap::Parser;
 use libnamegen::config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml};
-use rand::{rngs::StdRng, Rng, SeedableRng};
+use rand::{Rng, SeedableRng, rngs::StdRng};
 use xml::EmitterConfig as XmlEmitterConfig;
 
 use crate::styles::{ERROR, PATH};

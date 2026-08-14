@@ -2,6 +2,7 @@ use std::{collections::HashMap, io::Write};
 
 use crate::{
     config::{
+        GeneratorConfig, WriteError,
         elements::{
             ATTR_CUTOFF_LEN, ATTR_DISPLAY_NAME, ATTR_EXPR, ATTR_ID, ATTR_LEN, ATTR_MAX, ATTR_MIN, ATTR_MODE,
             ATTR_PROBABILITY, ATTR_RANK, ATTR_REJECT_TRAINING, ATTR_SCHEMA_LOCATION, ATTR_SEP, ATTR_SPLIT_CHARS,
@@ -10,12 +11,11 @@ use crate::{
             ELEM_OPTION, ELEM_PARAM, ELEM_REJECT, ELEM_REPEAT, ELEM_ROOT, ELEM_SPLIT_TOKENIZER, ELEM_SSP_TOKENIZER,
             ELEM_SWITCH, ELEM_WORDS, NS_XSI, PREFIX_XSI, SCHEMA_LOCATION,
         },
-        GeneratorConfig, WriteError,
     },
     generator::{CapitalizerMode, Tokenizer},
 };
 use itertools::Itertools;
-use xml::{name::Name, writer::XmlEvent, EventWriter as XmlWriter};
+use xml::{EventWriter as XmlWriter, name::Name, writer::XmlEvent};
 
 const WRAP_WIDTH: usize = 80;
 

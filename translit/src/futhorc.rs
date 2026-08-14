@@ -1,7 +1,7 @@
 use std::{
     collections::HashMap,
     env::args,
-    io::{stdin, Read},
+    io::{Read, stdin},
 };
 
 use itertools::Itertools;
