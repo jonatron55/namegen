@@ -11,13 +11,13 @@ use std::{
 use anstream::eprintln;
 use clap::Parser;
 use libnamegen::config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml};
-use rand::{Rng, SeedableRng, rngs::StdRng};
-use xml::{EmitterConfig as XmlEmitterConfig, writer::XmlEvent};
+use rand::{rngs::StdRng, Rng, SeedableRng};
+use xml::EmitterConfig as XmlEmitterConfig;
 
-use crate::styles::{ERROR, PATH, WARN};
+use crate::styles::{ERROR, PATH};
 
-const SILLY_CONFIG: &[u8] = include_bytes!("../../configs/silly.xml");
-const GADGETRY_CONFIG: &[u8] = include_bytes!("../../configs/gadgetry.xml");
+const DEFAULT_CONFIG: &[u8] = include_bytes!("../../configs/silly.xml");
+const SCHEMA: &[u8] = include_bytes!("../../configs/namegen.xsd");
 
 /// Generates random names from a given configuration.
 #[derive(Parser)]
@@ -34,16 +34,8 @@ struct Args {
     /// format described in the README and can be used to create more complex
     /// generators with multiple components.
     ///
-    /// Built-in configurations are also available. The following names can be
-    /// used to reference them:
-    ///
-    /// - `silly`: A configuration that generates amusing person names.
-    /// - `gadgetry`: A configuration that generates amusing names for objects
-    ///   or concepts.
-    ///
-    /// If a path is not provided, the `silly` built-in configuration will be
-    /// used. To use a configuration file that has the same name as a built-in,
-    /// prefix it with `./` or another path component.
+    /// If a path is not provided, a default built-in configuration will be
+    /// used.
     #[arg(value_name = "FILE")]
     config: Option<PathBuf>,
 
@@ -81,6 +73,8 @@ struct Args {
 
     /// Exports an example configuration file to the specified path instead of
     /// generating names.
+    ///
+    /// An XML schema file will also be exported to the same directory.
     #[arg(long, short, conflicts_with = "count", conflicts_with = "beautify")]
     export: bool,
 
@@ -100,11 +94,6 @@ struct Args {
 }
 
 fn main() -> ExitCode {
-    let builtins = HashMap::from([
-        (PathBuf::from("silly"), SILLY_CONFIG),
-        (PathBuf::from("gadgetry"), GADGETRY_CONFIG),
-    ]);
-
     let args = Args::parse();
 
     if args.export {
@@ -112,36 +101,33 @@ fn main() -> ExitCode {
             eprintln!("{ERROR}Error:{ERROR:#} --export requires a path argument");
             return ExitCode::FAILURE;
         };
-        if let Err(err) = fs::write(&path, SILLY_CONFIG) {
+
+        if let Err(err) = fs::write(&path, DEFAULT_CONFIG) {
             eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
             return ExitCode::FAILURE;
         }
 
+        println!("Exported '{}'", path.display());
+
+        let schema_path = path.with_file_name("namegen.xsd");
+        if let Err(err) = fs::write(&schema_path, SCHEMA) {
+            eprintln!(
+                "{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}",
+                schema_path.display(),
+                err
+            );
+            return ExitCode::FAILURE;
+        }
+
+        println!("Exported '{}'", schema_path.display());
+
         return ExitCode::SUCCESS;
     }
-
-    let path = args.config.unwrap_or("default".into());
 
     // We accept either plain text or an XML config file. We'll base out initial
     // guess on the file extension. If it's not clear from the extension, we'll
     // peek at the start of the file later for an XML signature.
-    let mut is_xml = match path.extension().and_then(|ext| ext.to_str()) {
-        Some(ext) if ext.eq_ignore_ascii_case("xml") => Some(true),
-        Some(ext) if ext.eq_ignore_ascii_case("txt") => Some(false),
-        _ => None,
-    };
-
-    let buffer: Box<dyn Read> = if let Some(builtin) = builtins.get(&path) {
-        if path.exists() {
-            eprintln!(
-                "{WARN}Warning:{WARN:#} {PATH}{}{PATH:#} is a built-in configuration. To use the file with the same name, prefix it with ./ or another path component.",
-                path.display()
-            );
-        }
-
-        is_xml = Some(true);
-        Box::new(*builtin)
-    } else {
+    let (buffer, is_xml): (Box<dyn Read>, Option<bool>) = if let Some(path) = args.config.as_deref() {
         let file = match File::open(&path) {
             Ok(file) => file,
             Err(err) => {
@@ -149,7 +135,16 @@ fn main() -> ExitCode {
                 return ExitCode::FAILURE;
             }
         };
-        Box::new(file)
+
+        let is_xml = match path.extension().and_then(|ext| ext.to_str()) {
+            Some(ext) if ext.eq_ignore_ascii_case("xml") => Some(true),
+            Some(ext) if ext.eq_ignore_ascii_case("txt") => Some(false),
+            _ => None,
+        };
+
+        (Box::new(file), is_xml)
+    } else {
+        (Box::new(DEFAULT_CONFIG), Some(true))
     };
 
     let mut reader = BufReader::new(buffer);
@@ -161,6 +156,8 @@ fn main() -> ExitCode {
         let prefix = prefix.trim_start_matches('\u{feff}').trim_start();
         Ok::<bool, IoError>(prefix.starts_with("<?xml") || prefix.starts_with("<NameGen>"))
     });
+
+    let path = args.config.unwrap_or_else(|| PathBuf::from("<default>"));
 
     let is_xml = match is_xml {
         Ok(is_xml) => is_xml,
@@ -213,17 +210,7 @@ fn main() -> ExitCode {
             .indent_string("  ")
             .create_writer(&mut writer);
 
-        if let Err(err) = writer.write(XmlEvent::start_element("NameGen")) {
-            eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
-            return ExitCode::FAILURE;
-        }
-
-        if let Err(err) = config.write_xml(&mut writer, 2) {
-            eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
-            return ExitCode::FAILURE;
-        }
-
-        if let Err(err) = writer.write(XmlEvent::end_element()) {
+        if let Err(err) = config.write_xml_root(&mut writer) {
             eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
             return ExitCode::FAILURE;
         }

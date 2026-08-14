@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NameGen>
+<NameGen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="namegen.xsd">
   <Description display_name="Greco-Roman Mythology">
     <Param id="name" display_name="Name" />
     Names based on Greco-Roman mythology. Suitable for generating names of gods,

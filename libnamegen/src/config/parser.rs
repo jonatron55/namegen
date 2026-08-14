@@ -15,29 +15,19 @@ use xml::{
 };
 
 use crate::{
-    config::GeneratorConfig,
+    config::{
+        GeneratorConfig,
+        elements::{
+            ATTR_CUTOFF_LEN, ATTR_DISPLAY_NAME, ATTR_EXPR, ATTR_ID, ATTR_LEN, ATTR_MAX, ATTR_MIN, ATTR_MODE,
+            ATTR_PROBABILITY, ATTR_RANK, ATTR_REJECT_TRAINING, ATTR_SEP, ATTR_SPLIT_CHARS, ATTR_STYLE,
+            ATTR_TARGET_LEN, ATTR_TEXT, ATTR_UNIFORM, ELEM_CAPITALIZE, ELEM_CASE, ELEM_CHUNK_TOKENIZER, ELEM_CLASS,
+            ELEM_DEFAULT, ELEM_DESCRIPTION, ELEM_JOIN, ELEM_LITERAL, ELEM_MARKOV, ELEM_MATCH, ELEM_NUMBER,
+            ELEM_OPTION, ELEM_PARAM, ELEM_REJECT, ELEM_REPEAT, ELEM_ROOT, ELEM_SPLIT_TOKENIZER, ELEM_SSP_TOKENIZER,
+            ELEM_SWITCH, ELEM_WORDS, NS_XSI,
+        },
+    },
     generator::{CapitalizerMode, NumberStyle, Tokenizer},
 };
-
-const ELEM_PARAM: &str = "Param";
-const ELEM_DESCRIPTION: &str = "Description";
-const ELEM_CAPITALIZE: &str = "Capitalize";
-const ELEM_CASE: &str = "Case";
-const ELEM_JOIN: &str = "Join";
-const ELEM_DEFAULT: &str = "Default";
-const ELEM_LITERAL: &str = "Literal";
-const ELEM_MARKOV: &str = "Markov";
-const ELEM_MATCH: &str = "Match";
-const ELEM_NUMBER: &str = "Number";
-const ELEM_OPTION: &str = "Option";
-const ELEM_REPEAT: &str = "Repeat";
-const ELEM_SWITCH: &str = "Switch";
-const ELEM_WORDS: &str = "Words";
-
-const ELEM_SPLIT_TOKENIZER: &str = "SplitTokenizer";
-const ELEM_CHUNK_TOKENIZER: &str = "ChunkTokenizer";
-const ELEM_SSP_TOKENIZER: &str = "SspTokenizer";
-const ELEM_CLASS: &str = "Class";
 
 lazy_static! {
     static ref VALID_PART_TYPES: HashSet<&'static str> = HashSet::from([
@@ -113,12 +103,15 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
     let event = reader.next()?;
 
     match event {
-        XmlEvent::StartElement { name, attributes, .. } if name.local_name == "NameGen" => {
+        XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_ROOT => {
             for attr in attributes {
-                return Err(Error::UnexpectedAttribute {
-                    name: attr.name.local_name.clone(),
-                    position: reader.position(),
-                });
+                // XSI attributes are allowed on the root element, but nothing else
+                if attr.name.namespace.as_deref() != Some(NS_XSI) {
+                    return Err(Error::UnexpectedAttribute {
+                        name: attr.name.local_name.clone(),
+                        position: reader.position(),
+                    });
+                }
             }
         }
         other => {
@@ -140,7 +133,7 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
 
         for attr in attributes {
             match attr.name.local_name.as_str() {
-                "display_name" => {
+                ATTR_DISPLAY_NAME => {
                     display_name = attr.value.clone();
                 }
                 other => {
@@ -162,10 +155,10 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
 
                     for attr in attributes {
                         match attr.name.local_name.as_str() {
-                            "id" => {
+                            ATTR_ID => {
                                 id = Some(attr.value.clone());
                             }
-                            "display_name" => {
+                            ATTR_DISPLAY_NAME => {
                                 display_name = attr.value.clone();
                             }
                             other => {
@@ -191,7 +184,7 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
                                     }
                                     break;
                                 } else {
-                                    return Err(Error::MissingAttribute("id".to_string()));
+                                    return Err(Error::MissingAttribute(ATTR_ID.to_string()));
                                 }
                             }
                             other => {
@@ -241,7 +234,7 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
 
     match event {
         XmlEvent::EndElement { name } => {
-            if name.local_name == "NameGen" {
+            if name.local_name == ELEM_ROOT {
                 Ok(description)
             } else {
                 Err(Error::UnexpectedEnd {
@@ -271,33 +264,33 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "id" => {
+                    ATTR_ID => {
                         id = Some(attr.value.clone());
                     }
-                    "target_len" => {
+                    ATTR_TARGET_LEN => {
                         target_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                            attribute: "target_len".to_string(),
+                            attribute: ATTR_TARGET_LEN.to_string(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?);
                     }
-                    "cutoff_len" => {
+                    ATTR_CUTOFF_LEN => {
                         cutoff_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                            attribute: "cutoff_len".to_string(),
+                            attribute: ATTR_CUTOFF_LEN.to_string(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?);
                     }
-                    "reject_training" => {
+                    ATTR_REJECT_TRAINING => {
                         reject_training = attr.value.parse().map_err(|_| Error::InvalidValue {
-                            attribute: "reject_training".to_string(),
+                            attribute: ATTR_REJECT_TRAINING.to_string(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?;
                     }
-                    "uniform" => {
+                    ATTR_UNIFORM => {
                         uniform = attr.value.parse().map_err(|_| Error::InvalidValue {
-                            attribute: "uniform".to_string(),
+                            attribute: ATTR_UNIFORM.to_string(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?;
@@ -320,7 +313,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         ref attributes,
                         ..
                     } => match name.local_name.as_str() {
-                        "Reject" => parse_reject(reader, &mut reject)?,
+                        ELEM_REJECT => parse_reject(reader, &mut reject)?,
                         ELEM_SPLIT_TOKENIZER | ELEM_CHUNK_TOKENIZER | ELEM_SSP_TOKENIZER => {
                             if tokenizer.is_some() {
                                 return Err(Error::UnexpectedElement {
@@ -380,7 +373,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "id" => {
+                    ATTR_ID => {
                         id = Some(attr.value.clone());
                     }
                     _ => {
@@ -412,9 +405,9 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
                         for attr in attributes {
                             match attr.name.local_name.as_str() {
-                                "expr" => {
+                                ATTR_EXPR => {
                                     expr = Some(Regex::new(&attr.value).map_err(|err| Error::InvalidRegex {
-                                        attribute: "expr".to_string(),
+                                        attribute: ATTR_EXPR.to_string(),
                                         position: reader.position(),
                                         err,
                                     })?);
@@ -433,7 +426,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                             let case = inner_from_xml(&event, reader)?;
                             cases.push((expr, case));
                         } else {
-                            return Err(Error::MissingAttribute("expr".to_string()));
+                            return Err(Error::MissingAttribute(ATTR_EXPR.to_string()));
                         }
 
                         let event = reader.next()?;
@@ -512,9 +505,9 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             let mut sep = String::new();
 
             for attr in attributes {
-                if attr.name.local_name == "id" {
+                if attr.name.local_name == ATTR_ID {
                     id = Some(attr.value.clone());
-                } else if attr.name.local_name == "sep" {
+                } else if attr.name.local_name == ATTR_SEP {
                     sep = attr.value.clone();
                 } else {
                     return Err(Error::UnexpectedAttribute {
@@ -530,13 +523,13 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
                         subparts.push(inner_from_xml(&event, reader)?);
                     }
-                    XmlEvent::StartElement { name, .. } if name.local_name == "Reject" => loop {
+                    XmlEvent::StartElement { name, .. } if name.local_name == ELEM_REJECT => loop {
                         match reader.next()? {
                             XmlEvent::Characters(data) => {
                                 reject.extend(data.split_whitespace().map(|s| s.to_string()));
                             }
                             XmlEvent::Whitespace(_) => {}
-                            XmlEvent::EndElement { name } if name.local_name == "Reject" => {
+                            XmlEvent::EndElement { name } if name.local_name == ELEM_REJECT => {
                                 break;
                             }
                             other => {
@@ -570,9 +563,9 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             let mut literal = String::new();
 
             for attr in attributes {
-                if attr.name.local_name == "id" {
+                if attr.name.local_name == ATTR_ID {
                     id = Some(attr.value.clone());
-                } else if attr.name.local_name == "text" {
+                } else if attr.name.local_name == ATTR_TEXT {
                     literal = attr.value.clone();
                 } else {
                     return Err(Error::UnexpectedAttribute {
@@ -602,7 +595,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             let mut subparts = Vec::new();
 
             for attr in attributes {
-                if attr.name.local_name == "id" {
+                if attr.name.local_name == ATTR_ID {
                     id = Some(attr.value.clone());
                 } else {
                     return Err(Error::UnexpectedAttribute {
@@ -637,7 +630,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             let mut words = Vec::new();
 
             for attr in attributes {
-                if attr.name.local_name == "id" {
+                if attr.name.local_name == ATTR_ID {
                     id = Some(attr.value.clone());
                 } else {
                     return Err(Error::UnexpectedAttribute {
@@ -675,10 +668,10 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "id" => {
+                    ATTR_ID => {
                         id = Some(attr.value.clone());
                     }
-                    "probability" => {
+                    ATTR_PROBABILITY => {
                         probability = attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
                             value: attr.value.clone(),
@@ -739,17 +732,17 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "id" => {
+                    ATTR_ID => {
                         id = Some(attr.value.clone());
                     }
-                    "min" => {
+                    ATTR_MIN => {
                         min = attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?;
                     }
-                    "max" => {
+                    ATTR_MAX => {
                         max = attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
                             value: attr.value.clone(),
@@ -782,7 +775,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         if let Some(subpart) = subpart {
                             if min > max {
                                 return Err(Error::InvalidValue {
-                                    attribute: "min".to_string(),
+                                    attribute: ATTR_MIN.to_string(),
                                     value: min.to_string(),
                                     position: reader.position(),
                                 });
@@ -820,24 +813,24 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "id" => {
+                    ATTR_ID => {
                         id = Some(attr.value.clone());
                     }
-                    "min" => {
+                    ATTR_MIN => {
                         min = attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?;
                     }
-                    "max" => {
+                    ATTR_MAX => {
                         max = attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?;
                     }
-                    "style" => {
+                    ATTR_STYLE => {
                         style = match attr.value.as_str() {
                             "Dec" | "Decimal" => NumberStyle::Decimal,
                             "Hex" | "HexUpper" | "HexadecimalUpper" => NumberStyle::HexadecimalUpper,
@@ -871,7 +864,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                     XmlEvent::EndElement { name } if name.local_name == ELEM_NUMBER => {
                         if min > max {
                             return Err(Error::InvalidValue {
-                                attribute: "min".to_string(),
+                                attribute: ATTR_MIN.to_string(),
                                 value: min.to_string(),
                                 position: reader.position(),
                             });
@@ -894,10 +887,10 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             let mut mode = CapitalizerMode::FirstUpper;
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "id" => {
+                    ATTR_ID => {
                         id = Some(attr.value.clone());
                     }
-                    "mode" => {
+                    ATTR_MODE => {
                         mode = match attr.value.as_str() {
                             "AllLower" => CapitalizerMode::AllLower,
                             "FirstUpper" => CapitalizerMode::FirstUpper,
@@ -921,13 +914,6 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
             }
 
             let mut subpart = None;
-
-            for attr in attributes {
-                return Err(Error::UnexpectedAttribute {
-                    name: attr.name.local_name.clone(),
-                    position: reader.position(),
-                });
-            }
 
             loop {
                 let event = reader.next()?;
@@ -979,7 +965,7 @@ fn parse_reject<R: Read>(reader: &mut EventReader<R>, reject: &mut Vec<String>) 
                 reject.extend(data.split_whitespace().map(|s| s.to_string()));
             }
             XmlEvent::Whitespace(_) => {}
-            XmlEvent::EndElement { name } if name.local_name == "Reject" => {
+            XmlEvent::EndElement { name } if name.local_name == ELEM_REJECT => {
                 break;
             }
             other => {
@@ -1004,7 +990,7 @@ fn parse_tokenizer<R: Read>(
             let mut chars: Vec<char> = Vec::new();
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "split_chars" => {
+                    ATTR_SPLIT_CHARS => {
                         chars = attr.value.chars().collect();
                     }
                     other => {
@@ -1026,7 +1012,7 @@ fn parse_tokenizer<R: Read>(
             let mut len: Option<usize> = None;
             for attr in attributes {
                 match attr.name.local_name.as_str() {
-                    "len" => {
+                    ATTR_LEN => {
                         len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
                             attribute: attr.name.local_name.clone(),
                             value: attr.value.clone(),
@@ -1042,11 +1028,11 @@ fn parse_tokenizer<R: Read>(
                 }
             }
 
-            let len = len.ok_or_else(|| Error::MissingAttribute("len".to_string()))?;
+            let len = len.ok_or_else(|| Error::MissingAttribute(ATTR_LEN.to_string()))?;
 
             if len == 0 {
                 return Err(Error::InvalidValue {
-                    attribute: "len".to_string(),
+                    attribute: ATTR_LEN.to_string(),
                     value: "0".to_string(),
                     position: reader.position(),
                 });
@@ -1069,9 +1055,9 @@ fn parse_tokenizer<R: Read>(
                     XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_CLASS => {
                         let mut rank: Option<u8> = None;
                         for attr in &attributes {
-                            if attr.name.local_name == "rank" {
+                            if attr.name.local_name == ATTR_RANK {
                                 rank = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                                    attribute: "rank".to_string(),
+                                    attribute: ATTR_RANK.to_string(),
                                     value: attr.value.clone(),
                                     position: reader.position(),
                                 })?);
@@ -1082,7 +1068,7 @@ fn parse_tokenizer<R: Read>(
                                 });
                             }
                         }
-                        let rank = rank.ok_or_else(|| Error::MissingAttribute("rank".to_string()))?;
+                        let rank = rank.ok_or_else(|| Error::MissingAttribute(ATTR_RANK.to_string()))?;
 
                         loop {
                             match reader.next()? {

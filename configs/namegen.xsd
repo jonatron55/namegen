@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified">
+  <!--
+    Rust's bool parser accepts only "true" and "false"; xs:boolean would also
+    admit "0" and "1".
+  -->
+  <xs:simpleType name="Boolean">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true" />
+      <xs:enumeration value="false" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Probability">
+    <xs:restriction base="xs:double">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CapitalizerMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AllLower" />
+      <xs:enumeration value="FirstUpper" />
+      <xs:enumeration value="AllUpper" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NumberStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Dec" />
+      <xs:enumeration value="Decimal" />
+      <xs:enumeration value="Hex" />
+      <xs:enumeration value="HexUpper" />
+      <xs:enumeration value="HexadecimalUpper" />
+      <xs:enumeration value="HexLower" />
+      <xs:enumeration value="HexadecimalLower" />
+      <xs:enumeration value="Oct" />
+      <xs:enumeration value="Octal" />
+      <xs:enumeration value="Bin" />
+      <xs:enumeration value="Binary" />
+      <xs:enumeration value="Roman" />
+      <xs:enumeration value="RomanUpper" />
+      <xs:enumeration value="RomanLower" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="NameGen">
+    <xs:annotation>
+      <xs:documentation>
+        Root element of a name generator configuration. Contains an optional
+        &lt;Description&gt; followed by exactly one generator or combiner.
+        See docs/config.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Description" type="Description" minOccurs="0" />
+        <xs:group ref="Part" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="Description" mixed="true">
+    <xs:annotation>
+      <xs:documentation>
+        Human-readable metadata. The element's text content is the description
+        shown to the user; &lt;Param&gt; children name the constrainable ids.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Param" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            Display name for a constrainable element id. Each id may appear at
+            most once.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="id" type="xs:string" use="required" />
+          <xs:attribute name="display_name" type="xs:string" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="display_name" type="xs:string" default="Unnamed Generator" />
+  </xs:complexType>
+
+  <!-- ==================== Generators and combiners ==================== -->
+
+  <xs:group name="Part">
+    <xs:annotation>
+      <xs:documentation>Any generator or combiner element.</xs:documentation>
+    </xs:annotation>
+    <xs:choice>
+      <xs:element name="Capitalize" type="Capitalize" />
+      <xs:element name="Join" type="Join" />
+      <xs:element name="Literal" type="Literal" />
+      <xs:element name="Markov" type="Markov" />
+      <xs:element name="Match" type="Match" />
+      <xs:element name="Number" type="Number" />
+      <xs:element name="Option" type="Option" />
+      <xs:element name="Repeat" type="Repeat" />
+      <xs:element name="Switch" type="Switch" />
+      <xs:element name="Words" type="Words" />
+    </xs:choice>
+  </xs:group>
+
+  <xs:complexType name="Capitalize">
+    <xs:annotation>
+      <xs:documentation>
+        Changes the capitalization of the output of its single child.
+        See docs/config-capitalize.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="Part" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="mode" type="CapitalizerMode" default="FirstUpper" />
+  </xs:complexType>
+
+  <xs:complexType name="Join">
+    <xs:annotation>
+      <xs:documentation>
+        Concatenates the output of its children, separated by "sep". A
+        &lt;Reject&gt; child lists whitespace-separated results to reroll.
+        See docs/config-join.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="Part" />
+      <xs:element name="Reject" type="xs:string" />
+    </xs:choice>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="sep" type="xs:string" default="" />
+  </xs:complexType>
+
+  <xs:complexType name="Literal">
+    <xs:annotation>
+      <xs:documentation>
+        Inserts a fixed string into the output. Must be empty.
+        See docs/config-literal.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="text" type="xs:string" default="" />
+  </xs:complexType>
+
+  <!--
+    Not expressible here: at most one tokenizer child is allowed. The parser
+    rejects a second one.
+  -->
+  <xs:complexType name="Markov" mixed="true">
+    <xs:annotation>
+      <xs:documentation>
+        Generates words from a Markov chain. The element's text content is the
+        whitespace-separated training data. See docs/config-markov.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="Reject" type="xs:string" />
+      <xs:element name="SplitTokenizer" type="SplitTokenizer" />
+      <xs:element name="ChunkTokenizer" type="ChunkTokenizer" />
+      <xs:element name="SspTokenizer" type="SspTokenizer" />
+    </xs:choice>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="target_len" type="xs:nonNegativeInteger" />
+    <xs:attribute name="cutoff_len" type="xs:nonNegativeInteger" />
+    <xs:attribute name="uniform" type="Boolean" default="false" />
+    <xs:attribute name="reject_training" type="Boolean" default="false" />
+  </xs:complexType>
+
+  <xs:complexType name="Match">
+    <xs:annotation>
+      <xs:documentation>
+        Runs its first child, then runs the &lt;Case&gt; whose regex matches
+        that output, or &lt;Default&gt; if none match. Cannot be constrained.
+        See docs/config-match.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="Part" />
+      <xs:element name="Case" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="Part" />
+          </xs:sequence>
+          <!-- Regex syntax is that of the Rust regex crate; not checked here. -->
+          <xs:attribute name="expr" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Default" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="Part" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+  </xs:complexType>
+
+  <!-- Not expressible here: min must be less than or equal to max. -->
+  <xs:complexType name="Number">
+    <xs:annotation>
+      <xs:documentation>
+        Emits a random number in [min, max]. Must be empty.
+        See docs/config-number.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="min" type="xs:nonNegativeInteger" default="1" />
+    <xs:attribute name="max" type="xs:nonNegativeInteger" default="99" />
+    <xs:attribute name="style" type="NumberStyle" default="Decimal" />
+  </xs:complexType>
+
+  <xs:complexType name="Option">
+    <xs:annotation>
+      <xs:documentation>
+        Runs its single child with the given probability.
+        See docs/config-option.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="Part" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="probability" type="Probability" default="0.5" />
+  </xs:complexType>
+
+  <!-- Not expressible here: min must be less than or equal to max. -->
+  <xs:complexType name="Repeat">
+    <xs:annotation>
+      <xs:documentation>
+        Runs its single child between min and max times.
+        See docs/config-repeat.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="Part" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+    <xs:attribute name="min" type="xs:nonNegativeInteger" default="1" />
+    <xs:attribute name="max" type="xs:nonNegativeInteger" default="2" />
+  </xs:complexType>
+
+  <xs:complexType name="Switch">
+    <xs:annotation>
+      <xs:documentation>
+        Runs exactly one randomly selected child.
+        See docs/config-switch.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="Part" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="Words">
+    <xs:annotation>
+      <xs:documentation>
+        Selects one word at random from its whitespace-separated text content.
+        See docs/config-words.md.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="id" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="SplitTokenizer">
+    <xs:annotation>
+      <xs:documentation>
+        Splits training words on the given characters. Defaults to "/".
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="split_chars" type="xs:string" default="/" />
+  </xs:complexType>
+
+  <xs:complexType name="ChunkTokenizer">
+    <xs:annotation>
+      <xs:documentation>
+        Splits training words into fixed-length chunks of "len" characters.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="len" type="xs:positiveInteger" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="SspTokenizer">
+    <xs:annotation>
+      <xs:documentation>
+        Splits training words into syllables using the sonority sequencing
+        principle. With no &lt;Class&gt; children, a default ranking is used.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Class" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            Assigns a sonority rank to each character in the text content;
+            higher is more sonorous.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="rank" type="xs:unsignedByte" use="required" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,4 +1,5 @@
 mod build_generator;
+mod elements;
 mod into_generator;
 mod parser;
 mod write_xml;
@@ -10,12 +11,12 @@ use std::{
 
 use regex::Regex;
 use thiserror::Error as ThisError;
-use xml::{ParserConfig as XmlParserConfig, writer::Error as XmlWriteError};
+use xml::{writer::Error as XmlWriteError, ParserConfig as XmlParserConfig};
 
 pub use build_generator::BuildGenerator;
 pub use into_generator::IntoGenerator;
-pub use parser::Error as ParseError;
 use parser::from_xml;
+pub use parser::Error as ParseError;
 pub use write_xml::WriteXml;
 
 use crate::generator::{CapitalizerMode, NumberStyle, Tokenizer};

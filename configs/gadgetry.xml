@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NameGen>
+<NameGen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="namegen.xsd">
   <Description display_name="Gadgetry">
     <Param id="adj" display_name="Adjective" />
     <Param id="agent" display_name="Agent noun" />
@@ -109,88 +109,87 @@
             Semi Space Sub Super Techno Tera Tri Turbo Ultra Uni Xeno Yocto Zepto
           </Words>
         </Option>
-      <Join>
-        <Match>
-          <Markov id="noun" target_len="5" cutoff_len="12" uniform="true">
-            Aardvark Abacus Aberration Abracadabra Absurdity Adjective Aerodrome Albatross
-             Alchemist Alligator  Aluminum Amoeba Anaconda Anemone
-            Ankylosaurus Anomaly Antelope Antenna Antlion Anvil  Ape Apocalypse
-            Apparatus Aquarium Aqueduct Arboretum Armadillo Armageddon Armory Armpit
-            Arpeggio Arquebus Artichoke Artifact Artificer Ascot Asparagus Asteroid
-            Astronaut Asylum Auditorium Automaton Automobile Aviator Avocado Baboon
-            Backgammon Bacon Badger Bagel Balaclava Bamboo Banana Banjo Barbecue Barometer
-            Barracuda Barricade Baryon Baryonyx Basilisk Bastion Bathtub Bazinga Beachball
-            Beagle Beanstalk Bear Beaver Beehive Beetle Beret Bigfoot Billygoat Biologist
-            Biscotti Blimp Bling Blorp Blubber Blunderbuss Bobsled Bonobo Boondoggle Bork
-            Borscht Boson Botanist Bowtie  Brain Broccoli Brogues Brontosaurus
-            Broomstick Brownie Bubblewrap Buffalo Bugle Bulldozer Bullfrog Bumblebee
-            Bungalow Bunsen Burrito Cabbage Cactus Candelabra Candy Cantaloupe Cappuccino
-            Carbon Caribou Carnival Carrot Cartographer Cartoon Cartwheel Cashew Cassowary
-            Catastrophe Caterpillar Catfish Cellophane Centaur Chameleon Chandelier
-            Charlatan Cheese Cheeseburger Chicken Chimpanzee Chinchilla Chipmunk Chupacabra
-            Circus Clown Clownfish Cockatoo Coconut Coffeepot Comedian Confetti Contraption
-            Corgi Cornflake Crab Crocodile Croissant Cucumber Cuddlebug Cummerbund Cupcake
-            Curmudgeon Cutlery Cuttlefish Dachshund Dandelion Deuterium Dimension Dimetrodon
-            Dingo Diplodocus Dodad Dodecahedron Doodle Doodlebug Doohickey Doughnut
-            Dragonfly Dromedary Dynamite Earthling Einsteinium Electron Elephant Emu
-            Enchilada Encyclopedia Entomologist Espresso Etymologist Excavator Eyeball
-            Eyepatch Facepalm Faceplant Falafel Fedora Fermion Ferret Fettuccine Fish
-            Fishstick Flamingo Flibbertigibbet Flowerpot Foobar Frankenstein Gadget Gadgetry
-            Galaxy Gazelle Gelato Gerbil  Gimbal Giraffe Gizmo Gluon Gnocchi
-            Gobbledygook Goblin Golem Gorilla Graviton Gremlin Grendel Gymnasium Habanero
-            Haberdasher Hadron Haggis Hamburger Hedgehog Helicopter Heliotrope Helium
-            Herpetologist Hippogriff Hippopotamus Hobgoblin Horizon Horologist
-            Horticulturist Hotdog Houseplant Hummus Hydrogen Hyperboloid Hypercube
-            Hypersphere Ibex Ibis Ichthyologist Igloo Ignoramus Iguana Impala Infographic
-            Infomercial Insect Insomniac Jackalope Jalapeno Jellyfish Jetpack Kaiju Kangaroo
-            Knitwear Koala Kraken Krampus Kumquat Labradoodle Labyrinth  Lasagna
-            Latte Lemming Lemur Lepton Linguine Llama Lobster Locomotive Lollipop Lollygag
-            Loudspeaker Luffa Lugnut Lumberjack Lycanthrope Macaron Macaroni Macaw Macchiato
-            Magician Malarkey Mallard Mammoth Manatee Marshmallow Martian Marzelvane
-            Mastodon Mathematician Meatball Megaphone Melon Menagerie Merlot Metaverse
-            Meteor Meteoroid Mongoose Monocle Moon Moonbeam Moorhen Moped Motorcycle Muffin
-            Muffler Multiverse Mushroom Nautilus Nebula Necktie Nectarine Nematode Neptunium
-            Neutron Ninja Nitrogen Noodle Nunchuck Octopus Ogre Orangutan Ornithologist
-            Ostrich Owlbear Oxygen Oyster Paleontologist Pancake Pangolin Panini Panorama
-            Parabola Paradox Parasol Parrot Peacock Pelican Pharmacologist Philosopher
-            Phosphorus Photon Physicist Pillbug Pillow Pirate Pixie Planet Planetarium
-            Platypus Plesiosaur Plutocracy Plutocrat Plutonium Pogo Polyglot Polyhedron
-            Polymath Polymorph Pomegranate Pomeranian Poodle Popcorn Popsicle Porcupine
-            Porkpie Porpoise Potato Poutine Pretzel Propellor Proton Psychologist
-            Pterodactyl Pumpkin Pyjamas Python Quark Quasar Qubit Quesadilla Quetzalcoatl
-            Quiche Quinoa Rabbit Raccoon Racecar Racehorse Radish Ramen Raptor Raspberry
-            Rattlesnake Ravioli Raygun Reality Reindeer Rhinoceros Rhubarb Robot Rockfish
-            Roflcopter Rutabaga Salamander Samosa Sandwich Sasquatch Satellite Scientist
-            Sculpture Seagull Seahorse Selenium Shawarma Shrimp Silicon Simulation
-            Singularity Skeleton Slop Snorkel Sociologist Spacecraft Spaghetti Spam Spatula
-            Sphinx  Spork Sprinkles Spud Spumoni Spurtle Squabble Squash Squeegee
-            Squelch Squid Squirrel Star Starfish Stegosaurus Strawberry Submarine Succotash
-             Sulfur Sushi Suspenders Swordfish Synergy Tandoori Tapir Teapot
-            Teddybear Tempura Tentacle Tesseract Theologian Thingamabob Thingamajig Tiramisu
-            Toadstool Toaster Tofu Tomato Toothbrush Toothpaste Toothpick Tortoise Toucan
-            Triceratops Tritium Trousers Trumpet Tuba Tugboat Turnip Turtle Tuxedo
-            Tyrannosaurus Ukulele Umbrella Unicorn Unicycle Universe Uranium Urchin Vampire
-            Velociraptor Vindaloo Volcano Vulcan Vulture Waffle Walrus Warthog Waterfowl
-            Watermelon Weasel Whatchamacallit Whodunit Wildebeest Wingnut Wizard Wombat
-            Wookie Wormhole Xylophone Yak Yodeler Yoyo Ytterbium Yurt Zebra Zephyr Zeppelin
-            Zither Zombie Zoologist Zucchini
-          </Markov>
-          <Case expr="[aeiou]$">
-            <Option probability="1">
-              <Words>inator
-                tron meter saurus scope bot
+        <Join>
+          <Match>
+            <Markov id="noun" target_len="5" cutoff_len="12" uniform="true">
+              Aardvark Abacus Aberration Abracadabra Absurdity Adjective Aerodrome Albatross
+              Alchemist Alligator Aluminum Amoeba Anaconda Anemone Ankylosaurus Anomaly
+              Antelope Antenna Antlion Anvil Ape Apocalypse Apparatus Aquarium Aqueduct
+              Arboretum Armadillo Armageddon Armory Armpit Arpeggio Arquebus Artichoke
+              Artifact Artificer Ascot Asparagus Asteroid Astronaut Asylum Auditorium
+              Automaton Automobile Aviator Avocado Baboon Backgammon Bacon Badger Bagel
+              Balaclava Bamboo Banana Banjo Barbecue Barometer Barracuda Barricade Baryon
+              Baryonyx Basilisk Bastion Bathtub Bazinga Beachball Beagle Beanstalk Bear Beaver
+              Beehive Beetle Beret Bigfoot Billygoat Biologist Biscotti Blimp Bling Blorp
+              Blubber Blunderbuss Bobsled Bonobo Boondoggle Bork Borscht Boson Botanist Bowtie
+              Brain Broccoli Brogues Brontosaurus Broomstick Brownie Bubblewrap Buffalo Bugle
+              Bulldozer Bullfrog Bumblebee Bungalow Bunsen Burrito Cabbage Cactus Candelabra
+              Candy Cantaloupe Cappuccino Carbon Caribou Carnival Carrot Cartographer Cartoon
+              Cartwheel Cashew Cassowary Catastrophe Caterpillar Catfish Cellophane Centaur
+              Chameleon Chandelier Charlatan Cheese Cheeseburger Chicken Chimpanzee Chinchilla
+              Chipmunk Chupacabra Circus Clown Clownfish Cockatoo Coconut Coffeepot Comedian
+              Confetti Contraption Corgi Cornflake Crab Crocodile Croissant Cucumber Cuddlebug
+              Cummerbund Cupcake Curmudgeon Cutlery Cuttlefish Dachshund Dandelion Deuterium
+              Dimension Dimetrodon Dingo Diplodocus Dodad Dodecahedron Doodle Doodlebug
+              Doohickey Doughnut Dragonfly Dromedary Dynamite Earthling Einsteinium Electron
+              Elephant Emu Enchilada Encyclopedia Entomologist Espresso Etymologist Excavator
+              Eyeball Eyepatch Facepalm Faceplant Falafel Fedora Fermion Ferret Fettuccine
+              Fish Fishstick Flamingo Flibbertigibbet Flowerpot Foobar Frankenstein Gadget
+              Gadgetry Galaxy Gazelle Gelato Gerbil Gimbal Giraffe Gizmo Gluon Gnocchi
+              Gobbledygook Goblin Golem Gorilla Graviton Gremlin Grendel Gymnasium Habanero
+              Haberdasher Hadron Haggis Hamburger Hedgehog Helicopter Heliotrope Helium
+              Herpetologist Hippogriff Hippopotamus Hobgoblin Horizon Horologist
+              Horticulturist Hotdog Houseplant Hummus Hydrogen Hyperboloid Hypercube
+              Hypersphere Ibex Ibis Ichthyologist Igloo Ignoramus Iguana Impala Infographic
+              Infomercial Insect Insomniac Jackalope Jalapeno Jellyfish Jetpack Kaiju Kangaroo
+              Knitwear Koala Kraken Krampus Kumquat Labradoodle Labyrinth Lasagna Latte
+              Lemming Lemur Lepton Linguine Llama Lobster Locomotive Lollipop Lollygag
+              Loudspeaker Luffa Lugnut Lumberjack Lycanthrope Macaron Macaroni Macaw Macchiato
+              Magician Malarkey Mallard Mammoth Manatee Marshmallow Martian Marzelvane
+              Mastodon Mathematician Meatball Megaphone Melon Menagerie Merlot Metaverse
+              Meteor Meteoroid Mongoose Monocle Moon Moonbeam Moorhen Moped Motorcycle Muffin
+              Muffler Multiverse Mushroom Nautilus Nebula Necktie Nectarine Nematode Neptunium
+              Neutron Ninja Nitrogen Noodle Nunchuck Octopus Ogre Orangutan Ornithologist
+              Ostrich Owlbear Oxygen Oyster Paleontologist Pancake Pangolin Panini Panorama
+              Parabola Paradox Parasol Parrot Peacock Pelican Pharmacologist Philosopher
+              Phosphorus Photon Physicist Pillbug Pillow Pirate Pixie Planet Planetarium
+              Platypus Plesiosaur Plutocracy Plutocrat Plutonium Pogo Polyglot Polyhedron
+              Polymath Polymorph Pomegranate Pomeranian Poodle Popcorn Popsicle Porcupine
+              Porkpie Porpoise Potato Poutine Pretzel Propellor Proton Psychologist
+              Pterodactyl Pumpkin Pyjamas Python Quark Quasar Qubit Quesadilla Quetzalcoatl
+              Quiche Quinoa Rabbit Raccoon Racecar Racehorse Radish Ramen Raptor Raspberry
+              Rattlesnake Ravioli Raygun Reality Reindeer Rhinoceros Rhubarb Robot Rockfish
+              Roflcopter Rutabaga Salamander Samosa Sandwich Sasquatch Satellite Scientist
+              Sculpture Seagull Seahorse Selenium Shawarma Shrimp Silicon Simulation
+              Singularity Skeleton Slop Snorkel Sociologist Spacecraft Spaghetti Spam Spatula
+              Sphinx Spork Sprinkles Spud Spumoni Spurtle Squabble Squash Squeegee Squelch
+              Squid Squirrel Star Starfish Stegosaurus Strawberry Submarine Succotash Sulfur
+              Sushi Suspenders Swordfish Synergy Tandoori Tapir Teapot Teddybear Tempura
+              Tentacle Tesseract Theologian Thingamabob Thingamajig Tiramisu Toadstool Toaster
+              Tofu Tomato Toothbrush Toothpaste Toothpick Tortoise Toucan Triceratops Tritium
+              Trousers Trumpet Tuba Tugboat Turnip Turtle Tuxedo Tyrannosaurus Ukulele
+              Umbrella Unicorn Unicycle Universe Uranium Urchin Vampire Velociraptor Vindaloo
+              Volcano Vulcan Vulture Waffle Walrus Warthog Waterfowl Watermelon Weasel
+              Whatchamacallit Whodunit Wildebeest Wingnut Wizard Wombat Wookie Wormhole
+              Xylophone Yak Yodeler Yoyo Ytterbium Yurt Zebra Zephyr Zeppelin Zither Zombie
+              Zoologist Zucchini
+            </Markov>
+            <Case expr="[aeiou]$">
+              <Option probability="1">
+                <Words>
+                  bot inator meter saurus scope tron
+                </Words>
+              </Option>
+            </Case>
+            <Default>
+              <Option probability="1">
+                <Words>
+                ium ology ometer osaurus oscope otron
               </Words>
-            </Option>
-          </Case>
-          <Default>
-            <Option probability="1">
-              <Words>
-                otron ometer osaurus oscope ium ology
-              </Words>
-            </Option>
-          </Default>
-        </Match>
-      </Join>
+              </Option>
+            </Default>
+          </Match>
+        </Join>
       </Join>
     </Capitalize>
     <Markov id="agent" target_len="6" cutoff_len="14" uniform="true">

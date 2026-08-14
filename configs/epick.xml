@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NameGen>
+<NameGen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="namegen.xsd">
   <Description display_name="Epick Phantasie">
     Produces the most epick of phantasie names taken from the grimoires of ark
     ancient magicks for the edgiest of edgelordes
