@@ -1,0 +1,76 @@
+name: Deploy webui
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-webui
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-webui.yml
+    with:
+      public-url: ${{ vars.DEPLOY_PUBLIC_URL || '/' }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      actions: read
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: namegen-webui-dist
+          path: dist
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          test -n "$SSH_KEY" || { echo "::error::DEPLOY_SSH_KEY is not set"; exit 1; }
+          test -n "$KNOWN_HOSTS" || { echo "::error::DEPLOY_KNOWN_HOSTS is not set"; exit 1; }
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/deploy_key ~/.ssh/known_hosts
+
+      - name: Upload to host
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_HOST" || { echo "::error::DEPLOY_HOST is not set"; exit 1; }
+          test -n "$DEPLOY_USER" || { echo "::error::DEPLOY_USER is not set"; exit 1; }
+
+          # --delete wipes anything at DEPLOY_PATH that isn't in dist/, so refuse obviously wrong targets.
+          case "$DEPLOY_PATH" in
+            "" | "/" | "~" | "~/" | "." ) echo "::error::DEPLOY_PATH must be a dedicated directory"; exit 1 ;;
+          esac
+
+          # --checksum compares content, not mtime, so unchanged assets keep their ETag/Last-Modified.
+          rsync \
+            --archive \
+            --compress \
+            --checksum \
+            --delete \
+            --no-perms \
+            --no-owner \
+            --no-group \
+            --rsh "ssh -i ~/.ssh/deploy_key -p $DEPLOY_PORT -o IdentitiesOnly=yes" \
+            dist/ \
+            "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

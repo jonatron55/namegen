@@ -1,0 +1,41 @@
+name: Build webui
+
+on:
+  workflow_call:
+    inputs:
+      public-url:
+        description: Base URL the assets are served from.
+        type: string
+        default: "/"
+      artifact-name:
+        type: string
+        default: namegen-webui-dist
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Add WASM target
+        run: rustup target add wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - name: Install trunk
+        run: cargo install --locked trunk@0.21.14
+
+      - name: Build
+        working-directory: namegen-webui
+        run: trunk build --release --locked --public-url "${{ inputs.public-url }}"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: namegen-webui/dist/
+          if-no-files-found: error

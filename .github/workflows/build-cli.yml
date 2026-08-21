@@ -1,0 +1,71 @@
+name: Build CLI
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        description: Rust target triple to build.
+        type: string
+        required: true
+      os:
+        description: Runner label; must be native to the target so the smoke test can run.
+        type: string
+        required: true
+      package:
+        description: Produce a release archive and upload it as an artifact.
+        type: boolean
+        default: false
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ${{ inputs.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Add target
+        run: rustup target add ${{ inputs.target }}
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          key: ${{ inputs.target }}
+
+      - name: Build
+        run: cargo build --release --locked --package=namegen-cli --target=${{ inputs.target }}
+
+      - name: Smoke test
+        run: ./target/${{ inputs.target }}/release/namegen${{ runner.os == 'Windows' && '.exe' || '' }} --help
+
+      - name: Package (Windows)
+        if: inputs.package && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $name = "namegen-$env:GITHUB_REF_NAME-${{ inputs.target }}"
+          New-Item -ItemType Directory -Path "staging\$name" -Force | Out-Null
+          Copy-Item "target\${{ inputs.target }}\release\namegen.exe" "staging\$name\"
+          Copy-Item Readme.md, License.txt "staging\$name\"
+          Copy-Item configs "staging\$name\configs" -Recurse
+          Compress-Archive -Path "staging\$name" -DestinationPath "$name.zip"
+
+      - name: Package (Unix)
+        if: inputs.package && runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="namegen-${GITHUB_REF_NAME}-${{ inputs.target }}"
+          mkdir -p "staging/$name"
+          cp "target/${{ inputs.target }}/release/namegen" "staging/$name/"
+          cp Readme.md License.txt "staging/$name/"
+          cp -r configs "staging/$name/"
+          tar -czf "$name.tar.gz" -C staging "$name"
+
+      - uses: actions/upload-artifact@v7
+        if: inputs.package
+        with:
+          name: namegen-${{ inputs.target }}
+          path: |
+            *.tar.gz
+            *.zip
+          if-no-files-found: error
