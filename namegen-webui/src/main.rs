@@ -8,6 +8,7 @@ use libnamegen::{
 
 use crate::{
     accent_colors::{AccentColors, ColoredString, WithAccentColor},
+    dialog::{Dialog, Severity},
     options_panel::OptionsPanel,
     output_panel::OutputPanel,
     toolbar::Toolbar,
@@ -15,6 +16,7 @@ use crate::{
 
 mod accent_colors;
 mod constraints;
+mod dialog;
 mod options_panel;
 mod output_panel;
 mod toolbar;
@@ -35,6 +37,7 @@ fn App() -> impl IntoView {
     let default_generator = default_config.build_generator();
 
     let (config, set_config) = signal_local(default_config);
+    let (parse_error, set_parse_error) = signal_local(None::<String>);
 
     let arg_display_names = Signal::derive_local(move || match config.get() {
         GeneratorConfig::Description { arg_display_names, .. } => arg_display_names.clone(),
@@ -109,7 +112,24 @@ fn App() -> impl IntoView {
 
     view! {
         <div class="app">
-            <Toolbar config on_config_loaded=move |config| set_config.set(config) />
+            move || parse_error.get().map(|parse_error| {
+                view! {
+                    <Dialog
+                        title="Error parsing configuration"
+                        content=parse_error
+                        yes_caption="OK"
+                        severity=Severity::Danger
+                        on_yes=move || set_parse_error.set(None)
+                    />
+                }
+            })
+            <Toolbar
+                config
+                on_config_loaded=move |config| match config {
+                    Ok(config) => set_config.set(config),
+                    Err(err) => set_parse_error.set(Some(err.to_string())),
+                }
+            />
             <OutputPanel
                 started=move || interval_handle.with(|h| h.is_some())
                 names=names.clone()
@@ -122,7 +142,26 @@ fn App() -> impl IntoView {
                 config
                 display_names=arg_display_names
                 constraint_values=constraint_values
-            />
+            /> <footer class="panel">
+                <div>
+                    <ul>
+                        <li>{format!("Version: {}", env!("CARGO_PKG_VERSION"))}</li>
+                        <li>
+                            <a href="https://github.com/jonatron55/namegen">
+                                "github.com/jonatron55/namegen"
+                            </a>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>"© 2026 Jonathon Cobb"</li>
+                        <li>
+                            <a href="https://github.com/jonatron55/namegen/tree/main/License.txt">
+                                "MIT License"
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </footer>
         </div>
     }
 }

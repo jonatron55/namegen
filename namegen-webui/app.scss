@@ -74,7 +74,7 @@ body {
   row-gap: var(--vertical-gap);
   column-gap: var(--horizontal-gap);
   width: 100%;
-  height: calc(100% - 3 * var(--vertical-gap));
+  height: 100%;
 }
 
 @media (min-width: globals.$wide-breakpoint) {
@@ -127,6 +127,30 @@ body {
   }
 }
 
+footer {
+  text-align: center;
+  grid-row: 3;
+  grid-column: 1 / span 2;
+
+  .caption {
+    text-transform: none !important;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: var(--vertical-gap) 0;
+  }
+
+  li {
+    display: inline;
+    &:not(:first-child)::before {
+      content: " • ";
+      color: var(--dim-foreground);
+    }
+  }
+}
+
 @media (max-width: globals.$narrow-breakpoint) {
   :root {
     overflow: auto;
@@ -154,6 +178,11 @@ body {
     grid-column: 1;
     height: auto;
     max-height: auto;
+  }
+
+  footer {
+    grid-row: 4;
+    grid-column: 1;
   }
 }
 

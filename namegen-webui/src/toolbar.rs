@@ -1,91 +1,114 @@
 use std::collections::HashMap;
 
 use itertools::Itertools;
-use lazy_static::lazy_static;
+use leptos::html;
 use leptos::prelude::*;
+use libnamegen::config::ParseError;
 use libnamegen::config::{ConfigSourceType, GeneratorConfig};
+use wasm_bindgen::prelude::Closure;
+use wasm_bindgen::JsCast;
+use web_sys::FileReader;
+use web_sys::HtmlInputElement;
 
-lazy_static! {
-    static ref builtins: HashMap<String, &'static [u8]> = {
-        let mut map: HashMap<String, &'static [u8]> = HashMap::new();
-        map.insert("silly".to_string(), include_bytes!("../../configs/silly.xml"));
-        map.insert("gadgetry".to_string(), include_bytes!("../../configs/gadgetry.xml"));
-        map.insert("elf".to_string(), include_bytes!("../../configs/elf.xml"));
-        map.insert("dwarf".to_string(), include_bytes!("../../configs/dwarf.xml"));
-        map.insert("goblin".to_string(), include_bytes!("../../configs/goblin.xml"));
-        map.insert("abrahamic".to_string(), include_bytes!("../../configs/abrahamic.xml"));
-        map.insert(
-            "greco-roman".to_string(),
-            include_bytes!("../../configs/greco-roman.xml"),
-        );
-        map.insert("epick".to_string(), include_bytes!("../../configs/epick.xml"));
-        map
-    };
-}
-
-lazy_static! {
-    static ref builtin_display_names: HashMap<String, &'static str> = {
-        let mut map: HashMap<String, &'static str> = HashMap::new();
-        map.insert("silly".to_string(), "Silly Names");
-        map.insert("gadgetry".to_string(), "Gadgetry");
-        map.insert("elf".to_string(), "Elven Names");
-        map.insert("dwarf".to_string(), "Dwarven Names");
-        map.insert("goblin".to_string(), "Goblin Names");
-        map.insert("abrahamic".to_string(), "Abrahamic Mythology");
-        map.insert("greco-roman".to_string(), "Greco-Roman Mythology");
-        map.insert("epick".to_string(), "Epick Phantasie");
-        map
-    };
-}
+const BUILTINS: [&[u8]; 8] = [
+    include_bytes!("../../configs/abrahamic.xml"),
+    include_bytes!("../../configs/dwarf.xml"),
+    include_bytes!("../../configs/elf.xml"),
+    include_bytes!("../../configs/epick.xml"),
+    include_bytes!("../../configs/gadgetry.xml"),
+    include_bytes!("../../configs/goblin.xml"),
+    include_bytes!("../../configs/greco-roman.xml"),
+    include_bytes!("../../configs/silly.xml"),
+];
 
 #[component]
 pub fn Toolbar(
     #[prop(into)] config: Signal<GeneratorConfig, LocalStorage>,
-    mut on_config_loaded: impl FnMut(GeneratorConfig) + 'static,
+    mut on_config_loaded: impl FnMut(Result<GeneratorConfig, ParseError>) + 'static,
 ) -> impl IntoView {
-    let display_name = Signal::derive_local(move || match config.get() {
-        GeneratorConfig::Description { display_name, .. } => display_name.clone(),
-        _ => String::new(),
-    });
+    let configs: HashMap<String, GeneratorConfig> = BUILTINS
+        .iter()
+        .map(|data| {
+            let config =
+                GeneratorConfig::read(*data, ConfigSourceType::Xml).expect("Builtin configuration could not be parsed");
+            let name = match &config {
+                GeneratorConfig::Description { display_name, .. } => display_name.clone(),
+                _ => panic!("Builtin configuration does not include a description"),
+            };
+            (name, config)
+        })
+        .collect();
+
+    let configs = RwSignal::new_local(configs);
 
     let description = Signal::derive_local(move || match config.get() {
-        GeneratorConfig::Description { description, .. } => description.clone(),
-        _ => String::new(),
+        GeneratorConfig::Description { description, .. } => Some(description.clone()),
+        _ => None,
     });
+
+    let file_input_ref = NodeRef::<html::Input>::new();
 
     view! {
         <div class="toolbar panel">
             <div class="caption">
                 <div class="toolbar-controls">
-                    <label for="-builtin-configs">"Configuration:"</label>
+                    <label for="configs">"Configuration:"</label>
                     <select
-                        id="-builtin-configs"
+                        id="configs"
                         on:input:target=move |ev| {
                             let name = ev.target().value();
-                            let data = builtins[&name];
-                            let config = GeneratorConfig::read(data, ConfigSourceType::Xml)
-                                .unwrap();
-                            on_config_loaded(config)
+                            let configs = configs.get();
+                            let data = configs.get(&name).expect("Configuration not found");
+                            on_config_loaded(Ok(data.clone()))
                         }
-                        prop:value="silly"
+                        prop:value="Silly Names"
                     >
-                        {builtins
-                            .keys()
-                            .sorted()
-                            .map(|key| {
-                                view! {
-                                    <option value=key.clone()>{builtin_display_names[key]}</option>
-                                }
-                            })
-                            .collect_view()}
+                        {move || {
+                            configs
+                                .get()
+                                .keys()
+                                .into_iter()
+                                .sorted()
+                                .map(|name| {
+                                    view! { <option value=name.clone()>{name.clone()}</option> }
+                                })
+                                .collect_view()
+                        }}
                     </select>
-                // <button>"Load from file"</button>
+                    <button>"↥ Import"</button>
+                    <button>"⤓ Export"</button>
                 </div>
             </div>
-            <div class="content">
-                <h1>{display_name}</h1>
-                <p>{description}</p>
-            </div>
+            {move || {
+                description
+                    .get()
+                    .map(|description| {
+                        view! {
+                            <div class="content">
+                                <p>{description}</p>
+                            </div>
+                        }
+                    })
+            }}
+
+            <input
+                id="file-input"
+                type="file"
+                accept=".xml,.txt"
+                on:change:target=move |ev| {
+                    let input: HtmlInputElement = ev.target().dyn_into().unwrap();
+                    if let Some(file) = input.files().and_then(|files| files.get(0)) {
+                        let reader = FileReader::new().unwrap();
+                        let onload = Closure::once_into_js(move |_: web_sys::ProgressEvent| {
+                            let result = reader.result().unwrap();
+                            let config = GeneratorConfig::read(data, ConfigSourceType::Xml);
+                            on_config_loaded(config);
+                        });
+                    }
+                }
+                node_ref=file_input_ref.clone()
+                hidden
+            />
         </div>
     }
 }
