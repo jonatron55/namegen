@@ -27,17 +27,17 @@ pub use repeater::Repeater;
 pub use switcher::Switcher;
 pub use words::Words;
 
-pub const MAX_REJECTIONS: usize = 100;
+pub const MAX_REJECTIONS: usize = 1024;
 
 #[derive(ThisError, Debug, Clone)]
 pub enum Error {
-    #[error("Exceeded 100 rejections during generation.")]
+    #[error("No output could be generated matching the given constraints after {MAX_REJECTIONS} attempts.")]
     MaxRejectionsExceeded,
 
-    #[error("Invalid constraint \"{constraint}\" for generator with ID \"{id}\".")]
+    #[error("the constraint \"{constraint}\" is not valid for generator with ID \"{id}\".")]
     InvalidHint { constraint: String, id: String },
 
-    #[error("Generator with ID \"{id}\" cannot produce output matching the given constraints.")]
+    #[error("The generator with ID \"{id}\" cannot produce output matching the given constraints.")]
     Overconstrained { id: String },
 }
 

@@ -20,9 +20,9 @@ use xml::{EventWriter as XmlWriter, name::Name, writer::XmlEvent};
 const WRAP_WIDTH: usize = 80;
 
 pub trait WriteXml: Sized {
-    fn write_xml(self, writer: &mut XmlWriter<&mut Box<dyn Write>>, indent: usize) -> Result<(), WriteError>;
+    fn write_xml(self, writer: &mut XmlWriter<&mut impl Write>, indent: usize) -> Result<(), WriteError>;
 
-    fn write_xml_root(self, writer: &mut XmlWriter<&mut Box<dyn Write>>) -> Result<(), WriteError> {
+    fn write_xml_root(self, writer: &mut XmlWriter<&mut impl Write>) -> Result<(), WriteError> {
         writer.write(XmlEvent::start_element(ELEM_ROOT).ns(PREFIX_XSI, NS_XSI).attr(
             Name::qualified(ATTR_SCHEMA_LOCATION, NS_XSI, Some(PREFIX_XSI)),
             SCHEMA_LOCATION,
@@ -35,7 +35,7 @@ pub trait WriteXml: Sized {
 }
 
 impl WriteXml for GeneratorConfig {
-    fn write_xml(self, writer: &mut XmlWriter<&mut Box<dyn Write>>, indent: usize) -> Result<(), WriteError> {
+    fn write_xml(self, writer: &mut XmlWriter<&mut impl Write>, indent: usize) -> Result<(), WriteError> {
         match self {
             GeneratorConfig::Description {
                 display_name,
@@ -314,7 +314,7 @@ impl WriteXml for GeneratorConfig {
 fn write_indented_lines(
     words: impl IntoIterator<Item = impl AsRef<str>>,
     indent: usize,
-    writer: &mut XmlWriter<&mut Box<dyn Write>>,
+    writer: &mut XmlWriter<&mut impl Write>,
 ) -> Result<(), WriteError> {
     let indent_str = " ".repeat(indent);
     writer.write(XmlEvent::characters("\n"))?;

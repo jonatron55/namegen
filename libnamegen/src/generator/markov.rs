@@ -15,7 +15,7 @@ pub use tokenizer::Tokenizer;
 type FreqMap = HashMap<Option<String>, i32>;
 
 /// Maximum length of generated string to prevent infinite loops in cyclic or near-cyclic models.
-pub const MAX_LEN: usize = 100;
+pub const MAX_LEN: usize = 64;
 
 pub struct Markov {
     id: Option<String>,

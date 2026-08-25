@@ -3,7 +3,7 @@ mod styles;
 use std::{
     collections::HashMap,
     fs::{self, File, OpenOptions},
-    io::{BufRead, BufReader, Error as IoError, Read, Write},
+    io::{BufReader, Read},
     path::PathBuf,
     process::ExitCode,
 };
@@ -127,7 +127,7 @@ fn main() -> ExitCode {
     // We accept either plain text or an XML config file. We'll base out initial
     // guess on the file extension. If it's not clear from the extension, we'll
     // peek at the start of the file later for an XML signature.
-    let (buffer, is_xml): (Box<dyn Read>, Option<bool>) = if let Some(path) = args.config.as_deref() {
+    let buffer: Box<dyn Read> = if let Some(path) = args.config.as_deref() {
         let file = match File::open(&path) {
             Ok(file) => file,
             Err(err) => {
@@ -136,45 +136,28 @@ fn main() -> ExitCode {
             }
         };
 
-        let is_xml = match path.extension().and_then(|ext| ext.to_str()) {
-            Some(ext) if ext.eq_ignore_ascii_case("xml") => Some(true),
-            Some(ext) if ext.eq_ignore_ascii_case("txt") => Some(false),
-            _ => None,
-        };
-
-        (Box::new(file), is_xml)
+        Box::new(file)
     } else {
-        (Box::new(DEFAULT_CONFIG), Some(true))
+        Box::new(DEFAULT_CONFIG)
     };
 
     let mut reader = BufReader::new(buffer);
 
-    let is_xml = is_xml.map(Ok).unwrap_or_else(|| {
-        let peek = reader.fill_buf()?;
-        let prefix = &peek[..peek.len().min(16)];
-        let prefix = String::from_utf8_lossy(prefix);
-        let prefix = prefix.trim_start_matches('\u{feff}').trim_start();
-        Ok::<bool, IoError>(prefix.starts_with("<?xml") || prefix.starts_with("<NameGen>"))
-    });
+    let source_type = if let Some(ref path) = args.config {
+        match ConfigSourceType::guess(&path, &mut reader) {
+            Ok(source_type) => source_type,
+            Err(err) => {
+                eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
+                return ExitCode::FAILURE;
+            }
+        }
+    } else {
+        ConfigSourceType::Xml
+    };
 
     let path = args.config.unwrap_or_else(|| PathBuf::from("<default>"));
 
-    let is_xml = match is_xml {
-        Ok(is_xml) => is_xml,
-        Err(err) => {
-            eprintln!("{ERROR}{}:{ERROR:#} {}", path.display(), err);
-            return ExitCode::FAILURE;
-        }
-    };
-
-    let config = match GeneratorConfig::read(
-        reader,
-        if is_xml {
-            ConfigSourceType::Xml
-        } else {
-            ConfigSourceType::PlainText
-        },
-    ) {
+    let config = match GeneratorConfig::read(reader, source_type) {
         Ok(config) => config,
         Err(err) => {
             if let Some(position) = err.position() {
@@ -194,7 +177,7 @@ fn main() -> ExitCode {
     if args.beautify {
         let tmp = path.with_extension("tmp");
 
-        let output = match OpenOptions::new().write(true).create(true).open(&tmp) {
+        let mut output = match OpenOptions::new().write(true).create(true).open(&tmp) {
             Ok(file) => file,
             Err(err) => {
                 eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);
@@ -202,13 +185,12 @@ fn main() -> ExitCode {
             }
         };
 
-        let mut writer: Box<dyn Write> = Box::new(output);
         let mut writer = XmlEmitterConfig::new()
             .perform_indent(true)
             .line_separator("\n")
             .pad_self_closing(true)
             .indent_string("  ")
-            .create_writer(&mut writer);
+            .create_writer(&mut output);
 
         if let Err(err) = config.write_xml_root(&mut writer) {
             eprintln!("{ERROR}Error:{ERROR:#} {PATH}{}:{PATH:#} {}", path.display(), err);

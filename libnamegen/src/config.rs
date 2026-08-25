@@ -6,7 +6,8 @@ mod write_xml;
 
 use std::{
     collections::HashMap,
-    io::{self, Error as IoError, Read},
+    io::{self, BufRead, Error as IoError, Read},
+    path::Path,
 };
 
 use regex::Regex;
@@ -133,6 +134,55 @@ impl GeneratorConfig {
                     .create_reader(reader);
                 from_xml(&mut xml)
             }
+        }
+    }
+}
+
+impl ConfigSourceType {
+    /// Guess the source type of a configuration file based on its filename and contents.
+    ///
+    /// If the filename has a clear extension (`.xml` or `.txt`), that will be used. Otherwise, the function peeks at
+    /// the start of the file for an opening `<` character (after skipping any whitespace or BOM) and guesses XML if one
+    /// is found, or plain text otherwise.
+    ///
+    /// Arguments
+    /// ---------
+    ///
+    /// - `filename`: The path to the configuration file. This is used to check the file extension.
+    /// - `reader`: A buffered reader for the configuration file. The function will peek at the start of the file by
+    ///   filling the buffer, but will not consume any bytes from the reader.
+    pub fn guess(filename: &Path, reader: &mut impl BufRead) -> Result<ConfigSourceType, IoError> {
+        match filename.extension().and_then(|ext| ext.to_str()) {
+            Some(ext) if ext.eq_ignore_ascii_case("xml") => return Ok(ConfigSourceType::Xml),
+            Some(ext) if ext.eq_ignore_ascii_case("txt") => return Ok(ConfigSourceType::PlainText),
+            _ => {}
+        }
+
+        let peek = reader.fill_buf()?;
+        let mut prefix = &peek[..peek.len().min(16)];
+
+        // Trim anything that looks like a BOM.
+        prefix = match prefix {
+            [0, 0, 0xFE, 0xFF, rest @ ..] | [0xFF, 0xFE, 0, 0, rest @ ..] => rest,
+            [0xEF, 0xBB, 0xBF, rest @ ..] => rest,
+            [0xFF, 0xFE, rest @ ..] | [0xFE, 0xFF, rest @ ..] => rest,
+            _ => prefix,
+        };
+
+        // Skip any leading whitespace or zero bytes (UTF-16 and UTF-32 may have zero bytes in legitimate characters).
+        while let Some((&byte, rest)) = prefix.split_first() {
+            if byte.is_ascii_whitespace() || byte == 0 {
+                prefix = rest;
+            } else {
+                break;
+            }
+        }
+
+        // If the first non-whitespace, non-BOM character is `<`, assume it's XML.
+        if prefix.starts_with(b"<") {
+            Ok(ConfigSourceType::Xml)
+        } else {
+            Ok(ConfigSourceType::PlainText)
         }
     }
 }

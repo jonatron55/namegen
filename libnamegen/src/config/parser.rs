@@ -52,38 +52,55 @@ pub enum Error {
     #[error("{0}")]
     Xml(#[from] XmlReadError),
 
-    #[error("Unexpected event {event:?}")]
+    #[error("{event:?} is not expected here")]
     UnexpectedEvent { event: XmlEvent, position: TextPosition },
 
-    #[error("Unexpected <{name}>")]
+    #[error("<{name}> is not valid here")]
     UnexpectedElement { name: String, position: TextPosition },
 
-    #[error("Unexpected end element: </{name}>")]
-    UnexpectedEnd { name: String, position: TextPosition },
+    #[error("</{name}> does not match the opening <{opening_name}>")]
+    UnexpectedEnd {
+        name: String,
+        opening_name: String,
+        position: TextPosition,
+    },
 
-    #[error("Unexpected attribute: {name}")]
+    #[error("{name} is not a valid attribute for this element")]
     UnexpectedAttribute { name: String, position: TextPosition },
 
-    #[error("Invalid {attribute} value: \"{value}\"")]
+    #[error("\"{value}\" is not a valid value for {attribute}")]
     InvalidValue {
         attribute: String,
         value: String,
         position: TextPosition,
     },
 
-    #[error("Invalid {attribute} value: {err}")]
+    #[error("The regular expression in attribute {attribute} is invalid: {err}")]
     InvalidRegex {
         attribute: String,
         position: TextPosition,
         err: RegexError,
     },
 
-    #[error("Missing attribute: \"{0}\"")]
+    #[error("Missing {0} attribute")]
     MissingAttribute(String),
 
-    #[error("Duplicate parameter description: \"{id}\"")]
+    #[error("Parameter {id} already has a description")]
     DuplicateParameter { id: String, position: TextPosition },
+
+    #[error("Document is too deeply nested")]
+    Depth { position: TextPosition },
+
+    #[error("Word length exceeds the maximum allowed")]
+    WordLength { position: TextPosition },
+
+    #[error("Word count exceeds the maximum allowed")]
+    WordCount { position: TextPosition },
 }
+
+const MAX_DEPTH: usize = 64;
+const MAX_WORD_LENGTH: usize = 64;
+const MAX_WORD_COUNT: usize = 65536;
 
 pub type Result<T> = StdResult<T, Error>;
 
@@ -219,14 +236,14 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
             display_name,
             description,
             arg_display_names,
-            subpart: inner_from_xml(&event, reader)?,
+            subpart: inner_from_xml(&event, reader, 0)?,
         }
     } else {
         GeneratorConfig::Description {
             display_name: "Unnamed Generator".to_string(),
             description: String::new(),
             arg_display_names: HashMap::new(),
-            subpart: inner_from_xml(&event, reader)?,
+            subpart: inner_from_xml(&event, reader, 0)?,
         }
     };
 
@@ -239,6 +256,7 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
             } else {
                 Err(Error::UnexpectedEnd {
                     name: name.local_name,
+                    opening_name: ELEM_ROOT.to_string(),
                     position: reader.position(),
                 })
             }
@@ -250,7 +268,17 @@ pub fn from_xml<R: Read>(reader: &mut EventReader<R>) -> Result<GeneratorConfig>
     }
 }
 
-fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Result<Box<GeneratorConfig>> {
+fn inner_from_xml<R: Read>(
+    event: &XmlEvent,
+    reader: &mut EventReader<R>,
+    depth: usize,
+) -> Result<Box<GeneratorConfig>> {
+    if depth >= MAX_DEPTH {
+        return Err(Error::Depth {
+            position: reader.position(),
+        });
+    }
+
     match event {
         XmlEvent::StartElement { name, attributes, .. } if name.local_name == ELEM_MARKOV => {
             let mut id = None;
@@ -331,7 +359,21 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         }
                     },
                     XmlEvent::Characters(data) => {
-                        training_data.extend(data.split_whitespace().map(|s| s.to_string()));
+                        for word in data.split_whitespace() {
+                            if word.len() > MAX_WORD_LENGTH {
+                                return Err(Error::WordLength {
+                                    position: reader.position(),
+                                });
+                            }
+
+                            if training_data.len() >= MAX_WORD_COUNT {
+                                return Err(Error::WordCount {
+                                    position: reader.position(),
+                                });
+                            }
+
+                            training_data.push(word.to_string());
+                        }
                     }
                     XmlEvent::EndElement { name } => {
                         if name.local_name == ELEM_MARKOV {
@@ -352,6 +394,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name,
+                                opening_name: ELEM_MARKOV.to_string(),
                                 position: reader.position(),
                             });
                         }
@@ -396,7 +439,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                             });
                         }
 
-                        base = Some(inner_from_xml(&event, reader)?);
+                        base = Some(inner_from_xml(&event, reader, depth + 1)?);
                     }
                     XmlEvent::StartElement {
                         ref name, attributes, ..
@@ -423,7 +466,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
                         if let Some(expr) = expr {
                             let event = reader.next()?;
-                            let case = inner_from_xml(&event, reader)?;
+                            let case = inner_from_xml(&event, reader, depth + 1)?;
                             cases.push((expr, case));
                         } else {
                             return Err(Error::MissingAttribute(ATTR_EXPR.to_string()));
@@ -459,7 +502,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         }
 
                         let event = reader.next()?;
-                        default = Some(inner_from_xml(&event, reader)?);
+                        default = Some(inner_from_xml(&event, reader, depth + 1)?);
 
                         let event = reader.next()?;
 
@@ -484,6 +527,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
+                                opening_name: ELEM_MATCH.to_string(),
                                 position: reader.position(),
                             });
                         }
@@ -521,7 +565,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                 let event = reader.next()?;
                 match event {
                     XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
-                        subparts.push(inner_from_xml(&event, reader)?);
+                        subparts.push(inner_from_xml(&event, reader, depth + 1)?);
                     }
                     XmlEvent::StartElement { name, .. } if name.local_name == ELEM_REJECT => loop {
                         match reader.next()? {
@@ -610,7 +654,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
 
                 match event {
                     XmlEvent::StartElement { ref name, .. } if VALID_PART_TYPES.contains(&name.local_name.as_str()) => {
-                        subparts.push(inner_from_xml(&event, reader)?);
+                        subparts.push(inner_from_xml(&event, reader, depth + 1)?);
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_SWITCH => {
                         return Ok(Box::new(GeneratorConfig::Switcher { id, subparts }));
@@ -698,7 +742,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                                 position: reader.position(),
                             });
                         }
-                        subpart = Some(inner_from_xml(&event, reader)?);
+                        subpart = Some(inner_from_xml(&event, reader, depth + 1)?);
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_OPTION => {
                         if let Some(subpart) = subpart {
@@ -710,6 +754,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
+                                opening_name: ELEM_OPTION.to_string(),
                                 position: reader.position(),
                             });
                         }
@@ -769,7 +814,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                                 position: reader.position(),
                             });
                         }
-                        subpart = Some(inner_from_xml(&event, reader)?);
+                        subpart = Some(inner_from_xml(&event, reader, depth + 1)?);
                     }
                     XmlEvent::EndElement { name } if name.local_name == ELEM_REPEAT => {
                         if let Some(subpart) = subpart {
@@ -790,6 +835,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                         } else {
                             return Err(Error::UnexpectedEnd {
                                 name: name.local_name.clone(),
+                                opening_name: ELEM_REPEAT.to_string(),
                                 position: reader.position(),
                             });
                         }
@@ -927,7 +973,7 @@ fn inner_from_xml<R: Read>(event: &XmlEvent, reader: &mut EventReader<R>) -> Res
                             });
                         }
 
-                        subpart = Some(inner_from_xml(&event, reader)?);
+                        subpart = Some(inner_from_xml(&event, reader, depth + 1)?);
                     }
                     XmlEvent::EndElement { ref name } if name.local_name == ELEM_CAPITALIZE => {
                         return Ok(Box::new(GeneratorConfig::Capitalizer {
@@ -1138,7 +1184,10 @@ impl Error {
             | Error::UnexpectedAttribute { position, .. }
             | Error::InvalidValue { position, .. }
             | Error::InvalidRegex { position, .. }
-            | Error::DuplicateParameter { position, .. } => Some(*position),
+            | Error::DuplicateParameter { position, .. }
+            | Error::Depth { position }
+            | Error::WordLength { position }
+            | Error::WordCount { position } => Some(*position),
         }
     }
 }
