@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)]
+    [Parameter()]
     [ValidateSet("Major", "Minor", "Patch")]
     [string]$Type = "Patch"
 )
@@ -12,11 +12,11 @@ try {
     $Status = git status --porcelain
     if ($Status) {
         if ($Host.UI.PromptForChoice(
-            "Uncommitted changes",
-            "There are uncommitted changes in the working directory. These changes will be included in the release commit. Do you want to continue?",
-            @("&Continue", "&Abort"),
-            1
-        ) -eq 1) {
+                "Uncommitted changes",
+                "There are uncommitted changes in the working directory. These changes will be included in the release commit. Do you want to continue?",
+                @("&Continue", "&Abort"),
+                1
+            ) -eq 1) {
             exit
         }
     }
@@ -26,11 +26,11 @@ try {
 
     if ($LASTEXITCODE -ne 0) {
         if ($Host.UI.PromptForChoice(
-            "Tests Failed",
-            "Cargo tests failed. Review the test output above to determine if the failures are acceptable. Do you want to proceed with failing tests?",
-            @("&Continue", "&Abort"),
-            1
-        ) -eq 1) {
+                "Tests Failed",
+                "Cargo tests failed. Review the test output above to determine if the failures are acceptable. Do you want to proceed with failing tests?",
+                @("&Continue", "&Abort"),
+                1
+            ) -eq 1) {
             exit
         }
     }
@@ -60,11 +60,11 @@ try {
     $NewVersion = "$Major.$Minor.$Patch"
 
     if ($Host.UI.PromptForChoice(
-        "Ready to commit release",
-        "The release is ready to be committed with version $NewVersion. Do you want to proceed?",
-        @("&Continue", "&Abort"),
-        0
-    ) -eq 1) {
+            "Ready to commit release",
+            "The release is ready to be committed with version $NewVersion. Do you want to proceed?",
+            @("&Continue", "&Abort"),
+            0
+        ) -eq 1) {
         exit
     }
 

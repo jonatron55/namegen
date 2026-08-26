@@ -974,7 +974,7 @@ checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
 name = "libnamegen"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "itertools 0.15.0",
  "lazy_static",
@@ -1021,7 +1021,7 @@ checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 
 [[package]]
 name = "namegen-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anstream",
  "anstyle",
@@ -1034,7 +1034,7 @@ dependencies = [
 
 [[package]]
 name = "namegen-webui"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "getrandom",
  "gloo-timers",
@@ -1755,7 +1755,7 @@ dependencies = [
 
 [[package]]
 name = "translit"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "itertools 0.15.0",
  "lazy_static",

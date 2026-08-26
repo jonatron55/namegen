@@ -4,7 +4,7 @@ members = ["libnamegen", "namegen-cli", "namegen-webui", "translit"]
 
 [workspace.package]
 authors = ["Jonathon Cobb"]
-version = "0.1.0"
+version = "0.1.1"
 
 [workspace.dependencies]
 anstream = "1.0"
