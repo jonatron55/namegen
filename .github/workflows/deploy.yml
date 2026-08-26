@@ -1,4 +1,4 @@
-name: Deploy webui
+name: Deploy Web UI
 
 on:
   workflow_dispatch:
