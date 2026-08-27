@@ -24,6 +24,9 @@ jobs:
     runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          lfs: true
 
       - name: Add target
         run: rustup target add ${{ inputs.target }}
