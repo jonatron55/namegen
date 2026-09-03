@@ -51,7 +51,6 @@
       <xs:documentation>
         Root element of a name generator configuration. Contains an optional
         &lt;Description&gt; followed by exactly one generator or combiner.
-        See docs/config.md.
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -110,7 +109,6 @@
     <xs:annotation>
       <xs:documentation>
         Changes the capitalization of the output of its single child.
-        See docs/config-capitalize.md.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -125,7 +123,6 @@
       <xs:documentation>
         Concatenates the output of its children, separated by "sep". A
         &lt;Reject&gt; child lists whitespace-separated results to reroll.
-        See docs/config-join.md.
       </xs:documentation>
     </xs:annotation>
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -140,7 +137,6 @@
     <xs:annotation>
       <xs:documentation>
         Inserts a fixed string into the output. Must be empty.
-        See docs/config-literal.md.
       </xs:documentation>
     </xs:annotation>
     <xs:attribute name="id" type="xs:string" />
@@ -155,7 +151,7 @@
     <xs:annotation>
       <xs:documentation>
         Generates words from a Markov chain. The element's text content is the
-        whitespace-separated training data. See docs/config-markov.md.
+        whitespace-separated training data.
       </xs:documentation>
     </xs:annotation>
     <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -176,7 +172,6 @@
       <xs:documentation>
         Runs its first child, then runs the &lt;Case&gt; whose regex matches
         that output, or &lt;Default&gt; if none match. Cannot be constrained.
-        See docs/config-match.md.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -206,7 +201,6 @@
     <xs:annotation>
       <xs:documentation>
         Emits a random number in [min, max]. Must be empty.
-        See docs/config-number.md.
       </xs:documentation>
     </xs:annotation>
     <xs:attribute name="id" type="xs:string" />
@@ -219,7 +213,6 @@
     <xs:annotation>
       <xs:documentation>
         Runs its single child with the given probability.
-        See docs/config-option.md.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -234,7 +227,6 @@
     <xs:annotation>
       <xs:documentation>
         Runs its single child between min and max times.
-        See docs/config-repeat.md.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -249,7 +241,6 @@
     <xs:annotation>
       <xs:documentation>
         Runs exactly one randomly selected child.
-        See docs/config-switch.md.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -262,7 +253,6 @@
     <xs:annotation>
       <xs:documentation>
         Selects one word at random from its whitespace-separated text content.
-        See docs/config-words.md.
       </xs:documentation>
     </xs:annotation>
     <xs:simpleContent>

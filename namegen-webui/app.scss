@@ -191,10 +191,17 @@ footer {
 .toolbar-controls {
   display: flex;
   flex-direction: row;
+  flex-wrap: balance;
   gap: var(--horizontal-gap);
   align-items: center;
   grid-row: 1;
   grid-column: 1 / span 2;
+}
+
+@media (max-width: globals.$x-narrow-breakpoint) {
+  .toolbar-controls {
+    --icon-button-caption: none;
+  }
 }
 
 .constraint {
@@ -248,4 +255,5 @@ footer {
   font-size: 1.25rem;
 }
 
-.futhorc {}
+.futhorc {
+}

@@ -176,11 +176,13 @@ pub fn Toolbar(
                         accept=".xml,.txt"
                         on:change:target=file_changed
                     />
-                    <label for="file-input" style="text-transform: none !important">
-                        "↥ Import"
+                    <label for="file-input" class="icon-button">
+                        <span class="icon">"↥"</span>
+                        <span class="caption">"Import"</span>
                     </label>
-                    <button type="button" on:click=export_file>
-                        "⤓ Export"
+                    <button class="icon-button" on:click=export_file>
+                        <span class="icon">"⤓"</span>
+                        <span class="caption">"Export"</span>
                     </button>
                 </div>
             </div>

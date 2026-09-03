@@ -103,7 +103,7 @@ impl Markov {
                 })
                 .sum();
 
-            // weight by state frequency (outgoing count as proxy)
+            // Weight by state frequency
             weighted_entropy += h * total as f64;
         }
 
@@ -144,7 +144,7 @@ impl Generator for Markov {
 
             'inner: loop {
                 if name.len() >= MAX_LEN {
-                    // Safety valve to prevent infinite loops in degenerate models
+                    // Prevent infinite loops in degenerate models
                     return Ok(vec![name]);
                 }
 
