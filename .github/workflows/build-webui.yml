@@ -22,7 +22,6 @@ jobs:
         with:
           lfs: true
           submodules: recursive
-          lfs: true
 
       - name: Add WASM target
         run: rustup target add wasm32-unknown-unknown
