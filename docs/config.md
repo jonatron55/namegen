@@ -570,5 +570,5 @@ string that can be parsed into an integer. If the constraint cannot be parsed
 into an integer, or if the parsed integer exceeds the number of child elements,
 then an error occurs.
 
-[`/configs/`]: https://github.com/jonatron55/namegen/configs/
-[`/configs/namegen.xsd`]: https://github.com/jonatron55/namegen/configs/namegen.xsd
+[`/configs/`]: /configs/
+[`/configs/namegen.xsd`]: /configs/namegen.xsd
