@@ -9,9 +9,9 @@ A live version of the Web UI can be found at <https://namegen.jonatron.ca>.
 Configuration
 -------------
 
-Generators are created using [XML configuration] files, which can combine multiple components to create complex generators. Examples are provided in the [`configs/`]
-directory and the [`docs/`] directory provides a detailed explanation of the
-format.
+Generators are created using [XML configuration] files, which can combine
+multiple components to create complex generators. Examples are provided in the
+[`configs/`] directory.
 
 Prerequisites
 -------------

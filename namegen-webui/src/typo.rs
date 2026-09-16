@@ -1,6 +1,7 @@
 use std::{borrow::Cow, time::Duration};
 
 use leptos::prelude::*;
+use translit::{self, Casing};
 
 use crate::accent_colors::ColoredString;
 
@@ -16,7 +17,7 @@ pub struct State {
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Alphabet {
     Unchanged,
-    Ascii,
+    Ascii(Option<Casing>),
     Futhorc,
     Tengwar,
 }
@@ -25,7 +26,8 @@ impl Alphabet {
     pub fn apply<'a>(&self, string: &'a str) -> Cow<'a, str> {
         match self {
             Self::Unchanged => Cow::Borrowed(string),
-            Self::Ascii => Cow::Owned(translit::to_ascii(string)),
+            Self::Ascii(Some(casing)) => Cow::Owned(translit::to_ascii_with_casing(string, *casing)),
+            Self::Ascii(None) => Cow::Owned(translit::to_ascii(string)),
             Self::Futhorc => Cow::Owned(translit::to_futhorc(string)),
             Self::Tengwar => Cow::Owned(translit::to_tengwar(string)),
         }
@@ -33,7 +35,7 @@ impl Alphabet {
 
     pub fn class(&self) -> Option<&'static str> {
         match self {
-            Self::Unchanged | Self::Ascii => None,
+            Self::Unchanged | Self::Ascii(_) => None,
             Self::Futhorc => Some("futhorc"),
             Self::Tengwar => Some("tengwar"),
         }
