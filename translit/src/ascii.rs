@@ -68,8 +68,11 @@ pub fn to_ascii_with_casing(s: &str, casing: Casing) -> String {
                 word_start = false;
                 string_start = false;
             }
-        } else if ch.is_whitespace() && let Some(sep) = casing.separator() {
-            result.push(sep);
+        } else if ch.is_whitespace() {
+            if let Some(sep) = casing.separator() {
+                result.push(sep);
+            }
+
             word_start = true;
         }
     }
