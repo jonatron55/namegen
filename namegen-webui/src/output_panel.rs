@@ -1,8 +1,9 @@
 use leptos::prelude::*;
+use translit::Casing;
 
 use crate::{
-    GenerationResult,
     typo::{Alphabet, Typo},
+    GenerationResult,
 };
 
 #[component]
@@ -69,7 +70,14 @@ pub fn OutputPanel(
                         on:change=move |ev| {
                             let value = event_target_value(&ev);
                             match value.as_str() {
-                                "ascii" => set_alphabet.set(Alphabet::Ascii),
+                                "ascii" => set_alphabet.set(Alphabet::Ascii(None)),
+                                "snake" => set_alphabet.set(Alphabet::Ascii(Some(Casing::Snake))),
+                                "kebab" => set_alphabet.set(Alphabet::Ascii(Some(Casing::Kebab))),
+                                "camel" => set_alphabet.set(Alphabet::Ascii(Some(Casing::Camel))),
+                                "pascal" => set_alphabet.set(Alphabet::Ascii(Some(Casing::Pascal))),
+                                "scream" => {
+                                    set_alphabet.set(Alphabet::Ascii(Some(Casing::Screaming)))
+                                }
                                 "futhorc" => set_alphabet.set(Alphabet::Futhorc),
                                 "tengwar" => set_alphabet.set(Alphabet::Tengwar),
                                 _ => set_alphabet.set(Alphabet::Unchanged),
@@ -78,6 +86,11 @@ pub fn OutputPanel(
                     >
                         <option value="unchanged">"Unchanged"</option>
                         <option value="ascii">"ASCII only"</option>
+                        <option value="snake">"snake_case"</option>
+                        <option value="kebab">"kebab-case"</option>
+                        <option value="camel">"camelCase"</option>
+                        <option value="pascal">"PascalCase"</option>
+                        <option value="scream">"SCREAMING_CASE"</option>
                         <option value="futhorc">"Futhorc runes"</option>
                         <option value="tengwar">"Tengwar"</option>
                     </select>

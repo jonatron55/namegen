@@ -27,6 +27,15 @@ lazy_static! {
     };
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Casing {
+    Snake,
+    Kebab,
+    Camel,
+    Pascal,
+    Screaming,
+}
+
 pub fn to_ascii(s: &str) -> String {
     let mut result = String::new();
 
@@ -41,6 +50,61 @@ pub fn to_ascii(s: &str) -> String {
     }
 
     result
+}
+
+pub fn to_ascii_with_casing(s: &str, casing: Casing) -> String {
+    let mut result = String::with_capacity(s.len());
+    let mut word_start = true;
+    let mut string_start = true;
+
+    for ch in s.chars().flat_map(|ch| ch.nfd()) {
+        if ch.is_ascii_alphanumeric() {
+            result.push(casing.apply_case(ch, string_start, word_start));
+            word_start = false;
+            string_start = false;
+        } else if let Some(replacement) = ASCII_MAP.get(&ch) {
+            for ch in replacement.chars() {
+                result.push(casing.apply_case(ch, string_start, word_start));
+                word_start = false;
+                string_start = false;
+            }
+        } else if ch.is_whitespace() && let Some(sep) = casing.separator() {
+            result.push(sep);
+            word_start = true;
+        }
+    }
+    result
+}
+
+impl Casing {
+    fn apply_case(&self, ch: char, string_start: bool, word_start: bool) -> char {
+        match self {
+            Casing::Snake | Casing::Kebab => ch.to_ascii_lowercase(),
+            Casing::Pascal => {
+                if word_start {
+                    ch.to_ascii_uppercase()
+                } else {
+                    ch.to_ascii_lowercase()
+                }
+            }
+            Casing::Camel => {
+                if word_start && !string_start {
+                    ch.to_ascii_uppercase()
+                } else {
+                    ch.to_ascii_lowercase()
+                }
+            }
+            Casing::Screaming => ch.to_ascii_uppercase(),
+        }
+    }
+
+    fn separator(&self) -> Option<char> {
+        match self {
+            Casing::Snake | Casing::Screaming => Some('_'),
+            Casing::Kebab => Some('-'),
+            _ => None,
+        }
+    }
 }
 
 #[cfg(test)]

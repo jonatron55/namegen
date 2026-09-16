@@ -11,7 +11,8 @@ use std::{
 use anstream::eprintln;
 use clap::Parser;
 use libnamegen::config::{ConfigSourceType, GeneratorConfig, IntoGenerator, WriteXml};
-use rand::{Rng, SeedableRng, rngs::StdRng};
+use rand::{rngs::StdRng, Rng, SeedableRng};
+use translit::Casing;
 use xml::EmitterConfig as XmlEmitterConfig;
 
 use crate::styles::{ERROR, PATH};
@@ -43,6 +44,20 @@ struct Args {
     #[arg(long, short = 'n', default_value_t = 1)]
     count: usize,
 
+    /// Constrain the output of a particular generator with the given ID.
+    /// Behaviour differs based on the generator type.
+    ///
+    /// This allows you to steer the generation process by providing specific
+    /// constraints for certain generators. This option can be used multiple
+    /// times to provide constraints for multiple generators. It should be
+    /// provided in the format `<id>:<constraint>`.
+    #[arg(long, short = 'C', conflicts_with = "export", conflicts_with = "beautify")]
+    constrain: Vec<String>,
+
+    /// Random seed for name generation.
+    #[arg(long, short, conflicts_with = "export", conflicts_with = "beautify")]
+    seed: Option<u64>,
+
     /// Replaces the provided configuration file with a beautified version of
     /// the same configuration and produces no other output.
     ///
@@ -62,14 +77,66 @@ struct Args {
     #[arg(long, short)]
     ascii: bool,
 
+    /// Converts non-ASCII characters and renders the names in snake_case.
+    ///
+    /// This will replace non-ASCII characters in the same way as the 'ascii'
+    /// flag, and then convert all letters to lowercase and replace whitespace
+    /// with '_'.
+    #[arg(long, group = "transliteration")]
+    snake: bool,
+
+    /// Converts non-ASCII characters and renders the names in kebab-case.
+    ///
+    /// This will replace non-ASCII characters in the same way as the 'ascii'
+    /// flag, and then convert them to lowercase and replace whitespace with
+    /// '-'.
+    #[arg(long, group = "transliteration")]
+    kebab: bool,
+
+    /// Converts non-ASCII characters and renders the names in camelCase.
+    ///
+    /// This will replace non-ASCII characters in the same way as the 'ascii'
+    /// flag, and then remove whitespace while capitalizing the first letter of
+    /// every word except the first.
+    #[arg(long, group = "transliteration")]
+    camel: bool,
+
+    /// Converts non-ASCII characters and renders the names in PascalCase.
+    ///
+    /// This will replace non-ASCII characters in the same way as the 'ascii'
+    /// flag, and then remove whitespace while capitalizing the first letter of
+    /// every word.
+    #[arg(long, group = "transliteration")]
+    pascal: bool,
+
+    /// Converts non-ASCII characters and renders the names in SCREAMING_CASE.
+    ///
+    /// This will replace non-ASCII characters in the same way as the 'ascii'
+    /// flag, and then convert all letters to uppercase and replace whitespace
+    /// with '_'.
+    #[arg(long, alias = "scream", alias = "screaming-snake", group = "transliteration")]
+    screaming: bool,
+
     /// Transliterates characters in the generated names to their closest
     /// runic equivalent.
     ///
     /// This flag maps characters to their corresponding runes in the Anglo-
     /// Saxon Futhorc. Characters that do not have a clear Futhorc equivalent
     /// remain unchanged.
-    #[arg(long, short, alias = "futhark", alias = "runes", conflicts_with = "ascii")]
+    #[arg(long, alias = "futhark", alias = "runes", group = "transliteration")]
     futhorc: bool,
+
+    /// Transliterates characters in the generated names to their closest
+    /// Tengwar equivalent.
+    ///
+    /// This flag maps characters to their corresponding symbols in the Tengwar
+    /// script. Characters that do not have a clear Tengwar equivalent remain
+    /// unchanged.
+    ///
+    /// The output will use the ConScript Unicode Registry (CSUR) encoding for
+    /// Tengwar (U+E000 to U+E07F).
+    #[arg(long, alias = "tengwar", group = "transliteration")]
+    tengwar: bool,
 
     /// Exports an example configuration file to the specified path instead of
     /// generating names.
@@ -77,20 +144,6 @@ struct Args {
     /// An XML schema file will also be exported to the same directory.
     #[arg(long, short, conflicts_with = "count", conflicts_with = "beautify")]
     export: bool,
-
-    /// Constrain the output of a particular generator with the given ID.
-    /// Behaviour differs based on the generator type.
-    ///
-    /// This allows you to steer the generation process by providing specific
-    /// constraints for certain generators. This option can be used multiple
-    /// times to provide constraints for multiple generators. It should be
-    /// provided in the format `<id>:<constraint>`.
-    #[arg(long, short = 'C', conflicts_with = "export", conflicts_with = "beautify")]
-    constrain: Vec<String>,
-
-    /// Random seed for name generation.
-    #[arg(long, short, conflicts_with = "export", conflicts_with = "beautify")]
-    seed: Option<u64>,
 }
 
 fn main() -> ExitCode {
@@ -237,19 +290,32 @@ fn main() -> ExitCode {
         })
         .collect();
 
+    let transliterator = if args.ascii {
+        translit::to_ascii
+    } else if args.snake {
+        |s: &str| translit::to_ascii_with_casing(s, Casing::Snake)
+    } else if args.kebab {
+        |s: &str| translit::to_ascii_with_casing(s, Casing::Kebab)
+    } else if args.camel {
+        |s: &str| translit::to_ascii_with_casing(s, Casing::Camel)
+    } else if args.pascal {
+        |s: &str| translit::to_ascii_with_casing(s, Casing::Pascal)
+    } else if args.screaming {
+        |s: &str| translit::to_ascii_with_casing(s, Casing::Screaming)
+    } else if args.futhorc {
+        translit::to_futhorc
+    } else if args.tengwar {
+        translit::to_tengwar
+    } else {
+        |s: &str| s.to_string()
+    };
+
     for _ in 0..args.count {
         match generator.generate(&mut rand, &constraints) {
             Ok(names) => {
                 for name in names {
-                    if args.ascii {
-                        let ascii_name = translit::to_ascii(&name);
-                        print!("{ascii_name}");
-                    } else if args.futhorc {
-                        let futhark_name = translit::to_futhorc(&name);
-                        print!("{futhark_name}");
-                    } else {
-                        print!("{name}");
-                    }
+                    let name = transliterator(&name);
+                    print!("{name}");
                 }
                 println!();
             }
