@@ -27,7 +27,7 @@
           </Option>
           <Repeat id="name-count" min="1" max="2">
             <Join>
-              <Markov id="firstname" target_len="5" cutoff_len="12">
+              <Markov id="firstname" target_min="5" target_max="12">
                 Abraham Achilles Adam Adolphus Alastair Albert Aldous Alexander Alfred Algernon
                 Aloysius Alphonse Alvin Angus Antonio Anubis Apollo Apophis Archibald Archilles
                 Ares Arnold Arthur Atlas Augustus Aurelius Austin Avery Axel Azrael Barbarossa
@@ -90,7 +90,7 @@
             </Words>
           </Option>
           <Repeat id="name-count" min="1" max="2">
-            <Markov id="firstname" target_len="5" cutoff_len="12">
+            <Markov id="firstname" target_min="5" target_max="12">
               Abagail Ada Adeline Agatha Agnes Amelia Angelica Annabelle Antonia Aphrodite
               Arabella Aria Ariadne Ariel Artemis Astrid Atalanta Athena Audrey Augusta
               Barbara Bast Beatrice Bernadette Bernadine Bernice Beryl Beverly Bianca Bonita
@@ -137,7 +137,7 @@
             Mc O'
           </Words>
         </Option>
-        <Markov id="surname" target_len="6" cutoff_len="12">
+        <Markov id="surname" target_min="6" target_max="12">
           Aardvark Abacus Abbey Aberration Abracadabra Absurdity Accident Accolade
           Addendum Adjective Aerodrome Albatross Albertosaurus Alligator Allosaurus
           Aluminum Amargasaurus Amoeba Anaconda Anemone Ankylosaurus Anomaly Antelope

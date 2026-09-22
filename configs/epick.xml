@@ -8,7 +8,7 @@
   </Description>
   <Join sep=" ">
     <Switch>
-      <Markov id="firstname" target_len="4" cutoff_len="10">
+      <Markov id="firstname" target_min="4" target_max="10">
         Abaddon Abraxas Acheron Achilles Aeneas Aerial Agamemnon Aiden Ajax Alaric
         Alexander Alfred Alioth Amber Ambrosius Andromeda Antares Anubis Apollo Aquarius
         Areal Ares Ariadne Artemis Arthur Asclepius Ash Asmodeus Asreal Astaroth Astrid

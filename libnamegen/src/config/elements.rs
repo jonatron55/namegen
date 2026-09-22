@@ -26,7 +26,6 @@ pub const ELEM_CHUNK_TOKENIZER: &str = "ChunkTokenizer";
 pub const ELEM_SSP_TOKENIZER: &str = "SspTokenizer";
 pub const ELEM_CLASS: &str = "Class";
 
-pub const ATTR_CUTOFF_LEN: &str = "cutoff_len";
 pub const ATTR_DISPLAY_NAME: &str = "display_name";
 pub const ATTR_EXPR: &str = "expr";
 pub const ATTR_ID: &str = "id";
@@ -41,6 +40,7 @@ pub const ATTR_SCHEMA_LOCATION: &str = "noNamespaceSchemaLocation";
 pub const ATTR_SEP: &str = "sep";
 pub const ATTR_SPLIT_CHARS: &str = "split_chars";
 pub const ATTR_STYLE: &str = "style";
-pub const ATTR_TARGET_LEN: &str = "target_len";
+pub const ATTR_TARGET_MAX: &str = "target_max";
+pub const ATTR_TARGET_MIN: &str = "target_min";
 pub const ATTR_TEXT: &str = "text";
 pub const ATTR_UNIFORM: &str = "uniform";

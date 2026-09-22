@@ -11,7 +11,7 @@
     good cup of coffee.
   </Description>
   <Join sep=" ">
-    <Markov id="adj" target_len="6" cutoff_len="14">
+    <Markov id="adj" target_min="6" target_max="14">
       Abandoned Aberrant Abhorrent Abominable Absolute Abstract Absurd Academic
       Acceptable Accessible Accidental Acclaimed Accommodating Accomplished Accurate
       Accusatory Acerbic Achromatic Acidic Acoustic Acquiescent Acrimonious Acrobatic
@@ -111,7 +111,7 @@
         </Option>
         <Join>
           <Match>
-            <Markov id="noun" target_len="5" cutoff_len="12" uniform="true">
+            <Markov id="noun" target_min="5" target_max="12" uniform="true">
               Aardvark Abacus Aberration Abracadabra Absurdity Adjective Aerodrome Albatross
               Alchemist Alligator Aluminum Amoeba Anaconda Anemone Ankylosaurus Anomaly
               Antelope Antenna Antlion Anvil Ape Apocalypse Apparatus Aquarium Aqueduct
@@ -192,7 +192,7 @@
         </Join>
       </Join>
     </Capitalize>
-    <Markov id="agent" target_len="6" cutoff_len="14" uniform="true">
+    <Markov id="agent" target_min="6" target_max="14" uniform="true">
       Abbreviator Accelerator Accumulator Adapter Adhesivator Adjudicator Aerator
       Affector Aggregator Agitator Aligner Alleviator Allocator Ameliorator Amortizer
       Amplifier Analog Analyzer Anesthetizer Annihilator Annotator Antagonizer Antenna

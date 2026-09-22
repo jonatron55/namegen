@@ -9,7 +9,7 @@
   </Description>
   <Join sep=" ">
     <Switch id="gender">
-      <Markov id="firstname" target_len="4" cutoff_len="10">
+      <Markov id="firstname" target_min="4" target_max="10">
         Aderiol Adeth Adiol Aerand Aerannol Aerathiand Aeriol Aeron Aerond Ailill
         Amaethon Aneirin Aodh Aonghus Arawn Arthfael Bedivere Belanor Belenos Brandior
         Brochfael Cadfael Cael Carrinnor Cernunnos Connla Conor Coriand Cynwrig Dagda
@@ -25,7 +25,7 @@
         Taranis Tariond Thaliand Thardiond Tharidinn Toriand Trahern Tryariol Tutgual
         Tyorwer Uthyr Vandiol Voridower Vorior Ywain Zelphar
       </Markov>
-      <Markov id="firstname" target_len="4" cutoff_len="10">
+      <Markov id="firstname" target_min="4" target_max="10">
         Aderyn Aerafrin Aerathielle Aerona Aeronvia Aeronwen Agrona Aife Ailbhe Andraste
         Angharad Anwen Aoife Ayda Blathine Blodeuedde Branwen Branwenne Bronwyn Carrian
         Ceibfionne Cithrel Cliodna Corianna Daireanne Dairine Derdriu Eadan Eadaoinne

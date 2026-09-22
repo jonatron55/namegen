@@ -10,7 +10,7 @@
   <Join sep=" ">
     <Switch id="gender">
       <Join>
-        <Markov id="firstname" target_len="3" cutoff_len="10">
+        <Markov id="firstname" target_min="3" target_max="10">
           <SspTokenizer>
             <Class rank="5">AEIOUYaeiouy</Class>
             <Class rank="4">JWjw</Class>
@@ -52,7 +52,7 @@
           <Literal text="son" />
         </Option>
       </Join>
-      <Markov id="firstname" target_len="3" cutoff_len="10">
+      <Markov id="firstname" target_min="3" target_max="10">
         <SspTokenizer>
           <Class rank="5">AEIOUYaeiouy</Class>
           <Class rank="4">JWjw</Class>

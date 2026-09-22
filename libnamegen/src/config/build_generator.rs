@@ -33,8 +33,8 @@ impl BuildGenerator for GeneratorConfig {
             GeneratorConfig::Markov {
                 id,
                 data,
-                target_len,
-                cutoff_len,
+                target_min,
+                target_max,
                 reject,
                 uniform,
                 reject_training,
@@ -50,8 +50,8 @@ impl BuildGenerator for GeneratorConfig {
                 Box::new(Markov::train(
                     id.clone(),
                     &data,
-                    *target_len,
-                    *cutoff_len,
+                    *target_min,
+                    *target_max,
                     reject,
                     tokenizer.clone(),
                     *uniform,

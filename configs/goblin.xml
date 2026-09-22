@@ -6,7 +6,7 @@
     Creates names for goblins, gremlins, and bugaboos.
   </Description>
   <Join sep=" ">
-    <Markov id="firstname" cutoff_len="11">
+    <Markov id="firstname" target_max="11">
       Aggro Arg Argleblargle Argwog Arklesnarck Arzlewig Barklesnurg Blarkblark Blurm
       Bnarzleback Bnitzlebong Bnurklesnang Bogsnoggle Booglin Braggle Brizzle Buckyuck
       Bugbug Buggle Buggleyuck Buglin Burglebung Buzzlebong Buzzlegunk Choggle Chuggle

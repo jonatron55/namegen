@@ -18,8 +18,8 @@ use crate::{
     config::{
         GeneratorConfig,
         elements::{
-            ATTR_CUTOFF_LEN, ATTR_DISPLAY_NAME, ATTR_EXPR, ATTR_ID, ATTR_LEN, ATTR_MAX, ATTR_MIN, ATTR_MODE,
-            ATTR_PROBABILITY, ATTR_RANK, ATTR_REJECT_TRAINING, ATTR_SEP, ATTR_SPLIT_CHARS, ATTR_STYLE, ATTR_TARGET_LEN,
+            ATTR_TARGET_MAX, ATTR_DISPLAY_NAME, ATTR_EXPR, ATTR_ID, ATTR_LEN, ATTR_MAX, ATTR_MIN, ATTR_MODE,
+            ATTR_PROBABILITY, ATTR_RANK, ATTR_REJECT_TRAINING, ATTR_SEP, ATTR_SPLIT_CHARS, ATTR_STYLE, ATTR_TARGET_MIN,
             ATTR_TEXT, ATTR_UNIFORM, ELEM_CAPITALIZE, ELEM_CASE, ELEM_CHUNK_TOKENIZER, ELEM_CLASS, ELEM_DEFAULT,
             ELEM_DESCRIPTION, ELEM_JOIN, ELEM_LITERAL, ELEM_MARKOV, ELEM_MATCH, ELEM_NUMBER, ELEM_OPTION, ELEM_PARAM,
             ELEM_REJECT, ELEM_REPEAT, ELEM_ROOT, ELEM_SPLIT_TOKENIZER, ELEM_SSP_TOKENIZER, ELEM_SWITCH, ELEM_WORDS,
@@ -286,8 +286,8 @@ fn inner_from_xml<R: Read>(
             let mut reject = Vec::new();
             let mut reject_training = false;
             let mut uniform = false;
-            let mut target_len = None;
-            let mut cutoff_len = None;
+            let mut target_min = None;
+            let mut target_max = None;
             let mut tokenizer: Option<Tokenizer> = None;
 
             for attr in attributes {
@@ -295,16 +295,16 @@ fn inner_from_xml<R: Read>(
                     ATTR_ID => {
                         id = Some(attr.value.clone());
                     }
-                    ATTR_TARGET_LEN => {
-                        target_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                            attribute: ATTR_TARGET_LEN.to_string(),
+                    ATTR_TARGET_MIN => {
+                        target_min = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: ATTR_TARGET_MIN.to_string(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?);
                     }
-                    ATTR_CUTOFF_LEN => {
-                        cutoff_len = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
-                            attribute: ATTR_CUTOFF_LEN.to_string(),
+                    ATTR_TARGET_MAX => {
+                        target_max = Some(attr.value.parse().map_err(|_| Error::InvalidValue {
+                            attribute: ATTR_TARGET_MAX.to_string(),
                             value: attr.value.clone(),
                             position: reader.position(),
                         })?);
@@ -384,8 +384,8 @@ fn inner_from_xml<R: Read>(
                             return Ok(Box::new(GeneratorConfig::Markov {
                                 id,
                                 data: training_data,
-                                target_len,
-                                cutoff_len,
+                                target_min,
+                                target_max,
                                 reject,
                                 reject_training,
                                 uniform,

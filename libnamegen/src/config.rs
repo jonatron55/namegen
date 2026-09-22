@@ -12,12 +12,12 @@ use std::{
 
 use regex::Regex;
 use thiserror::Error as ThisError;
-use xml::{ParserConfig as XmlParserConfig, writer::Error as XmlWriteError};
+use xml::{writer::Error as XmlWriteError, ParserConfig as XmlParserConfig};
 
 pub use build_generator::BuildGenerator;
 pub use into_generator::IntoGenerator;
-pub use parser::Error as ParseError;
 use parser::from_xml;
+pub use parser::Error as ParseError;
 pub use write_xml::WriteXml;
 
 use crate::generator::{CapitalizerMode, NumberStyle, Tokenizer};
@@ -62,8 +62,8 @@ pub enum GeneratorConfig {
     Markov {
         id: Option<String>,
         data: Vec<String>,
-        target_len: Option<usize>,
-        cutoff_len: Option<usize>,
+        target_min: Option<usize>,
+        target_max: Option<usize>,
         reject: Vec<String>,
         uniform: bool,
         reject_training: bool,
@@ -117,8 +117,8 @@ impl GeneratorConfig {
                     subpart: Box::new(GeneratorConfig::Markov {
                         id: Some("name".to_string()),
                         data,
-                        target_len: None,
-                        cutoff_len: None,
+                        target_min: None,
+                        target_max: None,
                         reject: vec![],
                         uniform: false,
                         reject_training: false,

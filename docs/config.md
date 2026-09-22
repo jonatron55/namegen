@@ -54,7 +54,7 @@ typical configuration file follows this structure:
       Alice Bob Eve Jane John
     </Words>
     <Words id="surname">
-      Brown Johnson Jones Smith Williams
+      Brown Doe Johnson Jones Smith Williams
     </Words>
   </Join>
 </NameGen>
@@ -65,7 +65,7 @@ Elements
 
 The configuration defines a tree of either generators or combiners of different
 types. This tree should have a single root generator or combiner, which,
-depending on the type, may have one or more children. The following types are
+depending on the type, may have one or more children. The following elements are
 available:
 
 | Type                                    | Usage     | Description                                                                           |
@@ -76,7 +76,7 @@ available:
 | [`<Number>`](#number-element)           | Generator | Selects a random number from a range with a variety of formatting options.            |
 | [`<Words>`](#words-element)             | Generator | Selects a random word from a list.                                                    |
 | [`<Capitalize>`](#capitalize-element)   | Combiner  | Changes the capitalization of the output of its child.                                |
-| [`<Join>`](#join-element)               | Combiner  | Join the output of two or more children together with am optional separator.          |
+| [`<Join>`](#join-element)               | Combiner  | Join the output of two or more children together with an optional separator.          |
 | [`<Match>`](#match-element)             | Combiner  | Runs a child generator, then selects another child generator to run based its output. |
 | [`<Option>`](#option-element)           | Combiner  | Runs its child only a certain percentage of the time.                                 |
 | [`<Repeat>`](#repeat-element)           | Combiner  | Runs its child a random number of times within a specified range.                     |
@@ -175,8 +175,8 @@ error.
 
 ```xml
 <Markov [id="string"]
-        [target_len="integer"]
-        [cutoff_len="integer"]
+        [target_min="integer"]
+        [target_max="integer"]
         [uniform="boolean"]
         [reject_training="boolean"]>
 
@@ -197,7 +197,7 @@ error.
 
 ### Attributes ###
 
-- `target_len` (optional): The desired minimum length of generated words. If the
+- `target_min` (optional): The desired minimum length of generated words. If the
   generator reaches a possible halting state before reaching this length when
   other options are available, it will skip halting as a possibility. This does
   not guarantee that generated words will be at least this long, but it prevents
@@ -205,11 +205,11 @@ error.
 
   If not specified, then there will be no minimum length.
 
-- `cutoff_len` (optional): The desired maximum length of generated words. If the
+- `target_max` (optional): The desired maximum length of generated words. If the
   generator reaches a possible halting state after reaching this length when it
-  will take it regardless of other options. Like with `target_len`, this does is
-  not a guarantee of maximum length, but rather a point at which the generator
-  will be more likely to halt.
+  will take it regardless of other options. Like with `target_min`, this does
+  not guarantee a maximum length, but rather a point at which the generator will
+  be most likely to halt.
 
   If not specified, then there will be no maximum length.
 
@@ -222,10 +222,10 @@ error.
 
 - `reject_training` (optional): If `true`, then the generator will reject any
   generated word that is in the training data. This will cause the generator to
-  to retry until it generates a word that is not rejected. This requires the
+  retry until it generates a word that is not rejected. This requires the
   training data to have a sufficiently high perplexity to allow for generation
-  of new words. If more than 100 consecutive rejections occur, then the
-  generator aborts.
+  of new words. If too many consecutive rejections occur, then the generator
+  aborts.
 
   Default value is `false`.
 
@@ -234,8 +234,8 @@ error.
 The Markov generator creates novel words based on its training data. The
 element should be populated with a list of words to train on, separated by
 whitespace. If `reject_training` is `false` or not specified, then it is
-possible (and likely) that the generator will produce words from the training
-as well as novel words.
+possible (and likely) that the generator will produce words from its training
+set as well as novel words.
 
 The training data is case-sensitive, which is usually desirable for name
 generation since capitalization can be an important part of the structure of
@@ -280,9 +280,9 @@ of the language and place the split characters accordingly.
 ```
 
 The Sonority Sequencing Principle tokenizer is the most sophisticated option. It
-breaks words into their syllable-like based on phonetic rules. This requires
-some understanding of the phonetics of the language being trained on, but it can
-produce more natural-sounding results.
+breaks words into their syllable-like substrings based on phonetic rules. This
+requires some understanding of the phonetics of the language being trained on,
+but it can produce more natural-sounding results.
 
 This tokenizer requires that all characters in the training data be assigned
 character classes, which are specified as `<Class rank="integer">` children of
@@ -301,11 +301,11 @@ data, then both versions should be included in the character classes. Any
 character encountered in the training data that is not included in the character
 classes will be treated as a token boundary, which correctly handles punctuation
 in names like "O'Neill" and "Mary-Jane" but will cause problems if the training
-data contains characters alphabetic characters that are not assigned to a class.
+data contains alphabetic characters that are not assigned a class.
 
 If no classes are specified, then a default set of classes will be used for the
 Latin alphabet, with ranks assigned for the most common English phonemes (though
-they are feasibly applicable to many other languages as well):
+they are also reasonable for other languages that use the Latin alphabet):
 
 ```xml
 <Class rank="5">aAáÁàÀâÂåÅäÄãÃæÆeEéÉèÈêÊëËiIíÍìÌîÎïÏoOóÓòÒôÔöÖõÕøØuUúÚùÙûÛůŮüÜyYýÝÿŸ</Class>
@@ -321,8 +321,8 @@ above character classes.
 The `<Markov>` element may also contain a `<Reject>` child element, which
 specifies a list of words that should be rejected if generated (regardless of
 the `reject_training` setting). This is useful for filtering out undesirable
-results. As with `reject_training`, if more than 100 consecutive rejections
-occur, then the generator aborts.
+results. As with `reject_training`, the generator will abort if too many
+consecutive rejections occur.
 
 ### Constraining ###
 
@@ -359,9 +359,10 @@ generator aborts.
 
 ### Description ###
 
-The `<Number>` generator selects a random number from the specified range and
-formats it according to the specified style. The range is inclusive of both
-`min` and `max`. If `min` is greater than `max`, then a parse error occurs.
+The `<Number>` generator selects a random number uniformly from the specified
+range and formats it according to the specified style. The range is inclusive of
+both `min` and `max`. Setting `min` to a value greater than `max` will result in
+an error.
 
 ### Constraining ###
 
@@ -474,13 +475,13 @@ error.
 
 ### Description ###
 
-The `<Match>` element runs its child generator, and then selects one of `<Case>`
-elements that matches the output of the child generator using regular expression
-matching. If a match is found, the corresponding child generator of the `<Case>`
-element runs. If no match is found and a `<Default>` element is present, then
-the child generator of the `<Default>` element runs. This element is best placed
-in a [`<Join>`](#join-element) in order to combine the output of the child
-generator with the output of the selected case.
+The `<Match>` element runs its child generator, and then selects the first
+`<Case>` element whose [regular expression][regex] matches the output of the
+child generator. If a match is found, the corresponding child generator of the
+`<Case>` element runs. If no match is found and a `<Default>` element is
+present, then the child generator of the `<Default>` element runs. This element
+is best placed in a [`<Join>`](#join-element) in order to combine the output of
+the child generator with the output of the selected case.
 
 ### Constraining ###
 
@@ -572,3 +573,4 @@ then an error occurs.
 
 [`/configs/`]: /configs/
 [`/configs/namegen.xsd`]: /configs/namegen.xsd
+[regex]: https://docs.rs/regex/latest/regex/index.html#syntax

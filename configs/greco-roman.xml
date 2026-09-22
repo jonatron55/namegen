@@ -5,7 +5,7 @@
     Names based on Greco-Roman mythology. Suitable for generating names of gods,
     heroes, and similar entities.
   </Description>
-  <Markov id="name" target_len="4" cutoff_len="10" reject_training="true">
+  <Markov id="name" target_min="4" target_max="10" reject_training="true">
     Abas Abderus Abundantia Acaste Acastus Acca Aceso Achelous Acheron Achilles
     Achlys Acis Acrisius Actaeus Adikia Admete Admetus Adonis Adrasteia Adrastus
     Aeacus Aegea Aegeus Aegimius Aegis Aegisthus Aegyptus Aella Aeneas Aeon Aequitas

@@ -161,8 +161,8 @@
       <xs:element name="SspTokenizer" type="SspTokenizer" />
     </xs:choice>
     <xs:attribute name="id" type="xs:string" />
-    <xs:attribute name="target_len" type="xs:nonNegativeInteger" />
-    <xs:attribute name="cutoff_len" type="xs:nonNegativeInteger" />
+    <xs:attribute name="target_min" type="xs:nonNegativeInteger" />
+    <xs:attribute name="target_max" type="xs:nonNegativeInteger" />
     <xs:attribute name="uniform" type="Boolean" default="false" />
     <xs:attribute name="reject_training" type="Boolean" default="false" />
   </xs:complexType>

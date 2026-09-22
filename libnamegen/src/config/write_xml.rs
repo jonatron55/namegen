@@ -2,20 +2,20 @@ use std::{collections::HashMap, io::Write};
 
 use crate::{
     config::{
-        GeneratorConfig, WriteError,
         elements::{
-            ATTR_CUTOFF_LEN, ATTR_DISPLAY_NAME, ATTR_EXPR, ATTR_ID, ATTR_LEN, ATTR_MAX, ATTR_MIN, ATTR_MODE,
-            ATTR_PROBABILITY, ATTR_RANK, ATTR_REJECT_TRAINING, ATTR_SCHEMA_LOCATION, ATTR_SEP, ATTR_SPLIT_CHARS,
-            ATTR_STYLE, ATTR_TARGET_LEN, ATTR_TEXT, ATTR_UNIFORM, ELEM_CAPITALIZE, ELEM_CASE, ELEM_CHUNK_TOKENIZER,
-            ELEM_CLASS, ELEM_DEFAULT, ELEM_DESCRIPTION, ELEM_JOIN, ELEM_LITERAL, ELEM_MARKOV, ELEM_MATCH, ELEM_NUMBER,
-            ELEM_OPTION, ELEM_PARAM, ELEM_REJECT, ELEM_REPEAT, ELEM_ROOT, ELEM_SPLIT_TOKENIZER, ELEM_SSP_TOKENIZER,
-            ELEM_SWITCH, ELEM_WORDS, NS_XSI, PREFIX_XSI, SCHEMA_LOCATION,
+            ATTR_DISPLAY_NAME, ATTR_EXPR, ATTR_ID, ATTR_LEN, ATTR_MAX, ATTR_MIN, ATTR_MODE, ATTR_PROBABILITY,
+            ATTR_RANK, ATTR_REJECT_TRAINING, ATTR_SCHEMA_LOCATION, ATTR_SEP, ATTR_SPLIT_CHARS, ATTR_STYLE,
+            ATTR_TARGET_MAX, ATTR_TARGET_MIN, ATTR_TEXT, ATTR_UNIFORM, ELEM_CAPITALIZE, ELEM_CASE,
+            ELEM_CHUNK_TOKENIZER, ELEM_CLASS, ELEM_DEFAULT, ELEM_DESCRIPTION, ELEM_JOIN, ELEM_LITERAL, ELEM_MARKOV,
+            ELEM_MATCH, ELEM_NUMBER, ELEM_OPTION, ELEM_PARAM, ELEM_REJECT, ELEM_REPEAT, ELEM_ROOT,
+            ELEM_SPLIT_TOKENIZER, ELEM_SSP_TOKENIZER, ELEM_SWITCH, ELEM_WORDS, NS_XSI, PREFIX_XSI, SCHEMA_LOCATION,
         },
+        GeneratorConfig, WriteError,
     },
     generator::{CapitalizerMode, Tokenizer},
 };
 use itertools::Itertools;
-use xml::{EventWriter as XmlWriter, name::Name, writer::XmlEvent};
+use xml::{name::Name, writer::XmlEvent, EventWriter as XmlWriter};
 
 const WRAP_WIDTH: usize = 80;
 
@@ -121,8 +121,8 @@ impl WriteXml for GeneratorConfig {
             GeneratorConfig::Markov {
                 id,
                 data,
-                target_len,
-                cutoff_len,
+                target_min,
+                target_max,
                 reject,
                 uniform,
                 reject_training,
@@ -136,14 +136,14 @@ impl WriteXml for GeneratorConfig {
                 let target_len_str: String;
                 let cutoff_len_str: String;
 
-                if let Some(target_len) = target_len {
-                    target_len_str = target_len.to_string();
-                    ev = ev.attr(ATTR_TARGET_LEN, &target_len_str);
+                if let Some(target_min) = target_min {
+                    target_len_str = target_min.to_string();
+                    ev = ev.attr(ATTR_TARGET_MIN, &target_len_str);
                 }
 
-                if let Some(cutoff_len) = cutoff_len {
-                    cutoff_len_str = cutoff_len.to_string();
-                    ev = ev.attr(ATTR_CUTOFF_LEN, &cutoff_len_str);
+                if let Some(target_max) = target_max {
+                    cutoff_len_str = target_max.to_string();
+                    ev = ev.attr(ATTR_TARGET_MAX, &cutoff_len_str);
                 }
 
                 if uniform {

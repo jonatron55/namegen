@@ -20,8 +20,8 @@ pub const MAX_LEN: usize = 64;
 pub struct Markov {
     id: Option<String>,
     freqs: HashMap<Option<String>, FreqMap>,
-    target_len: Option<usize>,
-    cutoff_len: Option<usize>,
+    target_min: Option<usize>,
+    target_max: Option<usize>,
     reject: Vec<String>,
     tokenizer: Tokenizer,
 }
@@ -38,8 +38,8 @@ impl Markov {
     pub fn train(
         id: Option<String>,
         data: &[impl AsRef<str>],
-        target_len: Option<usize>,
-        cutoff_len: Option<usize>,
+        target_min: Option<usize>,
+        target_max: Option<usize>,
         reject: impl IntoIterator<Item = impl ToString>,
         tokenizer: Tokenizer,
         uniform: bool,
@@ -70,8 +70,8 @@ impl Markov {
         Self {
             id,
             freqs,
-            target_len,
-            cutoff_len,
+            target_min,
+            target_max,
             reject: reject.into_iter().map(|s| s.to_string()).collect(),
             tokenizer: tokenizer,
         }
@@ -151,8 +151,8 @@ impl Generator for Markov {
                 let freq = self.freqs.get(&token).unwrap();
 
                 // Stop if we hit the cutoff length and there's a valid halt option
-                if let Some(cutoff_len) = self.cutoff_len
-                    && name.len() >= cutoff_len
+                if let Some(target_max) = self.target_max
+                    && name.len() >= target_max
                     && freq.contains_key(&None)
                 {
                     return Ok(vec![name]);
@@ -160,8 +160,8 @@ impl Generator for Markov {
 
                 // If we're under the target length and there are some valid continuations,
                 // remove the halt option to avoid early termination
-                let mut freq = if let Some(target_len) = self.target_len
-                    && name.len() < target_len
+                let mut freq = if let Some(target_min) = self.target_min
+                    && name.len() < target_min
                     && freq.keys().any(|k| k.is_some())
                 {
                     let mut freq = freq.clone();
