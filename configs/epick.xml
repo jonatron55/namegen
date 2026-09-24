@@ -3,47 +3,51 @@
   <Description display_name="Epick Phantasie">
     <Param id="firstname" display_name="First name" />
     <Param id="surname" display_name="Surname" />
-    Produces the most epick of phantasie names taken from the grimoires of ark
-    ancient magicks for the edgiest of edgelordes.
+    Produces the most epick of phantasie names taken from forbidden grimoires of
+    dark and ancient magicks. These grand names are fit only for the edgiest of
+    edgelordes.
   </Description>
   <Join sep=" ">
     <Switch>
       <Markov id="firstname" target_min="4" target_max="10">
-        Abaddon Abraxas Acheron Achilles Aeneas Aerial Agamemnon Aiden Ajax Alaric
-        Alexander Alfred Alioth Amber Ambrosius Andromeda Antares Anubis Apollo Aquarius
-        Areal Ares Ariadne Artemis Arthur Asclepius Ash Asmodeus Asreal Astaroth Astrid
-        Athena Atlas Atticus Auberon Augustus Aurelius Azrael Bacchus Baldr Baldur Bane
-        Baphomet Bastet Beelzebub Behemoth Belial Belinda Bellatrix Bellerophon
-        Belphegor Beowulf Berrant Bjarne Bjorn Blaphomet Blaze Bramble Brand Brandon
-        Brimstone Cadfeal Cadmus Caius Caligula Calliope Calypso Cambiel Castor Cato
-        Celestia Cerberus Cernunnos Chaos Charon Chastity Chiron Chronos Circe Claudius
-        Cleopatra Colossus Condor Conor Corvus Craze Cronus Cupid Cygnus Cyrus Daedalus
-        Dagon Damion Damocles Dariel Darius Delilah Demeter Desdemona Despina Diabolus
-        Diana Dionysus Django Dorian Draco Draconis Dracula Draven Drusilla Drusus Dylan
-        Dædalus Eden Eir Elysium Endymion Erebus Eris Eros Eternity Eurydice Evangeline
-        Eve Faust Faustus Fenrir Fionn Freya Gabriel Gaia Galadriel Galahad Galatea Gale
-        Ganymede Gawain Genghis Gideon Gilgamesh Goliath Gorgon Grendel Hades Hazel
-        Hecate Hector Hel Hela Helena Helga Helios Helix Hephaestus Hera Heracles Hermes
-        Hestia Hexxus Hilda Horus Hrothgar Hyperion Hypnos Icarus Ignatius Imperia
-        Imperius Io Isis Isolde Janus Jareth Jasmine Jason Jericho Jester Judas Julius
-        Juno Jupiter Kael Kali Kassandra Khan Kronos Lance Lancelot Lazarus Leander
-        Leonidas Leviathan Lilith Loki Lorelei Lucifer Lucius Luna Lysander Magellan
-        Magnus Magus Mammon Mars Matilda Maverick Maxima Maximus Medusa Melchior Mercury
-        Mercy Merlin Mesmer Minerva Mordred Morgan Morgana Morgause Morpheus Morphine
-        Morrigan Murmur Mystery Narcissus Nemesis Nephthys Neptune Nereus Nike Nimue Nyx
-        Oberon Octavia Odin Odysseus Oedipus Ophelia Orion Orpheus Osiris Pan Pandora
-        Paradoxia Paradoxius Paris Patroclus Pegasus Penndragon Persephone Perseus
-        Phoebe Phoenix Pluto Poseidon Prometheus Prospero Psyche Puck Quasimodo Ragnar
-        Raijin Raziel Rhea Rhiannon Rhiva Romulus Sable Sabriel Samael Samson Saphiel
-        Sapphira Saturn Seeker Selene Seraph Seraphina Shiva Sigurd Sirius Skadi Sobek
-        Solitaire Solstice Stiletto Tarot Temperance Thaddaeus Thalassa Thalassia
-        Thanatos Themis Theophantos Theseus Thor Thoth Tiamat Titania Tobias Triton Tyr
-        Ulysses Uranus Uriel Ursa Ursula Valentina Valentine Valour Venus Vercingetorix
-        Vesper Vespera Vesta Vesuvius Vex Veyra Veyron Veyronia Veyronius Veyronyxia
-        Victor Victoria Vladimir Vorion Vulcan Wolfgang Wormwood Xanthe Xavier Xena
-        Xerxes Xylander Yggdrasil Ymir Ysolde Yvaine Zacharias Zachariel Zagreus Zephron
-        Zephyr Zephyrine Zephyrus Zethus Zeus Zoltan Zora Zorina Zorion Zorya Zyra
-        Zythia
+        Abaddon Abraxas Acheron Achilles Ada Adeline Aeneas Aerial Agamemnon Aiden Ajax
+        Alaric Alexander Alfred Alioth Amber Ambrosius Andromeda Angus Antares Anubis
+        Aphrodite Apollo Aquarius Areal Ares Ariadne Artemis Arthur Asclepius Ash
+        Asmodeus Asreal Astaroth Astrid Athena Atlas Atticus Auberon Augusta Augustus
+        Aurelius Azrael Bacchus Baldr Baldur Bane Baphomet Bastet Beelzebub Behemoth
+        Belial Belinda Bellatrix Bellerophon Belphegor Beowulf Berrant Bjarne Bjorn
+        Blaphomet Blaze Bramble Brand Brandon Brimstone Cadfeal Cadmus Caius Caligula
+        Calliope Calypso Cambiel Castor Cato Celestia Cerberus Cernunnos Chaos Charon
+        Chastity Chiron Chronos Circe Claudius Cleopatra Colossus Condor Conor Corvus
+        Craze Cronus Cupid Cygnus Cyrus Daedalus Dagon Damion Damocles Dariel Darius
+        Delilah Demeter Desdemona Despina Diabolus Diana Dionysus Django Dominique
+        Dorian Draco Draconis Dracula Draven Drusilla Drusus Dylan Dædalus Eden Eir
+        Elizabeth Elysium Endymion Erebus Eris Eros Eternity Eurydice Evangeline Eve
+        Faust Faustus Fenrir Fionn Freya Gabriel Gaia Galadriel Galahad Galatea Gale
+        Ganymede Gawain Genghis Gideon Gilgamesh Gloria Goliath Gorgon Grendel Guinevere
+        Hades Hannibal Hazel Hecate Hector Hel Hela Helena Helga Helios Helix Hephaestus
+        Hera Heracles Hercules Hermes Hestia Hexxus Hilda Hildegarde Horus Hrothgar
+        Hypatia Hyperion Hypnos Icarus Ignatius Imogen Imperia Imperius Io Isis Isolde
+        Jack Janus Jareth Jasmine Jason Jericho Jester Judas Julius Juno Jupiter Kael
+        Kali Kassandra Khan Kronos Lance Lancelot Lazarus Leander Leonidas Leonora
+        Leviathan Lilith Loki Lorelei Lucifer Lucius Luna Lysander Macleod Magellan
+        Magnus Magus Mammon Mars Matilda Maverick Maxima Maximus Medusa Melchior
+        Mercedes Mercury Mercy Merlin Mesmer Minerva Mordred Morgan Morgana Morgause
+        Morpheus Morphine Morrigan Mortimer Murmur Mystery Narcissus Nemesis Nephthys
+        Neptune Nereus Nike Nimue Nyx Oberon Octavia Odin Odysseus Oedipus Ophelia Orion
+        Orpheus Osiris Pan Pandora Paradoxia Paradoxius Paris Patroclus Pegasus
+        Penndragon Persephone Perseus Phoebe Phoenix Pluto Poseidon Prometheus Prospero
+        Psyche Puck Quasimodo Quintus Ragnar Raijin Raziel Rhea Rhiannon Rhiva Romulus
+        Sable Sabriel Samael Samson Samuel Saphiel Sapphira Saturn Seeker Selene Seraph
+        Seraphina Shiva Sigurd Sirius Skadi Sobek Solitaire Solomon Solstice Stiletto
+        Tarot Temperance Thaddaeus Thalassa Thalassia Thanatos Themis Theophantos
+        Theseus Thor Thoth Tiamat Titania Tobias Triton Tyr Ulysses Uranus Uriel Ursa
+        Ursula Valentina Valentine Valour Venus Vercingetorix Vesper Vespera Vesta
+        Vesuvius Vex Veyra Veyron Veyronia Veyronius Veyronyxia Victor Victoria Vladimir
+        Vorion Vulcan Wallace Washington Watson Wolfgang Wormwood Xanthe Xavier Xena
+        Xeno Xerxes Xylander Yggdrasil Ymir Ysolde Yvaine Zacharias Zachariel Zagreus
+        Zephron Zephyr Zephyrine Zephyrus Zethus Zeus Zoltan Zora Zorina Zorion Zorya
+        Zyra Zythia
       </Markov>
     </Switch>
     <Switch>

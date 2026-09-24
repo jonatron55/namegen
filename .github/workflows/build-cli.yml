@@ -50,6 +50,7 @@ jobs:
           Copy-Item "target\${{ inputs.target }}\release\namegen.exe" "staging\$name\"
           Copy-Item Readme.md, License.txt "staging\$name\"
           Copy-Item configs "staging\$name\configs" -Recurse
+          Copy-Item docs "staging\$name\docs" -Recurse
           Compress-Archive -Path "staging\$name" -DestinationPath "$name.zip"
 
       - name: Package (Unix)
@@ -62,6 +63,7 @@ jobs:
           cp "target/${{ inputs.target }}/release/namegen" "staging/$name/"
           cp Readme.md License.txt "staging/$name/"
           cp -r configs "staging/$name/"
+          cp -r docs "staging/$name/"
           tar -czf "$name.tar.gz" -C staging "$name"
 
       - uses: actions/upload-artifact@v7

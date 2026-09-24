@@ -15,6 +15,7 @@ jobs:
     uses: ./.github/workflows/build-webui.yml
     with:
       public-url: ${{ vars.DEPLOY_PUBLIC_URL || '/' }}
+      package: true
 
   deploy:
     needs: build

@@ -10,6 +10,10 @@ on:
       artifact-name:
         type: string
         default: namegen-webui-dist
+      package:
+        description: Produce a release archive and upload it as an artifact.
+        type: boolean
+        default: false
 
 env:
   CARGO_TERM_COLOR: always
@@ -36,6 +40,7 @@ jobs:
         run: trunk build --release --locked --public-url "${{ inputs.public-url }}"
 
       - uses: actions/upload-artifact@v7
+        if: inputs.package
         with:
           name: ${{ inputs.artifact-name }}
           path: namegen-webui/dist/
