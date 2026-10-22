@@ -2,8 +2,8 @@ use leptos::prelude::*;
 use translit::Casing;
 
 use crate::{
-    typo::{Alphabet, Typo},
     GenerationResult,
+    typo::{Alphabet, Typo},
 };
 
 #[component]
