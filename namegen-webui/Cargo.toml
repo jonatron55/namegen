@@ -6,6 +6,7 @@ authors.workspace = true
 version.workspace = true
 
 [dependencies]
+components = { path = "jonstyle/components-rs" }
 getrandom = { workspace = true, features = ["wasm_js"] }
 gloo-timers.workspace = true
 itertools.workspace = true

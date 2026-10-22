@@ -2,8 +2,6 @@
 @use "jonstyle/scss/globals.scss";
 @use "jonstyle/scss/themes/arcane-dusk.scss";
 @use "jonstyle/scss/themes/arcane-dawn.scss";
-@use "jonstyle/scss/themes/high-contrast-dark.scss";
-@use "jonstyle/scss/themes/high-contrast-light.scss";
 @use "jonstyle/scss/themes/system.scss";
 
 :root {
@@ -19,14 +17,15 @@
 body {
   padding: var(--vertical-gap) var(--horizontal-gap);
   margin: 0;
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
 
   background-image: url("background-dark.jpg");
   background-size: cover;
   background-attachment: fixed;
 }
 
-@media (prefers-color-scheme: light) and (prefers-contrast: no-preference) and (forced-colors: none) {
+@media (prefers-color-scheme: light) and (forced-colors: none) {
   :root {
     @include arcane-dawn.theme;
   }
@@ -36,29 +35,9 @@ body {
   }
 }
 
-@media (prefers-contrast: more) and (forced-colors: none) {
-  :root {
-    @include high-contrast-dark.theme;
-  }
-
-  body {
-    background-image: none;
-  }
-}
-
-@media (prefers-color-scheme: light) and (prefers-contrast: more) and (forced-colors: none) {
-  :root {
-    @include high-contrast-light.theme;
-  }
-
-  body {
-    background-image: none;
-  }
-}
-
 @media (forced-colors: active) {
   :root {
-    @include high-contrast-dark.theme;
+    @include system.theme;
   }
 
   body {
@@ -95,6 +74,10 @@ body {
   overflow-y: auto;
   display: grid;
   grid-template-rows: auto 1fr auto;
+
+  .caption {
+    text-align: center;
+  }
 
   .content {
     display: flex;
@@ -154,15 +137,12 @@ footer {
 }
 
 @media (max-width: globals.$narrow-breakpoint) {
-  :root {
-    overflow: auto;
-  }
-
   .app {
     grid-template-rows: auto auto auto;
     grid-template-columns: 1fr;
     max-width: 60rem;
     height: auto;
+    overflow-y: auto;
   }
 
   .toolbar {
@@ -224,13 +204,6 @@ footer {
   grid-template-rows: auto 1fr;
 }
 
-.buttons {
-  display: flex;
-  gap: var(--horizontal-gap);
-  margin: 0 auto;
-  width: fit-content;
-}
-
 .name {
   -webkit-user-select: text;
   user-select: text;
@@ -256,4 +229,10 @@ footer {
 }
 
 .futhorc {
+}
+
+.buttons {
+  display: flex;
+  gap: var(--horizontal-gap);
+  justify-content: center;
 }

@@ -28,11 +28,11 @@ pub fn OutputPanel(
                         "Generate 20"
                     </button>
                     <button
-                        class=move || { if started.get() { "danger" } else { "secondary" } }
+                        class=move || { if started.get() { "danger" } else { "accent" } }
                         on:click=move |_| if started.get() { on_stop() } else { on_start() }
                     >
                         {move || {
-                            if started.get() { "Stop generation" } else { "Generate continuously" }
+                            if started.get() { "Stop generating" } else { "Start generating" }
                         }}
                     </button>
                 </div>

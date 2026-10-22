@@ -1,5 +1,6 @@
 use std::{cell::RefCell, collections::HashMap, time::Duration};
 
+use components::{Dialog, Severity};
 use leptos::prelude::*;
 use libnamegen::{
     config::{BuildGenerator, ConfigSourceType, GeneratorConfig, ParseError},
@@ -8,7 +9,6 @@ use libnamegen::{
 
 use crate::{
     accent_colors::{AccentColors, ColoredString, WithAccentColor},
-    dialog::{Dialog, Severity},
     options_panel::OptionsPanel,
     output_panel::OutputPanel,
     toolbar::Toolbar,
@@ -16,7 +16,6 @@ use crate::{
 
 mod accent_colors;
 mod constraints;
-mod dialog;
 mod options_panel;
 mod output_panel;
 mod toolbar;
@@ -124,11 +123,12 @@ fn App() -> impl IntoView {
                         view! {
                             <Dialog
                                 title="Error parsing configuration"
-                                content=parse_error
                                 yes_caption="OK"
                                 severity=Severity::Danger
                                 on_yes=move || set_parse_error.set(None)
-                            />
+                            >
+                                {parse_error}
+                            </Dialog>
                         }
                     })
             }} <Toolbar config on_config_loaded />
