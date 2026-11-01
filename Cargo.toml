@@ -14,7 +14,7 @@ byteorder = "1.5"
 clap = "4.6"
 crossterm = "0.29"
 getrandom = "0.4"
-glam = "0.33"
+glam = "0.34"
 gloo-timers = "0.4"
 image = { version = "0.25", default-features = false }
 itertools = "0.15"
