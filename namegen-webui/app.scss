@@ -1,8 +1,8 @@
-@use "jonstyle/scss/main.scss";
-@use "jonstyle/scss/globals.scss";
-@use "jonstyle/scss/themes/arcane-dusk.scss";
-@use "jonstyle/scss/themes/arcane-dawn.scss";
-@use "jonstyle/scss/themes/system.scss";
+@use "../modules/jonstyle/scss/main.scss";
+@use "../modules/jonstyle/scss/globals.scss";
+@use "../modules/jonstyle/scss/themes/arcane-dusk.scss";
+@use "../modules/jonstyle/scss/themes/arcane-dawn.scss";
+@use "../modules/jonstyle/scss/themes/system.scss";
 
 :root {
   font-family: Arcane, monospace;
